@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router';
 import type { VolunteerPlan } from '@/types';
 import { getSchoolScore, schools } from '@/data/schools';
-import { MapPin, Home, Info, RotateCcw, Download, Target, ExternalLink, TrendingUp, Shield, AlertTriangle, CheckCircle } from 'lucide-react';
+import { MapPin, Home, Info, RotateCcw, Download, Target, ExternalLink, TrendingUp, Shield, AlertTriangle, CheckCircle, Save, History, Trash2, ChevronDown, ChevronUp, FileText, Copy } from 'lucide-react';
 
 function useScrollAnimation() {
   useEffect(() => {
@@ -29,9 +29,71 @@ function useScrollAnimation() {
   }, []);
 }
 
-export default function PlanResult({ plan, onRegenerate }: { plan: VolunteerPlan; onRegenerate: () => void }) {
+export default function PlanResult({
+  plan,
+  onRegenerate,
+  onSavePlan,
+  savedPlans,
+  onLoadPlan,
+  onDeletePlan,
+}: {
+  plan: VolunteerPlan;
+  onRegenerate: () => void;
+  onSavePlan?: (plan: VolunteerPlan) => void;
+  savedPlans?: VolunteerPlan[];
+  onLoadPlan?: (plan: VolunteerPlan) => void;
+  onDeletePlan?: (generatedAt: string) => void;
+}) {
   const [expandedItem, setExpandedItem] = useState<number | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [copied, setCopied] = useState(false);
   useScrollAnimation();
+
+  const exportAsText = () => {
+    const lines: string[] = [];
+    lines.push(`深圳中考志愿方案`);
+    lines.push(`生成时间: ${new Date(plan.generatedAt).toLocaleString()}`);
+    lines.push(`考生信息: ${plan.studentInfo.score}分 · ${plan.studentInfo.studentType}类 · ${plan.studentInfo.strategyStyle === 'conservative' ? '保守' : plan.studentInfo.strategyStyle === 'aggressive' ? '激进' : '均衡'}`);
+    lines.push(`意向区域: ${plan.studentInfo.preferredDistricts.join('、') || '不限'}`);
+    lines.push('');
+    lines.push('志愿列表:');
+    plan.items.forEach(item => {
+      lines.push(`${item.order}. ${item.school.name} (${item.school.level}) - ${item.strategy} - 分数线${getSchoolScore(item.school, plan.studentInfo.studentType)}分 - 录取概率${item.probability}%`);
+    });
+    lines.push('');
+    lines.push('填报建议:');
+    lines.push('- 录取概率基于2025年分数线估算，仅供参考');
+    lines.push('- 实际录取受当年试题难度、报考人数等多种因素影响');
+    lines.push('- 建议结合实际情况和老师意见调整');
+
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `深圳中考志愿方案_${plan.studentInfo.score}分.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const copyAsText = async () => {
+    const lines: string[] = [];
+    lines.push(`深圳中考志愿方案 (${plan.studentInfo.score}分${plan.studentInfo.studentType}类)`);
+    lines.push('');
+    plan.items.forEach(item => {
+      lines.push(`${item.order}. ${item.school.name} (${getSchoolScore(item.school, plan.studentInfo.studentType)}分)`);
+    });
+    lines.push('');
+    lines.push('生成自: 深圳中考志愿填报助手');
+
+    try {
+      await navigator.clipboard.writeText(lines.join('\n'));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+    }
+  };
 
   const getStrategyColor = (s: string) => {
     if (s === '冲一冲') return 'bg-purple-100 text-purple-700 border-purple-200';
@@ -410,6 +472,21 @@ export default function PlanResult({ plan, onRegenerate }: { plan: VolunteerPlan
             <RotateCcw className="w-4 h-4" />
             重新生成
           </button>
+          {onSavePlan && (
+            <button
+              onClick={() => {
+                onSavePlan(plan);
+                setSaved(true);
+                setTimeout(() => setSaved(false), 2000);
+              }}
+              className={`px-6 py-3 rounded-xl font-medium transition-colors duration-200 flex items-center gap-2 ${
+                saved ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              <Save className="w-4 h-4" />
+              {saved ? '已保存' : '保存方案'}
+            </button>
+          )}
           <button
             onClick={() => window.print()}
             className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-200 flex items-center gap-2"
@@ -417,7 +494,84 @@ export default function PlanResult({ plan, onRegenerate }: { plan: VolunteerPlan
             <Download className="w-4 h-4" />
             打印/保存方案
           </button>
+          <button
+            onClick={exportAsText}
+            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-200 flex items-center gap-2"
+          >
+            <FileText className="w-4 h-4" />
+            导出文本
+          </button>
+          <button
+            onClick={copyAsText}
+            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-200 flex items-center gap-2"
+          >
+            <Copy className="w-4 h-4" />
+            {copied ? '已复制' : '复制方案'}
+          </button>
         </div>
+
+        {/* Saved Plans History */}
+        {savedPlans && savedPlans.length > 0 && onLoadPlan && (
+          <div className="mt-10 scroll-animate">
+            <button
+              onClick={() => setHistoryOpen(!historyOpen)}
+              className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors mb-4"
+            >
+              <History className="w-4 h-4" />
+              历史方案 ({savedPlans.length})
+              {historyOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+            {historyOpen && (
+              <div className="space-y-3">
+                {savedPlans.map((p, idx) => (
+                  <div
+                    key={p.generatedAt}
+                    className="bg-slate-50 rounded-xl p-4 flex items-center justify-between hover:bg-slate-100 transition-colors"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-sm font-medium text-gray-900">
+                          方案 {savedPlans.length - idx}
+                        </span>
+                        <span className="text-xs text-gray-400">
+                          {new Date(p.generatedAt).toLocaleString()}
+                        </span>
+                        <span className="text-xs px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded-full">
+                          {p.studentInfo.score}分 · {p.studentInfo.studentType}类
+                        </span>
+                        <span className="text-xs px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-full">
+                          公办{p.summary.publicCount}所
+                        </span>
+                      </div>
+                      <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
+                        {p.items.slice(0, 5).map(item => (
+                          <span key={item.order}>{item.school.name}</span>
+                        ))}
+                        {p.items.length > 5 && <span>+{p.items.length - 5}所</span>}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 ml-4 flex-shrink-0">
+                      <button
+                        onClick={() => onLoadPlan(p)}
+                        className="px-3 py-1.5 text-xs bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors"
+                      >
+                        加载
+                      </button>
+                      {onDeletePlan && (
+                        <button
+                          onClick={() => onDeletePlan(p.generatedAt)}
+                          className="p-1.5 text-gray-400 hover:text-red-500 transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </section>
   );

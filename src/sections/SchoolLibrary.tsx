@@ -14,6 +14,16 @@ export default function SchoolLibrary() {
   const [filterTrait, setFilterTrait] = useState<string>('all');
   const [filterReputation, setFilterReputation] = useState<string>('all');
   const [filterSize, setFilterSize] = useState<string>('all');
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   const districts: District[] = ['福田', '罗湖', '南山', '宝安', '龙岗', '龙华', '光明', '坪山', '盐田', '大鹏', '深汕'];
 
@@ -152,6 +162,28 @@ export default function SchoolLibrary() {
           </div>
         </div>
 
+        {selectedIds.size > 0 && (
+          <div className="mb-4 flex items-center justify-between bg-indigo-50 rounded-xl px-4 py-3">
+            <span className="text-sm text-indigo-700 font-medium">
+              已选择 {selectedIds.size} 所学校
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setSelectedIds(new Set())}
+                className="text-xs px-3 py-1.5 text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                清空
+              </button>
+              <Link
+                to={`/compare?ids=${Array.from(selectedIds).join(',')}`}
+                className="text-xs px-4 py-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                开始对比
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* School Table */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden scroll-animate">
           {/* Desktop Table */}
@@ -159,6 +191,7 @@ export default function SchoolLibrary() {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
+                  <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 w-10">对比</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">排名</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">学校名称</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500">区域</th>
@@ -174,6 +207,14 @@ export default function SchoolLibrary() {
               <tbody className="divide-y divide-gray-50">
                 {filtered.map((school, idx) => (
                   <tr key={school.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
+                    <td className="px-3 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(school.id)}
+                        onChange={() => toggleSelect(school.id)}
+                        className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                      />
+                    </td>
                     <td className="px-4 py-3 text-sm text-gray-400">{idx + 1}</td>
                     <td className="px-4 py-3">
                       <Link to={`/school/${school.id}`} className="font-medium text-sm text-indigo-700 hover:text-indigo-900 hover:underline flex items-center gap-1">
@@ -244,6 +285,15 @@ export default function SchoolLibrary() {
           <div className="md:hidden divide-y divide-gray-50">
             {filtered.slice(0, 20).map((school, idx) => (
               <div key={school.id} className="p-4 hover:bg-indigo-50/50 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(school.id)}
+                    onChange={() => toggleSelect(school.id)}
+                    className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                  />
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${getLevelBadge(school.level)}`}>{school.level}</span>
+                </div>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -254,7 +304,6 @@ export default function SchoolLibrary() {
                     </div>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-xs text-gray-500">{school.district}</span>
-                      <span className={`text-xs px-1.5 py-0.5 rounded ${getLevelBadge(school.level)}`}>{school.level}</span>
                     </div>
                     <div className="flex items-center gap-1 mt-1">
                       {school.wenli && <span className="text-xs text-gray-500">{school.wenli}</span>}

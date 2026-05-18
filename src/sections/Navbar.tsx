@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
-import { GraduationCap, X, Menu, Activity } from 'lucide-react';
+import { GraduationCap, X, Menu, Activity, Scale } from 'lucide-react';
 
 export default function Navbar({ onNavigate }: { onNavigate: (id: string) => void }) {
   const [scrolled, setScrolled] = useState(false);
@@ -58,6 +58,13 @@ export default function Navbar({ onNavigate }: { onNavigate: (id: string) => voi
               <Activity className="w-3.5 h-3.5" />
               体育计算器
             </Link>
+            <Link
+              to="/compare"
+              className="text-sm text-gray-600 hover:text-indigo-600 transition-colors duration-150 flex items-center gap-1"
+            >
+              <Scale className="w-3.5 h-3.5" />
+              学校对比
+            </Link>
             {isHome && (
               <button
                 onClick={() => onNavigate('form')}
@@ -107,6 +114,14 @@ export default function Navbar({ onNavigate }: { onNavigate: (id: string) => voi
             >
               <Activity className="w-4 h-4" />
               体育计算器
+            </Link>
+            <Link
+              to="/compare"
+              onClick={() => setMobileOpen(false)}
+              className="text-lg text-gray-700 py-3 border-b border-gray-100 text-left flex items-center gap-2"
+            >
+              <Scale className="w-4 h-4" />
+              学校对比
             </Link>
             {isHome && (
               <button

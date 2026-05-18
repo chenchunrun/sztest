@@ -1,6 +1,7 @@
-import { useState, useCallback, useEffect } from 'react';
-import type { StudentInfo } from '@/types';
+import { useCallback, useEffect } from 'react';
+import type { StudentInfo, VolunteerPlan } from '@/types';
 import { useVolunteerPlan } from '@/hooks/useVolunteerPlan';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import Navbar from '@/sections/Navbar';
 import HeroSection from '@/sections/HeroSection';
 import StepsSection from '@/sections/StepsSection';
@@ -38,7 +39,8 @@ function useScrollAnimation() {
 }
 
 export default function Home() {
-  const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
+  const [studentInfo, setStudentInfo] = useLocalStorage<StudentInfo | null>('sztest:lastStudentInfo', null);
+  const [savedPlans, setSavedPlans] = useLocalStorage<VolunteerPlan[]>('sztest:savedPlans', []);
   const plan = useVolunteerPlan(studentInfo);
   useScrollAnimation();
 
@@ -53,6 +55,24 @@ export default function Home() {
     }, 100);
   };
 
+  const handleSavePlan = (p: VolunteerPlan) => {
+    setSavedPlans(prev => {
+      const filtered = prev.filter(x => x.generatedAt !== p.generatedAt);
+      return [p, ...filtered].slice(0, 10);
+    });
+  };
+
+  const handleLoadPlan = (p: VolunteerPlan) => {
+    setStudentInfo(p.studentInfo);
+    setTimeout(() => {
+      document.getElementById('result')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  const handleDeletePlan = (generatedAt: string) => {
+    setSavedPlans(prev => prev.filter(p => p.generatedAt !== generatedAt));
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar onNavigate={scrollTo} />
@@ -63,7 +83,14 @@ export default function Home() {
 
       {plan && (
         <div id="result">
-          <PlanResult plan={plan} onRegenerate={() => setStudentInfo(null)} />
+          <PlanResult
+            plan={plan}
+            onRegenerate={() => setStudentInfo(null)}
+            onSavePlan={handleSavePlan}
+            savedPlans={savedPlans}
+            onLoadPlan={handleLoadPlan}
+            onDeletePlan={handleDeletePlan}
+          />
         </div>
       )}
 
