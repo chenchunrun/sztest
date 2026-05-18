@@ -17,30 +17,6 @@ function calculateProbability(score: number, schoolScore: number): number {
   return 5;
 }
 
-function determineStrategy(order: number): StrategyType {
-  if (order <= 4) return '冲一冲';
-  if (order <= 8) return '稳一稳';
-  return '保一保';
-}
-
-function getStrategyScoreRange(
-  effectiveScore: number,
-  strategy: StrategyType,
-  style: StudentInfo['strategyStyle']
-): { min: number; max: number } {
-  const styleOffset = style === 'conservative' ? -8 : style === 'aggressive' ? 5 : 0;
-  const adjustedScore = effectiveScore + styleOffset;
-
-  switch (strategy) {
-    case '冲一冲':
-      return { min: adjustedScore + 3, max: adjustedScore + 28 };
-    case '稳一稳':
-      return { min: adjustedScore - 10, max: adjustedScore + 8 };
-    case '保一保':
-      return { min: adjustedScore - 40, max: adjustedScore - 8 };
-  }
-}
-
 // ========== Phase 8: 人校匹配评分系统 ==========
 
 const OUTER_DISTRICTS = ['光明', '坪山', '盐田', '大鹏', '深汕'];
@@ -105,7 +81,7 @@ function calculateMatchScore(school: School, student: StudentInfo): number {
   }
   score += sizeScore * 0.05;
 
-  // 7. 性别匹配（5%）— 深圳高中绝大多数为男女同校，保持中性权重
+  // 7. 性别匹配（5%）
   score += 100 * 0.05;
 
   return Math.round(score);
@@ -116,17 +92,14 @@ function generateMatchReasons(school: School, student: StudentInfo): string[] {
   const schoolScore = getSchoolScore(school, student.studentType);
   const diff = student.score - schoolScore;
 
-  // 分数理由
   if (diff >= 10) reasons.push('分数匹配度高');
   else if (diff >= -5) reasons.push('分数接近，冲刺有望');
   else reasons.push('分数保底，录取稳妥');
 
-  // 地域理由
   if (student.preferredDistricts.includes(school.district)) {
     reasons.push(`位于意向区域${school.district}`);
   }
 
-  // 学科理由
   if (student.strongSubjects && student.strongSubjects.length > 0 && school.wenli) {
     const hasScience = student.strongSubjects.some(s => ['数学', '物理', '化学'].includes(s));
     const hasLiberal = student.strongSubjects.some(s => ['语文', '英语', '历史', '地理'].includes(s));
@@ -135,7 +108,6 @@ function generateMatchReasons(school: School, student: StudentInfo): string[] {
     if (school.wenli === '均衡') reasons.push('文理均衡，适合全面发展');
   }
 
-  // 特点理由
   if (school.traits?.includes('竞赛强校')) reasons.push('竞赛培养体系完善');
   if (school.traits?.includes('艺术特色')) reasons.push('艺术教育特色突出');
   if (school.traits?.includes('体育特色')) reasons.push('体育特长培养优势');
@@ -143,14 +115,12 @@ function generateMatchReasons(school: School, student: StudentInfo): string[] {
   if (school.traits?.includes('老牌名校')) reasons.push('历史悠久，底蕴深厚');
   if (school.traits?.includes('新兴学校')) reasons.push('新建学校，设施先进');
 
-  // 口碑理由
   if (school.reputation) {
     if ((school.reputation.compositeScore || 0) >= 75) reasons.push('口碑优秀');
     if ((school.reputation.teacherQuality || 0) >= 80) reasons.push('师资力量强');
     if ((school.reputation.teachingQuality || 0) >= 80) reasons.push('教学质量高');
   }
 
-  // 规模理由
   if (school.totalPlan2025 && school.totalPlan2025 >= 1000) reasons.push('招生规模大，资源丰富');
 
   return reasons.slice(0, 4);
@@ -162,20 +132,27 @@ export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan
 
     const { score, studentType, preferredDistricts, accommodation, preferredLevels, acceptPrivate, strategyStyle } = studentInfo;
 
-    const styleOffset = strategyStyle === 'conservative' ? -8 : strategyStyle === 'aggressive' ? 5 : 0;
-    const effectiveScore = score + styleOffset;
+    // 风格只影响冲高学校数量，不改变分数边界
+    const maxRush = strategyStyle === 'conservative' ? 2 : strategyStyle === 'aggressive' ? 6 : 4;
 
-    // 筛选学校
+    // ========== 1. 筛选学校 ==========
     let filtered = schools.filter(s => {
-      if (preferredDistricts.length > 0 && !preferredDistricts.includes(s.district)) return false;
-      if (preferredLevels.length > 0 && !preferredLevels.includes(s.level)) return false;
       if (!acceptPrivate && s.type === '民办') return false;
       if (accommodation === 'boarding' && !s.hasBoarding) return false;
       if (accommodation === 'day' && !s.hasDay) return false;
       return true;
     });
 
-    if (filtered.length < 12) {
+    if (preferredDistricts.length > 0) {
+      filtered = filtered.filter(s => preferredDistricts.includes(s.district));
+    }
+    if (preferredLevels.length > 0) {
+      filtered = filtered.filter(s => preferredLevels.includes(s.level));
+    }
+
+    // 如果学校太少或可录取学校太少，放宽区域/层次限制
+    const safeCount = filtered.filter(s => getSchoolScore(s, studentType) <= score).length;
+    if (filtered.length < 12 || safeCount < 4) {
       filtered = schools.filter(s => {
         if (!acceptPrivate && s.type === '民办') return false;
         if (accommodation === 'boarding' && !s.hasBoarding) return false;
@@ -184,155 +161,97 @@ export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan
       });
     }
 
-    const sortedByScore = [...filtered].sort((a, b) => {
-      const scoreA = getSchoolScore(a, studentType);
-      const scoreB = getSchoolScore(b, studentType);
-      return scoreB - scoreA;
+    // ========== 2. 按分数线从高到低排序 ==========
+    const sorted = [...filtered].sort((a, b) => {
+      return getSchoolScore(b, studentType) - getSchoolScore(a, studentType);
     });
 
-    const items: VolunteerItem[] = [];
-    const usedSchoolIds = new Set<string>();
+    // ========== 3. 选出12所 ==========
+    const selected: School[] = [];
+    const usedIds = new Set<string>();
 
-    for (let order = 1; order <= 12; order++) {
-      const strategy = determineStrategy(order);
-      const range = getStrategyScoreRange(effectiveScore, strategy, strategyStyle);
-
-      let candidates = sortedByScore.filter(s => {
-        if (usedSchoolIds.has(s.id)) return false;
-        const schoolScore = getSchoolScore(s, studentType);
-        return schoolScore >= range.min && schoolScore <= range.max;
-      });
-
-      if (candidates.length === 0) {
-        candidates = sortedByScore.filter(s => {
-          if (usedSchoolIds.has(s.id)) return false;
-          const schoolScore = getSchoolScore(s, studentType);
-          if (strategy === '冲一冲') return schoolScore > effectiveScore;
-          if (strategy === '稳一稳') return schoolScore >= effectiveScore - 15 && schoolScore <= effectiveScore + 10;
-          return schoolScore < effectiveScore;
-        });
-      }
-
-      // Phase 8: 按匹配分数排序（在分数策略基础上叠加匹配度）
-      candidates.sort((a, b) => {
-        const scoreA = getSchoolScore(a, studentType);
-        const scoreB = getSchoolScore(b, studentType);
-        const probA = calculateProbability(effectiveScore, scoreA);
-        const probB = calculateProbability(effectiveScore, scoreB);
-        const matchA = calculateMatchScore(a, studentInfo);
-        const matchB = calculateMatchScore(b, studentInfo);
-
-        if (strategy === '冲一冲') {
-          // 冲: 优先学校层次，其次匹配度
-          if (a.level !== b.level) {
-            const levelOrder = ['四大名校', '八大名校', '区属重点', '普通公办', '民办'];
-            return levelOrder.indexOf(a.level) - levelOrder.indexOf(b.level);
-          }
-          // 同层次内按匹配度排序
-          return matchB - matchA;
-        }
-        if (strategy === '稳一稳') {
-          // 稳: 概率接近65%优先，再考虑匹配度
-          const probDiffA = Math.abs(probA - 65);
-          const probDiffB = Math.abs(probB - 65);
-          if (Math.abs(probDiffA - probDiffB) > 10) {
-            return probDiffA - probDiffB;
-          }
-          return matchB - matchA;
-        }
-        // 保: 概率高且匹配度好
-        if (Math.abs(probB - probA) > 10) return probB - probA;
-        return matchB - matchA;
-      });
-
-      const selected = candidates[0];
-      if (selected) {
-        usedSchoolIds.add(selected.id);
-        const schoolScore = getSchoolScore(selected, studentType);
-        const probability = calculateProbability(effectiveScore, schoolScore);
-        const matchScore = calculateMatchScore(selected, studentInfo);
-        const matchReasons = generateMatchReasons(selected, studentInfo);
-        items.push({
-          order,
-          school: selected,
-          strategy,
-          probability,
-          scoreDiff: effectiveScore - schoolScore,
-          matchScore,
-          matchReasons,
-        });
+    // 冲高：分数线 > 考生分数，按从高到低，最多 maxRush 所
+    for (const s of sorted) {
+      if (selected.length >= maxRush) break;
+      if (getSchoolScore(s, studentType) > score) {
+        selected.push(s);
+        usedIds.add(s.id);
       }
     }
 
-    // 填充未满的志愿
-    let fallbackOrder = items.length + 1;
-    for (let order = 1; order <= 12; order++) {
-      if (items.find(i => i.order === order)) continue;
-
-      const strategy = determineStrategy(order);
-      const remaining = sortedByScore.filter(s => !usedSchoolIds.has(s.id));
-      
-      if (remaining.length > 0) {
-        // Phase 8: 在剩余学校中选择匹配度最高的
-        remaining.sort((a, b) => calculateMatchScore(b, studentInfo) - calculateMatchScore(a, studentInfo));
-        const pick = strategy === '保一保' ? remaining[0] : remaining[Math.floor(remaining.length / 2)];
-        usedSchoolIds.add(pick.id);
-        const schoolScore = getSchoolScore(pick, studentType);
-        const probability = calculateProbability(effectiveScore, schoolScore);
-        const matchScore = calculateMatchScore(pick, studentInfo);
-        const matchReasons = generateMatchReasons(pick, studentInfo);
-        items.push({
-          order: fallbackOrder++,
-          school: pick,
-          strategy,
-          probability,
-          scoreDiff: effectiveScore - schoolScore,
-          matchScore,
-          matchReasons,
-        });
+    // 可录取：分数线 <= 考生分数，按从高到低，选到第11所（留第12给强保底）
+    for (const s of sorted) {
+      if (selected.length >= 11) break;
+      if (usedIds.has(s.id)) continue;
+      if (getSchoolScore(s, studentType) <= score) {
+        selected.push(s);
+        usedIds.add(s.id);
       }
     }
 
-    items.sort((a, b) => a.order - b.order);
+    // 第12志愿：强保底，分数线 <= 考生分数 - 40（逐步降级到最低）
+    let backup12: School | undefined;
+    for (const threshold of [40, 30, 20, 10, 0]) {
+      backup12 = sorted.find(s => {
+        if (usedIds.has(s.id)) return false;
+        return getSchoolScore(s, studentType) <= score - threshold;
+      });
+      if (backup12) break;
+    }
 
-    while (items.length < 12) {
-      const remaining = sortedByScore.filter(s => !usedSchoolIds.has(s.id));
-      const pick = remaining[0] || sortedByScore[items.length % sortedByScore.length];
-      if (pick) {
-        usedSchoolIds.add(pick.id);
-        const schoolScore = getSchoolScore(pick, studentType);
-        const probability = calculateProbability(effectiveScore, schoolScore);
-        const matchScore = calculateMatchScore(pick, studentInfo);
-        const matchReasons = generateMatchReasons(pick, studentInfo);
-        items.push({
-          order: items.length + 1,
-          school: pick,
-          strategy: determineStrategy(items.length + 1),
-          probability,
-          scoreDiff: effectiveScore - schoolScore,
-          matchScore,
-          matchReasons,
-        });
+    if (backup12) {
+      selected.push(backup12);
+      usedIds.add(backup12.id);
+    }
+
+    // 如果仍不足12所，从剩余学校补充
+    for (const s of sorted) {
+      if (selected.length >= 12) break;
+      if (usedIds.has(s.id)) continue;
+      selected.push(s);
+      usedIds.add(s.id);
+    }
+
+    // ========== 4. 整体按分数线从高到低重新排序 ==========
+    selected.sort((a, b) => getSchoolScore(b, studentType) - getSchoolScore(a, studentType));
+
+    // ========== 5. 生成12个志愿 ==========
+    const items: VolunteerItem[] = selected.slice(0, 12).map((school, idx) => {
+      const schoolScore = getSchoolScore(school, studentType);
+      const diff = score - schoolScore;
+
+      // 标记策略标签（仅用于展示，不影响排序）
+      let strategy: StrategyType;
+      if (schoolScore > score) {
+        strategy = '冲一冲';
+      } else if (diff >= 10) {
+        strategy = '保一保';
       } else {
-        break;
+        strategy = '稳一稳';
       }
-    }
 
-    items.forEach((item, idx) => {
-      item.order = idx + 1;
-      item.strategy = determineStrategy(idx + 1);
+      return {
+        order: idx + 1,
+        school,
+        strategy,
+        probability: calculateProbability(score, schoolScore),
+        scoreDiff: diff,
+        matchScore: calculateMatchScore(school, studentInfo),
+        matchReasons: generateMatchReasons(school, studentInfo),
+      };
     });
 
+    // ========== 6. 计算摘要 ==========
     const publicCount = items.filter(i => i.school.type === '公办').length;
     const privateCount = items.filter(i => i.school.type === '民办').length;
     const probabilities = items.map(i => i.probability);
 
     return {
-      items: items.slice(0, 12),
+      items,
       studentInfo,
       generatedAt: new Date().toISOString(),
       summary: {
-        totalSchools: Math.min(items.length, 12),
+        totalSchools: items.length,
         publicCount,
         privateCount,
         avgProbability: Math.round(probabilities.reduce((a, b) => a + b, 0) / probabilities.length),
