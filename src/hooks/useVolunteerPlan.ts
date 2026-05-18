@@ -17,6 +17,15 @@ function calculateProbability(score: number, schoolScore: number): number {
   return 5;
 }
 
+/** 学校层次优先级：高 → 低 */
+const LEVEL_ORDER = ['四大名校', '八大名校', '区属重点', '普通公办', '民办'];
+
+function sortByLevel(schoolList: School[]): School[] {
+  return [...schoolList].sort((a, b) => {
+    return LEVEL_ORDER.indexOf(a.level) - LEVEL_ORDER.indexOf(b.level);
+  });
+}
+
 // ========== Phase 8: 人校匹配评分系统 ==========
 
 const OUTER_DISTRICTS = ['光明', '坪山', '盐田', '大鹏', '深汕'];
@@ -126,14 +135,53 @@ function generateMatchReasons(school: School, student: StudentInfo): string[] {
   return reasons.slice(0, 4);
 }
 
+/**
+ * ========== 密度分布志愿算法 ==========
+ * 
+ * 核心思想：考生实际中考分数会围绕预估分波动（±10-20分是正常的）。
+ * 因此志愿密度应该像正态分布/金字塔：
+ * 
+ *   冲高区  (分数线 > 预估+15)        : 1-2所  ← 密度低
+ *   尝试区  (预估+5 ~ 预估+15)        : 2所    ← 密度中等
+ *   核心上沿(预估 ~ 预估+5)           : 3所    ← 密度最大 ⭐
+ *   核心下沿(预估-10 ~ 预估)          : 3所    ← 密度最大 ⭐
+ *   稳妥区  (预估-25 ~ 预估-10)       : 2所    ← 密度中等
+ *   兜底区  (分数线 < 预估-25)        : 1-2所  ← 密度低
+ * 
+ * 风格影响整体分布位置：
+ *   保守 → 整体下移5分（更保守的区间）
+ *   激进 → 整体上移5分（更激进的区间）
+ *   均衡 → 以预估分为中心
+ */
+
+interface DensityZone {
+  label: string;
+  minScore: number;
+  maxScore: number;
+  targetCount: number;
+  strategyLabel: StrategyType;
+}
+
+function buildDensityZones(adjustedScore: number): DensityZone[] {
+  return [
+    { label: '冲高',    minScore: adjustedScore + 15, maxScore: Infinity,           targetCount: 1, strategyLabel: '冲一冲' },
+    { label: '尝试',    minScore: adjustedScore + 5,  maxScore: adjustedScore + 15, targetCount: 2, strategyLabel: '冲一冲' },
+    { label: '核心上沿', minScore: adjustedScore,      maxScore: adjustedScore + 5,  targetCount: 3, strategyLabel: '稳一稳' },
+    { label: '核心下沿', minScore: adjustedScore - 10, maxScore: adjustedScore,      targetCount: 3, strategyLabel: '稳一稳' },
+    { label: '稳妥',    minScore: adjustedScore - 25, maxScore: adjustedScore - 10, targetCount: 2, strategyLabel: '保一保' },
+    { label: '兜底',    minScore: -Infinity,          maxScore: adjustedScore - 25, targetCount: 1, strategyLabel: '保一保' },
+  ];
+}
+
 export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan | null {
   return useMemo(() => {
     if (!studentInfo) return null;
 
     const { score, studentType, preferredDistricts, accommodation, preferredLevels, acceptPrivate, strategyStyle } = studentInfo;
 
-    // 风格只影响冲高学校数量，不改变分数边界
-    const maxRush = strategyStyle === 'conservative' ? 2 : strategyStyle === 'aggressive' ? 6 : 4;
+    // 风格偏移：保守整体下移，激进整体上移
+    const styleOffset = strategyStyle === 'conservative' ? -5 : strategyStyle === 'aggressive' ? 5 : 0;
+    const adjustedScore = score + styleOffset;
 
     // ========== 1. 筛选学校 ==========
     let filtered = schools.filter(s => {
@@ -150,7 +198,7 @@ export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan
       filtered = filtered.filter(s => preferredLevels.includes(s.level));
     }
 
-    // 如果学校太少或可录取学校太少，放宽区域/层次限制
+    // 放宽筛选确保有足够学校
     const safeCount = filtered.filter(s => getSchoolScore(s, studentType) <= score).length;
     if (filtered.length < 12 || safeCount < 4) {
       filtered = schools.filter(s => {
@@ -161,70 +209,57 @@ export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan
       });
     }
 
-    // ========== 2. 按分数线从高到低排序 ==========
+    // 按分数线从高到低排序（全局基准序）
     const sorted = [...filtered].sort((a, b) => {
       return getSchoolScore(b, studentType) - getSchoolScore(a, studentType);
     });
 
-    // ========== 3. 选出12所 ==========
+    // ========== 2. 密度分布选校 ==========
+    const zones = buildDensityZones(adjustedScore);
     const selected: School[] = [];
     const usedIds = new Set<string>();
 
-    // 冲高：分数线 > 考生分数，按从高到低，最多 maxRush 所
-    for (const s of sorted) {
-      if (selected.length >= maxRush) break;
-      if (getSchoolScore(s, studentType) > score) {
-        selected.push(s);
-        usedIds.add(s.id);
-      }
-    }
-
-    // 可录取：分数线 <= 考生分数，按从高到低，选到第11所（留第12给强保底）
-    for (const s of sorted) {
-      if (selected.length >= 11) break;
-      if (usedIds.has(s.id)) continue;
-      if (getSchoolScore(s, studentType) <= score) {
-        selected.push(s);
-        usedIds.add(s.id);
-      }
-    }
-
-    // 第12志愿：强保底，分数线 <= 考生分数 - 40（逐步降级到最低）
-    let backup12: School | undefined;
-    for (const threshold of [40, 30, 20, 10, 0]) {
-      backup12 = sorted.find(s => {
+    for (const zone of zones) {
+      // 从该区间选校：先按层次排序，再选最好的
+      const pool = sorted.filter(s => {
         if (usedIds.has(s.id)) return false;
-        return getSchoolScore(s, studentType) <= score - threshold;
+        const sc = getSchoolScore(s, studentType);
+        return sc >= zone.minScore && sc < zone.maxScore;
       });
-      if (backup12) break;
+      const picked = sortByLevel(pool).slice(0, zone.targetCount);
+      for (const s of picked) {
+        selected.push(s);
+        usedIds.add(s.id);
+      }
     }
 
-    if (backup12) {
-      selected.push(backup12);
-      usedIds.add(backup12.id);
-    }
-
-    // 如果仍不足12所，从剩余学校补充
-    for (const s of sorted) {
+    // 如果总数不足12，从剩余学校补充（按层次+匹配度）
+    const remaining = sorted.filter(s => !usedIds.has(s.id));
+    const fallback = [...remaining].sort((a, b) => {
+      const levelDiff = LEVEL_ORDER.indexOf(a.level) - LEVEL_ORDER.indexOf(b.level);
+      if (levelDiff !== 0) return levelDiff;
+      return calculateMatchScore(b, studentInfo) - calculateMatchScore(a, studentInfo);
+    });
+    for (const s of fallback) {
       if (selected.length >= 12) break;
-      if (usedIds.has(s.id)) continue;
       selected.push(s);
       usedIds.add(s.id);
     }
 
-    // ========== 4. 整体按分数线从高到低重新排序 ==========
+    // 如果超过12所，截取前12（按分数线从高到低，确保优先级正确）
     selected.sort((a, b) => getSchoolScore(b, studentType) - getSchoolScore(a, studentType));
+    const finalSelected = selected.slice(0, 12);
 
-    // ========== 5. 生成12个志愿 ==========
-    const items: VolunteerItem[] = selected.slice(0, 12).map((school, idx) => {
+    // ========== 3. 生成志愿项 ==========
+    const items: VolunteerItem[] = finalSelected.map((school, idx) => {
       const schoolScore = getSchoolScore(school, studentType);
       const diff = score - schoolScore;
 
-      // 标记策略标签（仅用于展示，不影响排序）
+      // 根据实际分数线与原始分数的差距标记策略
       let strategy: StrategyType;
       if (schoolScore > score) {
         strategy = '冲一冲';
-      } else if (diff >= 10) {
+      } else if (diff >= 15) {
         strategy = '保一保';
       } else {
         strategy = '稳一稳';
@@ -241,7 +276,7 @@ export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan
       };
     });
 
-    // ========== 6. 计算摘要 ==========
+    // ========== 4. 计算摘要 ==========
     const publicCount = items.filter(i => i.school.type === '公办').length;
     const privateCount = items.filter(i => i.school.type === '民办').length;
     const probabilities = items.map(i => i.probability);
