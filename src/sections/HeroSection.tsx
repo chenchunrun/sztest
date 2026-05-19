@@ -6,7 +6,7 @@ export default function HeroSection({ onStart }: { onStart: () => void }) {
   useEffect(() => { setTimeout(() => setLoaded(true), 100); }, []);
 
   const stats = [
-    { icon: SchoolIcon, value: '103', label: '所高中数据' },
+    { icon: SchoolIcon, value: '102', label: '所高中数据' },
     { icon: Target, value: '630', label: '分总分参考' },
     { icon: Shield, value: '冲稳保', label: '科学策略' },
   ];

@@ -14,6 +14,8 @@ import CountdownSection from '@/sections/CountdownSection';
 import TimelineSection from '@/sections/TimelineSection';
 import '../App.css';
 
+const PRIVATE_STORAGE_TTL_MS = 24 * 60 * 60 * 1000;
+
 function useScrollAnimation() {
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -39,8 +41,16 @@ function useScrollAnimation() {
 }
 
 export default function Home() {
-  const [studentInfo, setStudentInfo] = useLocalStorage<StudentInfo | null>('sztest:lastStudentInfo', null);
-  const [savedPlans, setSavedPlans] = useLocalStorage<VolunteerPlan[]>('sztest:savedPlans', []);
+  const [studentInfo, setStudentInfo, clearStudentInfo] = useLocalStorage<StudentInfo | null>(
+    'sztest:lastStudentInfo',
+    null,
+    { ttlMs: PRIVATE_STORAGE_TTL_MS }
+  );
+  const [savedPlans, setSavedPlans, clearSavedPlans] = useLocalStorage<VolunteerPlan[]>(
+    'sztest:savedPlans',
+    [],
+    { ttlMs: PRIVATE_STORAGE_TTL_MS }
+  );
   const plan = useVolunteerPlan(studentInfo);
   useScrollAnimation();
 
@@ -73,6 +83,11 @@ export default function Home() {
     setSavedPlans(prev => prev.filter(p => p.generatedAt !== generatedAt));
   };
 
+  const handleClearStoredData = () => {
+    clearStudentInfo();
+    clearSavedPlans();
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar onNavigate={scrollTo} />
@@ -90,6 +105,7 @@ export default function Home() {
             savedPlans={savedPlans}
             onLoadPlan={handleLoadPlan}
             onDeletePlan={handleDeletePlan}
+            onClearStoredData={handleClearStoredData}
           />
         </div>
       )}

@@ -1,0 +1,45 @@
+name: Verify
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install openpyxl
+        run: python -m pip install openpyxl
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Verify generated school data
+        env:
+          SCHOOL_DATA_XLSX: ./2026中考数据库.xlsx
+        run: |
+          if [ -f "$SCHOOL_DATA_XLSX" ]; then
+            python scripts/verify_schools_data.py --excel "$SCHOOL_DATA_XLSX"
+          else
+            echo "Skipping data verification: $SCHOOL_DATA_XLSX not found in repository."
+          fi

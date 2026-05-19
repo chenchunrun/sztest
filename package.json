@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "shenzhen-high-school-admission-application",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "data:verify": "python3 scripts/verify_schools_data.py",
+    "hooks:install": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

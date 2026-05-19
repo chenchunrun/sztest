@@ -48,9 +48,6 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
     if (!form.score || form.score < 0 || form.score > 630) {
       newErrors.score = '请输入 0-630 之间的有效分数';
     }
-    if (form.preferredDistricts?.length === 0) {
-      newErrors.districts = '请至少选择一个意向区域';
-    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -129,10 +126,21 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
           {/* Districts */}
           <div className="mb-6">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              意向区域 <span className="text-red-500">*</span>
-              <span className="text-xs font-normal text-gray-400 ml-2">（可多选）</span>
+              意向区域
+              <span className="text-xs font-normal text-gray-400 ml-2">（可多选；默认全市范围）</span>
             </label>
             <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setForm(prev => ({ ...prev, preferredDistricts: [] }))}
+                className={`px-3 py-2 rounded-lg text-sm transition-all duration-150 flex items-center gap-1 ${
+                  !form.preferredDistricts || form.preferredDistricts.length === 0
+                    ? 'bg-indigo-500 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-indigo-100'
+                }`}
+              >
+                <School className="w-3 h-3" />
+                全市范围
+              </button>
               {districts.map((d) => (
                 <button
                   key={d}
@@ -144,7 +152,9 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
                 </button>
               ))}
             </div>
-            {errors.districts && <p className="mt-1 text-sm text-red-500 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.districts}</p>}
+            <p className="mt-2 text-xs text-gray-400">
+              选择具体区域后，系统会优先从这些区域生成候选学校；仅在候选不足时，才会从全市补充。
+            </p>
           </div>
 
           {/* Accommodation */}

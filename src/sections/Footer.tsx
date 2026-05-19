@@ -10,7 +10,7 @@ export default function Footer() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
                 <GraduationCap className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold">深圳中考志愿填报助手</span>
+              <span className="font-bold">Shenzhen High School Admission Application</span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
               基于2025年真实录取数据，为深圳中考考生提供科学、专业的志愿填报建议。
@@ -38,7 +38,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-slate-700 pt-6 text-center text-xs text-slate-500">
-          <p> 深圳中考志愿填报助手 · 数据仅供参考 · 请以官方信息为准</p>
+          <p>Shenzhen High School Admission Application · 数据仅供参考 · 请以官方信息为准</p>
         </div>
       </div>
     </footer>

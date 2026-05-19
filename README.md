@@ -1,73 +1,40 @@
-# React + TypeScript + Vite
+# Shenzhen High School Admission Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+基于 Vite + React + TypeScript 的深圳中考志愿填报站点，包含学校库、学校对比、体育分计算和志愿推荐能力。
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run data:verify
+npm run hooks:install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Data Verification
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+学校数据文件位于 [src/data/schools.ts](/Users/newmba/sztest/src/data/schools.ts:1)，来源于 `~/Downloads/2026中考数据库.xlsx`。
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+执行下面命令可把当前 `schools.ts` 和 Excel 重新生成结果做全量比对：
+
+```bash
+npm run data:verify
+```
+
+校验脚本位于 [scripts/verify_schools_data.py](/Users/newmba/sztest/scripts/verify_schools_data.py:1)，数据生成脚本位于 [generate_schools.py](/Users/newmba/sztest/generate_schools.py:1)。
+
+## Local Hook
+
+执行下面命令可启用仓库内置的 `pre-commit` hook：
+
+```bash
+npm run hooks:install
+```
+
+启用后，提交前会自动执行 `npm run lint` 和 `npm run data:verify`。
+
+## CI Note
+
+GitHub Actions 会始终执行 `lint`。如果仓库根目录存在 `2026中考数据库.xlsx`，还会额外执行一次学校数据全量校验；如果该文件未提交到仓库，则会跳过这一步。
 ```

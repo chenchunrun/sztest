@@ -1,10 +1,11 @@
 import openpyxl
+import argparse
 import re
 from collections import defaultdict
+from pathlib import Path
 
-EXCEL_PATH = '/Users/newmba/Downloads/2026中考数据库.xlsx'
-OUTPUT_PATH = '/Users/newmba/sztest/src/data/schools.ts'
-DAMAGED_PATH = '/Users/newmba/sztest/src/data/schools.ts'
+ROOT_DIR = Path(__file__).resolve().parent
+DEFAULT_OUTPUT_PATH = ROOT_DIR / 'src' / 'data' / 'schools.ts'
 
 NAME_MAP = {
     '深中': '深圳中学',
@@ -139,7 +140,7 @@ def match_school_name(short_name, standard_names):
     return None
 
 def extract_level_map(path):
-    with open(path, 'r') as f:
+    with open(path, 'r', encoding='utf-8') as f:
         content = f.read()
     pattern = r"name: '([^']+)'.*?level: '([^']+)'"
     matches = re.findall(pattern, content, re.DOTALL)
@@ -148,9 +149,29 @@ def extract_level_map(path):
         level_map[name] = level
     return level_map
 
-LEVEL_MAP = extract_level_map(DAMAGED_PATH)
+def parse_args():
+    parser = argparse.ArgumentParser(description='Generate schools.ts from the source workbook.')
+    parser.add_argument('excel_path', help='Path to the source Excel workbook.')
+    parser.add_argument(
+        '--output',
+        default=str(DEFAULT_OUTPUT_PATH),
+        help='Path to the generated schools.ts file.',
+    )
+    parser.add_argument(
+        '--reference',
+        default=str(DEFAULT_OUTPUT_PATH),
+        help='Reference schools.ts used to preserve existing school levels.',
+    )
+    return parser.parse_args()
 
-wb = openpyxl.load_workbook(EXCEL_PATH, data_only=True)
+args = parse_args()
+excel_path = Path(args.excel_path).expanduser().resolve()
+output_path = Path(args.output).expanduser().resolve()
+reference_path = Path(args.reference).expanduser().resolve()
+
+LEVEL_MAP = extract_level_map(reference_path)
+
+wb = openpyxl.load_workbook(excel_path, data_only=True)
 ws_main = wb['【公办】高中数据大数据']
 main_rows = list(ws_main.iter_rows(values_only=True))
 ws_scores = wb['2021-2025深圳中考录取分数线']
@@ -721,11 +742,9 @@ lines.append("  return schools.find(s => s.id === id);")
 lines.append("}")
 lines.append("")
 
-with open(OUTPUT_PATH, 'w') as f:
+with open(output_path, 'w', encoding='utf-8') as f:
     f.write('\n'.join(lines))
 
-print(f'Wrote {len(lines)} lines to {OUTPUT_PATH}')
+print(f'Wrote {len(lines)} lines to {output_path}')
 print(f'Total public schools: {len(school_list)}')
 print(f'Total private schools: {len(private_schools)}')
-PYEOF
-python3 /Users/newmba/sztest/generate_schools.py

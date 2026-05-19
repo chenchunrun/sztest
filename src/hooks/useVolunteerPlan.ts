@@ -77,7 +77,7 @@ function calculateMatchScore(school: School, student: StudentInfo): number {
   score += Math.max(0, Math.min(100, traitScore)) * 0.1;
 
   // 5. 口碑匹配（10%）
-  let reputationScore = school.reputation?.compositeScore || 50;
+  const reputationScore = school.reputation?.compositeScore || 50;
   score += reputationScore * 0.1;
 
   // 6. 规模匹配（5%）
@@ -178,41 +178,48 @@ export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan
     if (!studentInfo) return null;
 
     const { score, studentType, preferredDistricts, accommodation, preferredLevels, acceptPrivate, strategyStyle } = studentInfo;
+    const hasDistrictPreference = preferredDistricts.length > 0;
 
     // 风格偏移：保守整体下移，激进整体上移
     const styleOffset = strategyStyle === 'conservative' ? -5 : strategyStyle === 'aggressive' ? 5 : 0;
     const adjustedScore = score + styleOffset;
 
     // ========== 1. 筛选学校 ==========
-    let filtered = schools.filter(s => {
+    const baseFiltered = schools.filter(s => {
       if (!acceptPrivate && s.type === '民办') return false;
       if (accommodation === 'boarding' && !s.hasBoarding) return false;
       if (accommodation === 'day' && !s.hasDay) return false;
       return true;
     });
 
-    if (preferredDistricts.length > 0) {
-      filtered = filtered.filter(s => preferredDistricts.includes(s.district));
-    }
-    if (preferredLevels.length > 0) {
-      filtered = filtered.filter(s => preferredLevels.includes(s.level));
-    }
+    const districtFiltered = hasDistrictPreference
+      ? baseFiltered.filter(s => preferredDistricts.includes(s.district))
+      : baseFiltered;
 
-    // 放宽筛选确保有足够学校
-    const safeCount = filtered.filter(s => getSchoolScore(s, studentType) <= score).length;
-    if (filtered.length < 12 || safeCount < 4) {
-      filtered = schools.filter(s => {
-        if (!acceptPrivate && s.type === '民办') return false;
-        if (accommodation === 'boarding' && !s.hasBoarding) return false;
-        if (accommodation === 'day' && !s.hasDay) return false;
-        return true;
-      });
-    }
+    const primaryFiltered = preferredLevels.length > 0
+      ? districtFiltered.filter(s => preferredLevels.includes(s.level))
+      : districtFiltered;
+
+    // 地域偏好优先保留；如果学校层次偏好导致样本过少，则先放宽层次，不直接放宽地域。
+    const primarySafeCount = primaryFiltered.filter(s => getSchoolScore(s, studentType) <= score).length;
+    const primaryPool = (primaryFiltered.length < 12 || primarySafeCount < 4) ? districtFiltered : primaryFiltered;
+
+    // 仅在地域学校池仍不足时，才允许从全市补充。
+    const secondaryDistrictPool = hasDistrictPreference
+      ? baseFiltered.filter(s => !preferredDistricts.includes(s.district))
+      : [];
+    const secondaryPool = preferredLevels.length > 0
+      ? secondaryDistrictPool.filter(s => preferredLevels.includes(s.level))
+      : secondaryDistrictPool;
 
     // 按分数线从高到低排序（全局基准序）
-    const sorted = [...filtered].sort((a, b) => {
+    const primarySorted = [...primaryPool].sort((a, b) => {
       return getSchoolScore(b, studentType) - getSchoolScore(a, studentType);
     });
+    const secondarySorted = [...secondaryPool].sort((a, b) => {
+      return getSchoolScore(b, studentType) - getSchoolScore(a, studentType);
+    });
+    const sorted = [...primarySorted, ...secondarySorted];
 
     // ========== 2. 密度分布选校 ==========
     const zones = buildDensityZones(adjustedScore);

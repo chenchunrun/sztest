@@ -6,19 +6,20 @@ import { ArrowLeft, MapPin, TrendingUp, Scale } from 'lucide-react';
 
 export default function ComparePage() {
   const [searchParams] = useSearchParams();
-  const ids = searchParams.get('ids')?.split(',') || [];
 
   const selected = useMemo(() => {
+    const ids = searchParams.get('ids')?.split(',') || [];
     return ids.map(id => schools.find(s => s.id === id)).filter(Boolean) as typeof schools;
-  }, [ids]);
+  }, [searchParams]);
 
   if (selected.length === 0) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
           <Scale className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 mb-4">未选择学校进行对比</p>
-          <Link to="/" className="text-indigo-600 hover:underline">返回学校库</Link>
+          <p className="text-gray-700 font-medium mb-2">还没有加入对比的学校</p>
+          <p className="text-sm text-gray-500 mb-4">请先到学校库勾选学校，再进入学校对比页面查看结果。</p>
+          <Link to="/#schools" className="text-indigo-600 hover:underline">前往学校库</Link>
         </div>
       </div>
     );

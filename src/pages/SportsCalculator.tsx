@@ -443,11 +443,6 @@ export default function SportsCalculator() {
 
   const gradeInfo = getGrade(total50)
 
-  // Reset optional value when item changes
-  useEffect(() => {
-    setOptionalValue('')
-  }, [optionalItemId])
-
   const handleReset = () => {
     setGender('male')
     setRequiredItem('run')
@@ -622,7 +617,13 @@ export default function SportsCalculator() {
           <CardContent className="space-y-5">
             <div className="space-y-2">
               <Label className="text-sm font-medium text-gray-700">选择项目</Label>
-              <Select value={optionalItemId} onValueChange={(v) => setOptionalItemId(v as OptionalItemId)}>
+              <Select
+                value={optionalItemId}
+                onValueChange={(v) => {
+                  setOptionalItemId(v as OptionalItemId)
+                  setOptionalValue('')
+                }}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="请选择选考项目" />
                 </SelectTrigger>
