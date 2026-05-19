@@ -18,6 +18,20 @@ const TimelineSection = lazy(() => import('@/sections/TimelineSection'));
 
 function useScrollAnimation() {
   useEffect(() => {
+    const observeElement = (element: Element, observer: IntersectionObserver) => {
+      if (!(element instanceof HTMLElement)) return;
+      if (!element.classList.contains('scroll-animate')) return;
+      if (element.dataset.scrollObserved === 'true') return;
+
+      element.dataset.scrollObserved = 'true';
+      observer.observe(element);
+
+      const rect = element.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        element.classList.add('animate-in');
+      }
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -29,14 +43,27 @@ function useScrollAnimation() {
       },
       { threshold: 0.15 }
     );
+
     document.querySelectorAll('.scroll-animate').forEach((el) => {
-      observer.observe(el);
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        el.classList.add('animate-in');
-      }
+      observeElement(el, observer);
     });
-    return () => observer.disconnect();
+
+    const mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (!(node instanceof HTMLElement)) return;
+          observeElement(node, observer);
+          node.querySelectorAll?.('.scroll-animate').forEach((el) => observeElement(el, observer));
+        });
+      });
+    });
+
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
   }, []);
 }
 
