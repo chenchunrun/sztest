@@ -300,9 +300,9 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
             <label className="block text-sm font-semibold text-gray-700 mb-2">志愿填报风格</label>
             <div className="grid grid-cols-3 gap-3">
               {([
-                { value: 'conservative', label: '保守稳妥', desc: '偏保底', color: 'text-green-600' },
-                { value: 'balanced', label: '均衡搭配', desc: '冲稳兼顾', color: 'text-indigo-600' },
-                { value: 'aggressive', label: '激进冲刺', desc: '冲高为主', color: 'text-orange-600' },
+                { value: 'conservative', label: '保守稳妥', desc: '降低波动估计，结果更偏稳', color: 'text-green-600' },
+                { value: 'balanced', label: '均衡搭配', desc: '采用默认波动与风险参数', color: 'text-indigo-600' },
+                { value: 'aggressive', label: '激进冲刺', desc: '提高波动估计，结果更偏进取', color: 'text-orange-600' },
               ] as const).map((opt) => (
                 <button
                   key={opt.value}

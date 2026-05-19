@@ -2,7 +2,6 @@ import type { QuotaProfile, School, StudentInfo, StudentType } from '../types/in
 import { buildStudentScoreModel, convertRawScore610To630, getSchoolScore, schools } from '../data/schools.ts';
 import { getQuotaPlan2026BySchoolName } from '../data/admissionPlans2026Utils.ts';
 import { findJuniorSchoolIndicatorAllocation } from '../data/indicatorAllocations.ts';
-import { generateVolunteerPlan } from './volunteerPlanEngine.ts';
 
 export type QuotaRecommendation = {
   school: School;
@@ -24,22 +23,41 @@ export type QuotaRecommendationContext =
   | { status: 'no_candidate'; juniorSchool: string; district: string }
   | { status: 'ready'; juniorSchool: string; district: string; recommendation: QuotaRecommendation };
 
-function randomNormal() {
+function hashSeed(input: string) {
+  let hash = 2166136261;
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= input.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function createSeededRandom(seedInput: string) {
+  let state = hashSeed(seedInput) || 1;
+  return () => {
+    state = (state + 0x6D2B79F5) | 0;
+    let t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function randomNormal(random: () => number) {
   let u = 0;
   let v = 0;
-  while (u === 0) u = Math.random();
-  while (v === 0) v = Math.random();
+  while (u === 0) u = random();
+  while (v === 0) v = random();
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-function randomPoisson(lambda: number) {
+function randomPoisson(lambda: number, random: () => number) {
   const safeLambda = Math.max(0.1, lambda);
   const limit = Math.exp(-safeLambda);
   let p = 1;
   let k = 0;
   do {
     k += 1;
-    p *= Math.random();
+    p *= random();
   } while (p > limit);
   return k - 1;
 }
@@ -117,20 +135,28 @@ function simulateQuotaProbability(
 ) {
   const studentModel = buildStudentScoreModel(student);
   const competitorModel = buildCompetitorModel(student, school, quota, regularLine, controlLine);
+  const random = createSeededRandom(JSON.stringify({
+    student,
+    schoolId: school.id,
+    controlLine,
+    quota,
+    regularLine,
+    simulations,
+  }));
 
   let success = 0;
   for (let i = 0; i < simulations; i += 1) {
-    const score = Math.max(0, Math.min(630, Math.round(studentModel.muScore + randomNormal() * studentModel.sigmaScore)));
+    const score = Math.max(0, Math.min(630, Math.round(studentModel.muScore + randomNormal(random) * studentModel.sigmaScore)));
     if (score < controlLine) continue;
 
-    const competitors = randomPoisson(competitorModel.expectedCompetitors);
+    const competitors = randomPoisson(competitorModel.expectedCompetitors, random);
     let higherCount = 0;
     let equalCount = 0;
 
     for (let j = 0; j < competitors; j += 1) {
       const competitorScore = Math.max(
         0,
-        Math.min(630, Math.round(competitorModel.competitorScoreMean + randomNormal() * competitorModel.competitorScoreSigma))
+        Math.min(630, Math.round(competitorModel.competitorScoreMean + randomNormal(random) * competitorModel.competitorScoreSigma))
       );
       if (competitorScore > score) higherCount += 1;
       else if (competitorScore === score) equalCount += 1;
@@ -138,7 +164,7 @@ function simulateQuotaProbability(
 
     let tieAhead = 0;
     for (let j = 0; j < equalCount; j += 1) {
-      if (Math.random() > studentModel.tieBreakAdvantage) tieAhead += 1;
+      if (random() > studentModel.tieBreakAdvantage) tieAhead += 1;
     }
 
     if (higherCount + tieAhead < quota) success += 1;
@@ -154,13 +180,6 @@ function getQuotaValueScore(school: School, probability: number, regularGap: num
   const levelWeight = school.level === '四大名校' ? 100 : school.level === '八大名校' ? 88 : school.level === '区属重点' ? 75 : 62;
   const desireScore = Math.max(45, levelWeight - Math.max(0, regularGap - 12) * 1.2);
   return probability * 0.55 + desireScore * 0.45;
-}
-
-function getQuotaBenchmarkLine(studentInfo: StudentInfo) {
-  const regularPlan = generateVolunteerPlan(studentInfo);
-  if (!regularPlan || regularPlan.items.length === 0) return studentInfo.score;
-  const topRegular = regularPlan.items[0];
-  return topRegular.forecastLine ?? getSchoolScore(topRegular.school, studentInfo.studentType);
 }
 
 async function getQuotaProfile(
@@ -191,12 +210,12 @@ async function getQuotaProfile(
   };
 }
 
-export async function getQuotaRecommendationContext(planStudentInfo: StudentInfo): Promise<QuotaRecommendationContext> {
+export async function getQuotaRecommendationContext(planStudentInfo: StudentInfo, quotaBenchmarkLine?: number): Promise<QuotaRecommendationContext> {
   const studentType = planStudentInfo.studentType;
   const studentModel = buildStudentScoreModel(planStudentInfo);
   const score = studentModel.muScore;
-  const quotaBenchmarkLine = getQuotaBenchmarkLine(planStudentInfo);
   const juniorSchool = planStudentInfo.juniorSchool?.trim();
+  const regularBenchmarkLine = quotaBenchmarkLine ?? score;
 
   if (planStudentInfo.isQuotaEligible === false) return { status: 'ineligible' };
   if (!juniorSchool) return { status: 'missing' };
@@ -227,7 +246,7 @@ export async function getQuotaRecommendationContext(planStudentInfo: StudentInfo
       const regularLine = getSchoolScore(school, studentType);
       const regularGap = regularLine - score;
       if (regularGap < 0 || regularGap > 20) return null;
-      if (regularLine < quotaBenchmarkLine) return null;
+      if (regularLine < regularBenchmarkLine) return null;
 
       const simulated = simulateQuotaProbability(
         planStudentInfo,

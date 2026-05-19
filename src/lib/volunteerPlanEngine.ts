@@ -53,11 +53,30 @@ function normalCdf(value: number, mean: number, sigma: number): number {
   return 0.5 * (1 + erf((value - mean) / (sigma * Math.SQRT2)));
 }
 
-function randomNormal(): number {
+function hashSeed(input: string) {
+  let hash = 2166136261;
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= input.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function createSeededRandom(seedInput: string) {
+  let state = hashSeed(seedInput) || 1;
+  return () => {
+    state = (state + 0x6D2B79F5) | 0;
+    let t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function randomNormal(random: () => number): number {
   let u = 0;
   let v = 0;
-  while (u === 0) u = Math.random();
-  while (v === 0) v = Math.random();
+  while (u === 0) u = random();
+  while (v === 0) v = random();
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
@@ -545,18 +564,29 @@ function simulateOrderedAdmissions(orderedCandidates: FinalStrategyCandidate[], 
     return { admissionBySchoolId: {}, missProbability: 1, firstBatchAdmissionProbability: 0 };
   }
   const studentModel = buildStudentScoreModel(studentInfo);
+  const random = createSeededRandom(JSON.stringify({
+    student: studentInfo,
+    orderedCandidates: orderedCandidates.map((candidate) => ({
+      id: candidate.school.id,
+      strategy: candidate.strategy,
+      muLine: candidate.forecast.muLine,
+      sigmaLine: candidate.forecast.sigmaLine,
+      probability: candidate.probability,
+    })),
+    simulations,
+  }));
   const counts: Record<string, number> = {};
   let missCount = 0;
   orderedCandidates.forEach((candidate) => { counts[candidate.school.id] = 0; });
   for (let i = 0; i < simulations; i += 1) {
-    const score = Math.max(0, Math.min(630, Math.round(studentModel.muScore + randomNormal() * studentModel.sigmaScore)));
-    const commonShock = randomNormal();
+    const score = Math.max(0, Math.min(630, Math.round(studentModel.muScore + randomNormal(random) * studentModel.sigmaScore)));
+    const commonShock = randomNormal(random);
     let admitted = false;
     for (const candidate of orderedCandidates) {
       const sensitivity = candidate.forecast.commonSensitivity;
       const schoolSigma = candidate.forecast.sigmaLine;
       const ownSigma = schoolSigma * Math.sqrt(Math.max(0, 1 - sensitivity ** 2));
-      const simulatedLine = Math.max(0, Math.min(630, Math.round(candidate.forecast.muLine + sensitivity * schoolSigma * commonShock + randomNormal() * ownSigma)));
+      const simulatedLine = Math.max(0, Math.min(630, Math.round(candidate.forecast.muLine + sensitivity * schoolSigma * commonShock + randomNormal(random) * ownSigma)));
       if (score > simulatedLine) {
         counts[candidate.school.id] += 1;
         admitted = true;
@@ -564,7 +594,7 @@ function simulateOrderedAdmissions(orderedCandidates: FinalStrategyCandidate[], 
       }
       if (score === simulatedLine) {
         const tiePassProb = Math.max(0.2, Math.min(0.85, (candidate.forecast.tiePassProb + studentModel.tieBreakAdvantage) / 2));
-        if (Math.random() < tiePassProb) {
+        if (random() < tiePassProb) {
           counts[candidate.school.id] += 1;
           admitted = true;
           break;

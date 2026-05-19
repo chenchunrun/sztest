@@ -41,8 +41,8 @@ const NORMALIZED_NAME_ALIASES: Record<string, string> = {
 
 export const ADMISSION_PLAN_2026_DATA_NOTES = {
   source: '深圳市 2026 年 4 份官方招生计划 PDF',
-  runtimePolicy: '运行时仅使用通过校验的解析结果；特殊跨行条目已在生成脚本阶段修正。',
-  coveragePolicy: '覆盖率按学校库中的公办普高与应参与名额分配的公办学校分别统计。',
+  runtimePolicy: '页面展示数据为经校验后的招生计划信息，学校名称按统一口径进行规范匹配。',
+  coveragePolicy: '覆盖统计分别按公办普通高中计划和应参与名额分配的公办学校进行计算。',
 } as const;
 
 const QUOTA_EXCLUDED_SCHOOL_NAMES = new Set([

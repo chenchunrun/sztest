@@ -60,11 +60,11 @@ export default function AdmissionPlans2026Page() {
               <div>
                 <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
                   <Database className="h-3.5 w-3.5" />
-                  2026 招生计划查询
+                  2026 年招生计划查询
                 </div>
-                <h1 className="mt-3 text-3xl font-bold text-slate-900">深圳 2026 录取计划数据库</h1>
+                <h1 className="mt-3 text-3xl font-bold text-slate-900">深圳市 2026 年高中阶段学校招生计划查询</h1>
                 <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-                  已解析你新增的 4 份官方 PDF，当前可直接查询公办普高、名额分配、民办普高和中职技工计划。公办普高总计划和名额分配计划已开始用于推荐模型的计划修正与指标生推荐。
+                  本页汇总展示 2026 年公办普通高中招生计划、名额分配计划、民办普通高中招生计划和中等职业学校、技工院校招生计划，供考生和家长查询参考。
                 </p>
               </div>
 
@@ -89,7 +89,7 @@ export default function AdmissionPlans2026Page() {
             </div>
 
             <div className="mt-6 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
-              当前公办学校库匹配覆盖：公办计划 <strong>{coverage.matchedPublic}</strong> 所，名额分配计划 <strong>{coverage.matchedQuota}</strong> / <strong>{coverage.eligibleQuotaSchools}</strong> 所。
+              当前页面已收录并校验的学校计划中，公办普通高中计划对应 <strong>{coverage.matchedPublic}</strong> 所学校，名额分配计划对应 <strong>{coverage.matchedQuota}</strong> / <strong>{coverage.eligibleQuotaSchools}</strong> 所应参与名额分配的公办学校。
             </div>
 
             <div className="mt-4 grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600 lg:grid-cols-3">
@@ -98,11 +98,11 @@ export default function AdmissionPlans2026Page() {
                 <div className="mt-1 leading-6">{ADMISSION_PLAN_2026_DATA_NOTES.source}</div>
               </div>
               <div>
-                <div className="font-semibold text-slate-900">修正策略</div>
+                <div className="font-semibold text-slate-900">数据口径</div>
                 <div className="mt-1 leading-6">{ADMISSION_PLAN_2026_DATA_NOTES.runtimePolicy}</div>
               </div>
               <div>
-                <div className="font-semibold text-slate-900">覆盖口径</div>
+                <div className="font-semibold text-slate-900">统计口径</div>
                 <div className="mt-1 leading-6">{ADMISSION_PLAN_2026_DATA_NOTES.coveragePolicy}</div>
               </div>
             </div>
@@ -146,7 +146,7 @@ export default function AdmissionPlans2026Page() {
                 <div>学校</div>
                 <div>计划</div>
                 <div>住宿/分类</div>
-                <div>链接/说明</div>
+                <div>详情</div>
               </div>
 
               <div className="divide-y divide-slate-200">
@@ -178,7 +178,7 @@ export default function AdmissionPlans2026Page() {
                               查看学校详情
                             </Link>
                           ) : (
-                            <span className="text-slate-400">仅计划库收录</span>
+                            <span className="text-slate-400">暂无学校详情页</span>
                           )}
                         </div>
                       </div>
@@ -204,7 +204,7 @@ export default function AdmissionPlans2026Page() {
                               查看学校详情
                             </Link>
                           ) : (
-                            <span className="text-slate-400">仅计划库收录</span>
+                            <span className="text-slate-400">暂无学校详情页</span>
                           )}
                         </div>
                       </div>
@@ -222,7 +222,7 @@ export default function AdmissionPlans2026Page() {
                         </div>
                         <div>总计划 <strong>{privateItem.totalPlan}</strong></div>
                         <div>{privateItem.accommodation || '未注明'}</div>
-                        <div className="text-slate-400">查询页展示</div>
+                        <div className="text-slate-400">计划信息展示</div>
                       </div>
                     );
                   }
@@ -237,7 +237,7 @@ export default function AdmissionPlans2026Page() {
                       </div>
                       <div>总计划 <strong>{vocationalItem.totalPlan}</strong></div>
                       <div>{vocationalItem.accommodation || vocationalItem.nature || '未注明'}</div>
-                      <div className="text-slate-400">查询页展示</div>
+                      <div className="text-slate-400">计划信息展示</div>
                     </div>
                   );
                 })}

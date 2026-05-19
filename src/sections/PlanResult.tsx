@@ -141,7 +141,10 @@ export default function PlanResult({
     import('@/lib/quotaRecommendation')
       .then(async ({ getQuotaRecommendationContext }) => {
         if (cancelled) return;
-        const context = await getQuotaRecommendationContext(plan.studentInfo);
+        const quotaBenchmarkLine = plan.items[0]
+          ? (plan.items[0].forecastLine ?? getSchoolScore(plan.items[0].school, plan.studentInfo.studentType))
+          : plan.studentInfo.score;
+        const context = await getQuotaRecommendationContext(plan.studentInfo, quotaBenchmarkLine);
         if (cancelled) return;
         setIndicatorContext(context);
       })
