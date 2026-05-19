@@ -35,7 +35,7 @@ export default function HeroSection({ onStart }: { onStart: () => void }) {
 
           {/* Subtitle */}
           <p className={`text-base sm:text-lg text-gray-600 mb-8 max-w-2xl leading-relaxed transition-all duration-700 delay-200 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
-            基于 2025 年真实录取数据，结合考生成绩与偏好，智能生成符合深圳中考规则的"冲稳保"志愿方案，让每一分都发挥最大价值。
+            基于近年录取数据、2026 招生计划和考生成绩偏好，智能生成符合深圳中考规则的 12 个公办普高志愿方案，让每一分都发挥最大价值。
           </p>
 
           {/* CTA Buttons */}

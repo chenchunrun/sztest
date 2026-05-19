@@ -124,6 +124,9 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
             <p className="mt-2 text-xs text-gray-400">
               不填写也能生成 12 个正取志愿，但系统将无法按您所在初中的指标名额给出指标生主推荐。
             </p>
+            <p className="mt-1 text-xs text-amber-600">
+              指标生属于优先批次，定位是冲高机会，不是保稳志愿。若被指标生录取，后续 12 个正取志愿自动失效。
+            </p>
           </div>
 
           <div className="mb-6">

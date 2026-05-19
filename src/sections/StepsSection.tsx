@@ -12,14 +12,14 @@ export default function StepsSection() {
     {
       icon: SlidersHorizontal,
       title: '设置偏好倾向',
-      desc: '选择学校类型偏好、住宿需求、是否接受民办高中、填报风格等',
+      desc: '选择区域、学校层级、住宿需求、通勤接受度与填报风格等偏好',
       color: 'from-indigo-500 to-purple-500',
       bg: 'bg-indigo-50',
     },
     {
       icon: ClipboardList,
       title: '获取志愿方案',
-      desc: '系统按照"冲稳保"策略自动生成12个志愿的填报方案，可手动调整',
+      desc: '系统自动生成12个公办普高志愿，并按冲刺、匹配、保底梯度排序',
       color: 'from-purple-500 to-pink-500',
       bg: 'bg-purple-50',
     },

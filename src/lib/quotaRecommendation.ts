@@ -2,6 +2,7 @@ import type { QuotaProfile, School, StudentInfo, StudentType } from '../types/in
 import { buildStudentScoreModel, convertRawScore610To630, getSchoolScore, schools } from '../data/schools.ts';
 import { getQuotaPlan2026BySchoolName } from '../data/admissionPlans2026Utils.ts';
 import { findJuniorSchoolIndicatorAllocation } from '../data/indicatorAllocations.ts';
+import { generateVolunteerPlan } from './volunteerPlanEngine.ts';
 
 export type QuotaRecommendation = {
   school: School;
@@ -155,6 +156,13 @@ function getQuotaValueScore(school: School, probability: number, regularGap: num
   return probability * 0.55 + desireScore * 0.45;
 }
 
+function getQuotaBenchmarkLine(studentInfo: StudentInfo) {
+  const regularPlan = generateVolunteerPlan(studentInfo);
+  if (!regularPlan || regularPlan.items.length === 0) return studentInfo.score;
+  const topRegular = regularPlan.items[0];
+  return topRegular.forecastLine ?? getSchoolScore(topRegular.school, studentInfo.studentType);
+}
+
 async function getQuotaProfile(
   school: School,
   studentType: StudentType,
@@ -187,6 +195,7 @@ export async function getQuotaRecommendationContext(planStudentInfo: StudentInfo
   const studentType = planStudentInfo.studentType;
   const studentModel = buildStudentScoreModel(planStudentInfo);
   const score = studentModel.muScore;
+  const quotaBenchmarkLine = getQuotaBenchmarkLine(planStudentInfo);
   const juniorSchool = planStudentInfo.juniorSchool?.trim();
 
   if (planStudentInfo.isQuotaEligible === false) return { status: 'ineligible' };
@@ -218,6 +227,7 @@ export async function getQuotaRecommendationContext(planStudentInfo: StudentInfo
       const regularLine = getSchoolScore(school, studentType);
       const regularGap = regularLine - score;
       if (regularGap < 0 || regularGap > 20) return null;
+      if (regularLine < quotaBenchmarkLine) return null;
 
       const simulated = simulateQuotaProbability(
         planStudentInfo,
@@ -244,9 +254,10 @@ export async function getQuotaRecommendationContext(planStudentInfo: StudentInfo
   const candidates = candidateEntries
     .filter((item): item is NonNullable<typeof item> => item !== null)
     .sort((a, b) => {
+      if (b.regularGap !== a.regularGap) return b.regularGap - a.regularGap;
       if (b.valueScore !== a.valueScore) return b.valueScore - a.valueScore;
       if (b.probability !== a.probability) return b.probability - a.probability;
-      return a.regularGap - b.regularGap;
+      return getSchoolScore(b.school, studentType) - getSchoolScore(a.school, studentType);
     });
 
   if (candidates.length === 0) {

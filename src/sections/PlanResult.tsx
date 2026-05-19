@@ -174,7 +174,7 @@ export default function PlanResult({
         <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 mb-8 scroll-animate">
           {[
             { label: '公办高中', value: `${plan.summary.publicCount}所`, color: 'text-indigo-600' },
-            { label: '民办高中', value: `${plan.summary.privateCount}所`, color: 'text-purple-600' },
+            { label: '志愿总数', value: `${plan.items.length}所`, color: 'text-purple-600' },
             { label: '平均达线概率', value: `${plan.summary.avgProbability}%`, color: 'text-emerald-600' },
             { label: '第一批总录取率', value: `${plan.summary.firstBatchAdmissionProbability ?? 0}%`, color: 'text-sky-600' },
             { label: '未录取风险', value: `${plan.summary.missRisk ?? 0}%`, color: 'text-rose-600' },
@@ -188,15 +188,10 @@ export default function PlanResult({
           ))}
         </div>
 
-        {(missRisk >= 10 || plan.items.length < 12) && (
+        {missRisk >= 10 && (
           <div className="mb-6 scroll-animate rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
             <p className="font-semibold mb-1">公办风险提示</p>
-            {plan.items.length < 12 && (
-              <p>当前仅筛出 <strong>{plan.items.length}</strong> 所公办普高，说明您所在分数段的公办候选已经接近尾部，系统没有用民办学校强行补齐。</p>
-            )}
-            {missRisk >= 10 && (
-              <p className={plan.items.length < 12 ? 'mt-1' : ''}>按当前公办志愿顺序模拟，第一批公办总录取率约 <strong>{firstBatchAdmissionProbability}%</strong>，未录取风险约 <strong>{missRisk}%</strong>。建议结合区域、住宿和学校层次偏好继续放宽筛选。</p>
-            )}
+            <p>按当前公办志愿顺序模拟，第一批公办总录取率约 <strong>{firstBatchAdmissionProbability}%</strong>，未录取风险约 <strong>{missRisk}%</strong>。建议结合区域、住宿和学校层次偏好继续调整梯度。</p>
           </div>
         )}
 
@@ -218,6 +213,7 @@ export default function PlanResult({
                 <ul className="list-disc list-inside space-y-0.5 text-xs opacity-90">
                   <li>推荐基于您填写的初中学校在 Excel 指标分配表中的实际名额</li>
                   <li>只推荐您所在初中有名额、且您达到指标控制线的高中</li>
+                  <li>只推荐 <strong>不低于当前正取最高志愿</strong> 的指标生冲高学校，不把指标生当保稳位</li>
                   <li>冲高范围控制在该校正取线高出您当前分数 <strong>不超过20分</strong></li>
                   <li>指标生批次 <strong>优先于</strong> 第一批次（正取）录取</li>
                   <li>指标生被录取后，后续正取志愿 <strong>自动失效</strong></li>
@@ -252,7 +248,7 @@ export default function PlanResult({
 
           {indicatorContext.status === 'no_candidate' && (
             <div className="rounded-xl border border-dashed border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-              {indicatorContext.juniorSchool} 虽然有指标生名额，但按“达到控制线且正取线高出当前分数不超过20分”的规则，当前没有合适的指标生冲高学校。
+              {indicatorContext.juniorSchool} 虽然有指标生名额，但按“达到控制线、正取线高出当前分数不超过20分，且不得低于当前正取最高志愿”的规则，当前没有合适的指标生冲高学校。
             </div>
           )}
 
@@ -273,7 +269,7 @@ export default function PlanResult({
                   <div>
                     <div className="font-semibold text-gray-900">{indicatorContext.recommendation.school.name}</div>
                     <div className="text-xs text-gray-500 mt-1">
-                      您所在初中分到 <strong>{indicatorContext.recommendation.quota}</strong> 个名额，且该校正取线仅高出您当前分数 <strong>{indicatorContext.recommendation.regularGap}</strong> 分。
+                      您所在初中分到 <strong>{indicatorContext.recommendation.quota}</strong> 个名额，且该校正取线高出您当前分数 <strong>{indicatorContext.recommendation.regularGap}</strong> 分，定位高于或不低于当前正取最高志愿。
                     </div>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded-full font-medium ${
@@ -336,12 +332,9 @@ export default function PlanResult({
           <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-amber-800">
             <p className="font-medium mb-1">填报说明</p>
-            <p>系统同时展示两类概率：一是单校“达线概率”，反映您的分数达到该校预测线的机会；二是“最终录取概率”，反映按当前 12 个志愿顺序实际落到该校的机会。当前正取志愿推荐聚焦公办普高，公办候选不足时会少推荐，不再用民办学校强行补齐。</p>
+            <p>系统同时展示两类概率：一是单校“达线概率”，反映您的分数达到该校预测线的机会；二是“最终录取概率”，反映按当前 12 个志愿顺序实际落到该校的机会。当前正取志愿固定输出 12 个公办普高志愿，并按冲刺、匹配、保底梯度排序。</p>
             {!hasPlanItems && (
               <p className="mt-2 text-xs font-medium">当前筛选条件下没有符合“冲稳保梯度”的学校，建议放宽区域、住宿或学校层次限制后重新生成。</p>
-            )}
-            {hasPlanItems && plan.items.length < 12 && (
-              <p className="mt-2 text-xs font-medium">当前只推荐了 {plan.items.length} 所学校，因为在您设定的筛选条件下，无法凑齐完整的 12 所且仍满足分数梯度约束的学校。</p>
             )}
             <p className="mt-2 text-xs opacity-80">为降低共享设备上的隐私残留，考生信息和历史方案仅在本机缓存 24 小时，可随时手动清除。</p>
           </div>

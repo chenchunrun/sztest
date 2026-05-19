@@ -33,12 +33,12 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-3">重要声明</h4>
             <p className="text-sm text-slate-400 leading-relaxed">
-              本系统提供的志愿方案仅供参考，不构成正式填报建议。实际志愿填报请以深圳市招生考试办公室发布的官方信息和政策为准。
+              本网站数据来源于公开渠道，提供的学校信息、录取数据、志愿方案和概率测算仅供考生与家长参考，不构成任何录取承诺或正式填报依据。本网站不对考生最终录取结果负责，实际填报与录取结果请以深圳市招生考试办公室发布的官方信息、政策和投档结果为准。
             </p>
           </div>
         </div>
         <div className="border-t border-slate-700 pt-6 text-center text-xs text-slate-500">
-          <p>Shenzhen High School Admission Application · 数据仅供参考 · 请以官方信息为准</p>
+          <p>Shenzhen High School Admission Application · 数据来源于公开渠道 · 仅供参考 · 不对最终录取结果负责 · 请以官方信息为准</p>
         </div>
       </div>
     </footer>
