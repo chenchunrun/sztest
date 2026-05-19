@@ -21,6 +21,7 @@ export type District = '福田' | '罗湖' | '南山' | '宝安' | '龙岗' | '�
 
 // 性别
 export type Gender = '男' | '女';
+export type ApplicantTrack = 'general' | 'art';
 
 // 强势学科
 export type Subject = '数学' | '物理' | '化学' | '语文' | '英语' | '历史' | '地理' | '生物';
@@ -114,6 +115,8 @@ export interface StudentInfo {
   score: number;
   studentType: StudentType;
   bioGeoGrade: BioGeoGrade;
+  juniorSchool?: string;
+  applicantTrack?: ApplicantTrack;
   preferredDistricts: District[];
   accommodation: AccommodationNeed;
   preferredLevels: SchoolLevel[];

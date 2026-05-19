@@ -5163,6 +5163,11 @@ export function getSchoolScore(school: School, studentType: StudentType): number
   return studentType === 'AC' ? school.acScore2025 : school.dScore2025;
 }
 
+export function convertRawScore610To630(rawScore?: number): number | undefined {
+  if (rawScore === undefined) return undefined;
+  return rawScore + 19;
+}
+
 export function getSchoolById(id: string): School | undefined {
   return schools.find(s => s.id === id);
 }

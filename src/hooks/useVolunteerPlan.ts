@@ -1,29 +1,124 @@
 import { useMemo } from 'react';
-import type { StudentInfo, VolunteerItem, VolunteerPlan, StrategyType, School } from '@/types';
+import type { StudentInfo, VolunteerItem, VolunteerPlan, School } from '@/types';
 import { schools, getSchoolScore } from '@/data/schools';
 
-function calculateProbability(score: number, schoolScore: number): number {
-  const diff = score - schoolScore;
-  if (diff >= 30) return 99;
-  if (diff >= 20) return 95;
-  if (diff >= 15) return 90;
-  if (diff >= 10) return 80;
-  if (diff >= 5) return 65;
-  if (diff >= 0) return 50;
-  if (diff >= -5) return 35;
-  if (diff >= -10) return 25;
-  if (diff >= -15) return 15;
-  if (diff >= -20) return 10;
-  return 5;
+const RUSH_COUNT = 4;
+const STEADY_COUNT = 4;
+const SAFE_COUNT = 4;
+const TOTAL_TARGET_COUNT = RUSH_COUNT + STEADY_COUNT + SAFE_COUNT;
+
+function erf(x: number): number {
+  const sign = x >= 0 ? 1 : -1;
+  const absX = Math.abs(x);
+  const a1 = 0.254829592;
+  const a2 = -0.284496736;
+  const a3 = 1.421413741;
+  const a4 = -1.453152027;
+  const a5 = 1.061405429;
+  const p = 0.3275911;
+  const t = 1 / (1 + p * absX);
+  const y = 1 - (((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t * Math.exp(-absX * absX));
+  return sign * y;
 }
 
-/** 学校层次优先级：高 → 低 */
-const LEVEL_ORDER = ['四大名校', '八大名校', '区属重点', '普通公办', '民办'];
+function normalCdf(value: number, mean: number, sigma: number): number {
+  return 0.5 * (1 + erf((value - mean) / (sigma * Math.SQRT2)));
+}
 
-function sortByLevel(schoolList: School[]): School[] {
-  return [...schoolList].sort((a, b) => {
-    return LEVEL_ORDER.indexOf(a.level) - LEVEL_ORDER.indexOf(b.level);
-  });
+function getScoreElasticityFactor(score: number): number {
+  if (score >= 575) return 0.72;
+  if (score >= 560) return 0.82;
+  if (score >= 540) return 0.9;
+  if (score >= 500) return 1;
+  return 1.1;
+}
+
+function getRushMaxGap(score: number): number {
+  if (score >= 575) return 15;
+  if (score >= 560) return 20;
+  if (score >= 540) return 22;
+  if (score >= 500) return 30;
+  if (score >= 480) return 35;
+  return 40;
+}
+
+function scaleWindow(base: number, factor: number, minValue: number): number {
+  return Math.max(minValue, Math.round(base * factor));
+}
+
+function getStudentScoreSigma(score: number, strategyStyle: StudentInfo['strategyStyle']): number {
+  const baseSigma = strategyStyle === 'conservative' ? 15 : strategyStyle === 'aggressive' ? 20 : 17;
+  const factor = getScoreElasticityFactor(score);
+  return Number((baseSigma * factor).toFixed(1));
+}
+
+function calculateScoreProbability(score: number, schoolScore: number, strategyStyle: StudentInfo['strategyStyle']): number {
+  const studentSigma = getStudentScoreSigma(score, strategyStyle);
+  const schoolLineSigma = 6;
+  const combinedSigma = Math.sqrt(studentSigma ** 2 + schoolLineSigma ** 2);
+  const lineDriftBias = -2;
+  const meanDifference = score - (schoolScore + lineDriftBias);
+  const probability = normalCdf(meanDifference, 0, combinedSigma) * 100;
+  return Math.max(1, Math.min(99, Math.round(probability)));
+}
+
+function calculateProbability(
+  score: number,
+  schoolScore: number,
+  strategyStyle: StudentInfo['strategyStyle'],
+  bucket?: 'rush' | 'steady' | 'safe'
+): number {
+  const baseProbability = calculateScoreProbability(score, schoolScore, strategyStyle);
+
+  if (!bucket) return baseProbability;
+
+  const adjustment = bucket === 'rush' ? -4 : bucket === 'steady' ? 2 : 5;
+  return Math.max(1, Math.min(99, baseProbability + adjustment));
+}
+
+function isArtTrackSchool(school: School): boolean {
+  const text = [
+    school.name,
+    school.description,
+    school.classTypes,
+    school.dormitory,
+    ...(school.features || []),
+    ...(school.traits || []),
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return /艺术高中|美术学校|艺术普高|艺术类普通高考|美术|音乐|传媒/.test(text);
+}
+
+function isSpecialProgramSchool(school: School): boolean {
+  const text = [
+    school.name,
+    school.description,
+    school.classTypes,
+    ...(school.features || []),
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return /综合高中|留学基金委自费出国留学班|港澳|国际体系|出国方向|国际书院/.test(text);
+}
+
+function getSchoolLevelWeight(level: School['level']): number {
+  if (level === '四大名校') return 100;
+  if (level === '八大名校') return 88;
+  if (level === '区属重点') return 75;
+  if (level === '普通公办') return 60;
+  return 48;
+}
+
+function calculateSchoolUtility(school: School, student: StudentInfo): number {
+  const levelWeight = getSchoolLevelWeight(school.level);
+  const schoolScore = getSchoolScore(school, student.studentType);
+  const scoreWeight = schoolScore * 0.45;
+  const matchWeight = calculateMatchScore(school, student) * 0.45;
+  const reputationWeight = (school.reputation?.compositeScore || 50) * 0.1;
+  return levelWeight + scoreWeight + matchWeight + reputationWeight;
 }
 
 // ========== Phase 8: 人校匹配评分系统 ==========
@@ -135,60 +230,106 @@ function generateMatchReasons(school: School, student: StudentInfo): string[] {
   return reasons.slice(0, 4);
 }
 
-/**
- * ========== 密度分布志愿算法 ==========
- * 
- * 核心思想：考生实际中考分数会围绕预估分波动（±10-20分是正常的）。
- * 因此志愿密度应该像正态分布/金字塔：
- * 
- *   冲高区  (分数线 > 预估+15)        : 1-2所  ← 密度低
- *   尝试区  (预估+5 ~ 预估+15)        : 2所    ← 密度中等
- *   核心上沿(预估 ~ 预估+5)           : 3所    ← 密度最大 ⭐
- *   核心下沿(预估-10 ~ 预估)          : 3所    ← 密度最大 ⭐
- *   稳妥区  (预估-25 ~ 预估-10)       : 2所    ← 密度中等
- *   兜底区  (分数线 < 预估-25)        : 1-2所  ← 密度低
- * 
- * 风格影响整体分布位置：
- *   保守 → 整体下移5分（更保守的区间）
- *   激进 → 整体上移5分（更激进的区间）
- *   均衡 → 以预估分为中心
- */
-
-interface DensityZone {
-  label: string;
-  minScore: number;
-  maxScore: number;
-  targetCount: number;
-  strategyLabel: StrategyType;
+function dedupeSchools(schoolList: School[]): School[] {
+  const seen = new Set<string>();
+  return schoolList.filter((school) => {
+    if (seen.has(school.id)) return false;
+    seen.add(school.id);
+    return true;
+  });
 }
 
-function buildDensityZones(adjustedScore: number): DensityZone[] {
-  return [
-    { label: '冲高',    minScore: adjustedScore + 15, maxScore: Infinity,           targetCount: 1, strategyLabel: '冲一冲' },
-    { label: '尝试',    minScore: adjustedScore + 5,  maxScore: adjustedScore + 15, targetCount: 2, strategyLabel: '冲一冲' },
-    { label: '核心上沿', minScore: adjustedScore,      maxScore: adjustedScore + 5,  targetCount: 3, strategyLabel: '稳一稳' },
-    { label: '核心下沿', minScore: adjustedScore - 10, maxScore: adjustedScore,      targetCount: 3, strategyLabel: '稳一稳' },
-    { label: '稳妥',    minScore: adjustedScore - 25, maxScore: adjustedScore - 10, targetCount: 2, strategyLabel: '保一保' },
-    { label: '兜底',    minScore: -Infinity,          maxScore: adjustedScore - 25, targetCount: 1, strategyLabel: '保一保' },
-  ];
+function takeTopSchools(schoolList: School[], count: number): School[] {
+  return schoolList.slice(0, count);
+}
+
+function sortBucketSchools(
+  schoolList: School[],
+  studentInfo: StudentInfo,
+  primarySchoolIds: Set<string>,
+  targetScore: number,
+  mode: 'score_desc' | 'closest'
+): School[] {
+  const { studentType } = studentInfo;
+
+  return [...schoolList].sort((a, b) => {
+    const scoreA = getSchoolScore(a, studentType);
+    const scoreB = getSchoolScore(b, studentType);
+
+    const primaryDiff = Number(primarySchoolIds.has(b.id)) - Number(primarySchoolIds.has(a.id));
+    if (primaryDiff !== 0) return primaryDiff;
+
+    if (mode === 'closest') {
+      const targetGapA = Math.abs(targetScore - scoreA);
+      const targetGapB = Math.abs(targetScore - scoreB);
+      if (targetGapA !== targetGapB) return targetGapA - targetGapB;
+      if (scoreA !== scoreB) return scoreB - scoreA;
+      return calculateMatchScore(b, studentInfo) - calculateMatchScore(a, studentInfo);
+    }
+
+    if (scoreA !== scoreB) return scoreB - scoreA;
+
+    return calculateMatchScore(b, studentInfo) - calculateMatchScore(a, studentInfo);
+  });
+}
+
+function sortSelectedByScoreDesc(schoolList: School[], studentType: StudentInfo['studentType']): School[] {
+  return [...schoolList].sort((a, b) => getSchoolScore(b, studentType) - getSchoolScore(a, studentType));
+}
+
+function rankBucketByExpectedValue(
+  schoolList: School[],
+  studentInfo: StudentInfo,
+  primarySchoolIds: Set<string>,
+  bucket: 'rush' | 'steady' | 'safe'
+): School[] {
+  const { score, studentType, strategyStyle } = studentInfo;
+
+  return [...schoolList].sort((a, b) => {
+    const probabilityA = calculateProbability(score, getSchoolScore(a, studentType), strategyStyle, bucket);
+    const probabilityB = calculateProbability(score, getSchoolScore(b, studentType), strategyStyle, bucket);
+    const expectedValueA = probabilityA * calculateSchoolUtility(a, studentInfo);
+    const expectedValueB = probabilityB * calculateSchoolUtility(b, studentInfo);
+    if (expectedValueA !== expectedValueB) return expectedValueB - expectedValueA;
+
+    const primaryDiff = Number(primarySchoolIds.has(b.id)) - Number(primarySchoolIds.has(a.id));
+    if (primaryDiff !== 0) return primaryDiff;
+
+    return getSchoolScore(b, studentType) - getSchoolScore(a, studentType);
+  });
 }
 
 export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan | null {
   return useMemo(() => {
     if (!studentInfo) return null;
 
-    const { score, studentType, preferredDistricts, accommodation, preferredLevels, acceptPrivate, strategyStyle } = studentInfo;
+    const { score, studentType, preferredDistricts, accommodation, preferredLevels, acceptPrivate, strategyStyle, applicantTrack } = studentInfo;
     const hasDistrictPreference = preferredDistricts.length > 0;
+    const isArtApplicant = applicantTrack === 'art';
 
     // 风格偏移：保守整体下移，激进整体上移
     const styleOffset = strategyStyle === 'conservative' ? -5 : strategyStyle === 'aggressive' ? 5 : 0;
     const adjustedScore = score + styleOffset;
+    const elasticityFactor = getScoreElasticityFactor(score);
+    const rushMaxGap = getRushMaxGap(score);
+    const steadyWindowBelow = scaleWindow(
+      strategyStyle === 'aggressive' ? 15 : strategyStyle === 'conservative' ? 12 : 15,
+      elasticityFactor,
+      8
+    );
+    const safeMaxGap = scaleWindow(
+      strategyStyle === 'aggressive' ? 65 : strategyStyle === 'conservative' ? 55 : 60,
+      elasticityFactor,
+      35
+    );
 
     // ========== 1. 筛选学校 ==========
     const baseFiltered = schools.filter(s => {
       if (!acceptPrivate && s.type === '民办') return false;
       if (accommodation === 'boarding' && !s.hasBoarding) return false;
       if (accommodation === 'day' && !s.hasDay) return false;
+      if (!isArtApplicant && (isArtTrackSchool(s) || isSpecialProgramSchool(s))) return false;
+      if (isArtApplicant && isSpecialProgramSchool(s) && !isArtTrackSchool(s)) return false;
       return true;
     });
 
@@ -201,8 +342,7 @@ export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan
       : districtFiltered;
 
     // 地域偏好优先保留；如果学校层次偏好导致样本过少，则先放宽层次，不直接放宽地域。
-    const primarySafeCount = primaryFiltered.filter(s => getSchoolScore(s, studentType) <= score).length;
-    const primaryPool = (primaryFiltered.length < 12 || primarySafeCount < 4) ? districtFiltered : primaryFiltered;
+    const primaryPool = primaryFiltered.length < 12 ? districtFiltered : primaryFiltered;
 
     // 仅在地域学校池仍不足时，才允许从全市补充。
     const secondaryDistrictPool = hasDistrictPreference
@@ -212,71 +352,76 @@ export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan
       ? secondaryDistrictPool.filter(s => preferredLevels.includes(s.level))
       : secondaryDistrictPool;
 
-    // 按分数线从高到低排序（全局基准序）
-    const primarySorted = [...primaryPool].sort((a, b) => {
-      return getSchoolScore(b, studentType) - getSchoolScore(a, studentType);
-    });
-    const secondarySorted = [...secondaryPool].sort((a, b) => {
-      return getSchoolScore(b, studentType) - getSchoolScore(a, studentType);
-    });
-    const sorted = [...primarySorted, ...secondarySorted];
+    const primarySchoolIds = new Set(primaryPool.map(s => s.id));
+    const combinedPool = dedupeSchools([...primaryPool, ...secondaryPool]);
 
-    // ========== 2. 密度分布选校 ==========
-    const zones = buildDensityZones(adjustedScore);
-    const selected: School[] = [];
-    const usedIds = new Set<string>();
+    const rushCandidates = sortBucketSchools(
+      combinedPool.filter(s => {
+        const schoolScore = getSchoolScore(s, studentType);
+        return schoolScore > score && schoolScore <= score + rushMaxGap;
+      }),
+      studentInfo,
+      primarySchoolIds,
+      adjustedScore,
+      'score_desc'
+    );
+    const rushRanked = rankBucketByExpectedValue(rushCandidates, studentInfo, primarySchoolIds, 'rush');
 
-    for (const zone of zones) {
-      // 从该区间选校：先按层次排序，再选最好的
-      const pool = sorted.filter(s => {
-        if (usedIds.has(s.id)) return false;
-        const sc = getSchoolScore(s, studentType);
-        return sc >= zone.minScore && sc < zone.maxScore;
-      });
-      const picked = sortByLevel(pool).slice(0, zone.targetCount);
-      for (const s of picked) {
-        selected.push(s);
-        usedIds.add(s.id);
-      }
-    }
+    const pickedRush = sortSelectedByScoreDesc(takeTopSchools(rushRanked, RUSH_COUNT), studentType);
+    const usedIds = new Set(pickedRush.map(s => s.id));
 
-    // 如果总数不足12，从剩余学校补充（按层次+匹配度）
-    const remaining = sorted.filter(s => !usedIds.has(s.id));
-    const fallback = [...remaining].sort((a, b) => {
-      const levelDiff = LEVEL_ORDER.indexOf(a.level) - LEVEL_ORDER.indexOf(b.level);
-      if (levelDiff !== 0) return levelDiff;
-      return calculateMatchScore(b, studentInfo) - calculateMatchScore(a, studentInfo);
-    });
-    for (const s of fallback) {
-      if (selected.length >= 12) break;
-      selected.push(s);
-      usedIds.add(s.id);
-    }
+    const steadyCandidates = sortBucketSchools(
+      combinedPool.filter(s => {
+        const schoolScore = getSchoolScore(s, studentType);
+        return !usedIds.has(s.id) && schoolScore <= score && schoolScore >= score - steadyWindowBelow;
+      }),
+      studentInfo,
+      primarySchoolIds,
+      adjustedScore,
+      'closest'
+    );
+    const steadyRanked = rankBucketByExpectedValue(steadyCandidates, studentInfo, primarySchoolIds, 'steady');
+    const pickedSteady = sortSelectedByScoreDesc(
+      takeTopSchools(steadyRanked, STEADY_COUNT),
+      studentType
+    );
+    pickedSteady.forEach(s => usedIds.add(s.id));
 
-    // 如果超过12所，截取前12（按分数线从高到低，确保优先级正确）
-    selected.sort((a, b) => getSchoolScore(b, studentType) - getSchoolScore(a, studentType));
-    const finalSelected = selected.slice(0, 12);
+    const safeCandidates = sortBucketSchools(
+      combinedPool.filter(s => {
+        const schoolScore = getSchoolScore(s, studentType);
+        return !usedIds.has(s.id) && schoolScore < score - steadyWindowBelow && schoolScore >= score - safeMaxGap;
+      }),
+      studentInfo,
+      primarySchoolIds,
+      adjustedScore,
+      'score_desc'
+    );
+    const safeRanked = rankBucketByExpectedValue(safeCandidates, studentInfo, primarySchoolIds, 'safe');
+    const pickedSafe = sortSelectedByScoreDesc(takeTopSchools(safeRanked, SAFE_COUNT), studentType);
+    pickedSafe.forEach(s => usedIds.add(s.id));
+
+    const rushFinal = [...pickedRush];
+    const steadyFinal = [...pickedSteady];
+    const safeFinal = [...pickedSafe];
+
+    const finalSelected = [...rushFinal, ...steadyFinal, ...safeFinal].slice(0, TOTAL_TARGET_COUNT);
 
     // ========== 3. 生成志愿项 ==========
     const items: VolunteerItem[] = finalSelected.map((school, idx) => {
       const schoolScore = getSchoolScore(school, studentType);
       const diff = score - schoolScore;
 
-      // 根据实际分数线与原始分数的差距标记策略
-      let strategy: StrategyType;
-      if (schoolScore > score) {
-        strategy = '冲一冲';
-      } else if (diff >= 15) {
-        strategy = '保一保';
-      } else {
-        strategy = '稳一稳';
-      }
-
       return {
         order: idx + 1,
         school,
-        strategy,
-        probability: calculateProbability(score, schoolScore),
+        strategy: idx < RUSH_COUNT ? '冲一冲' : idx < RUSH_COUNT + STEADY_COUNT ? '稳一稳' : '保一保',
+        probability: calculateProbability(
+          score,
+          schoolScore,
+          strategyStyle,
+          idx < RUSH_COUNT ? 'rush' : idx < RUSH_COUNT + STEADY_COUNT ? 'steady' : 'safe'
+        ),
         scoreDiff: diff,
         matchScore: calculateMatchScore(school, studentInfo),
         matchReasons: generateMatchReasons(school, studentInfo),
@@ -287,6 +432,11 @@ export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan
     const publicCount = items.filter(i => i.school.type === '公办').length;
     const privateCount = items.filter(i => i.school.type === '民办').length;
     const probabilities = items.map(i => i.probability);
+    const avgProbability = probabilities.length > 0
+      ? Math.round(probabilities.reduce((a, b) => a + b, 0) / probabilities.length)
+      : 0;
+    const maxProbability = probabilities.length > 0 ? Math.max(...probabilities) : 0;
+    const minProbability = probabilities.length > 0 ? Math.min(...probabilities) : 0;
 
     return {
       items,
@@ -296,9 +446,9 @@ export function useVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan
         totalSchools: items.length,
         publicCount,
         privateCount,
-        avgProbability: Math.round(probabilities.reduce((a, b) => a + b, 0) / probabilities.length),
-        maxProbability: Math.max(...probabilities),
-        minProbability: Math.min(...probabilities),
+        avgProbability,
+        maxProbability,
+        minProbability,
       },
     };
   }, [studentInfo]);

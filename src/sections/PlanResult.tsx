@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router';
 import type { VolunteerPlan } from '@/types';
-import { getSchoolScore, schools } from '@/data/schools';
+import { convertRawScore610To630, getSchoolScore, schools } from '@/data/schools';
+import { findJuniorSchoolIndicatorAllocation } from '@/data/indicatorAllocations';
 import { MapPin, Home, Info, RotateCcw, Download, Target, ExternalLink, TrendingUp, Shield, AlertTriangle, CheckCircle, Save, History, Trash2, ChevronDown, ChevronUp, FileText, Copy } from 'lucide-react';
 
 function useScrollAnimation() {
@@ -65,7 +66,7 @@ export default function PlanResult({
     });
     lines.push('');
     lines.push('填报建议:');
-    lines.push('- 录取概率基于2025年分数线估算，仅供参考');
+    lines.push('- 录取概率基于预估分的正态分布与2025年分数线波动估算，仅供参考');
     lines.push('- 实际录取受当年试题难度、报考人数等多种因素影响');
     lines.push('- 建议结合实际情况和老师意见调整');
 
@@ -119,64 +120,91 @@ export default function PlanResult({
 
   const studentTypeLabel = plan.studentInfo.studentType === 'AC' ? 'AC类（深户）' : 'D类（非深户）';
   const styleLabel = plan.studentInfo.strategyStyle === 'conservative' ? '保守稳妥' : plan.studentInfo.strategyStyle === 'aggressive' ? '激进冲刺' : '均衡搭配';
+  const avgMatchScore = plan.items.length > 0
+    ? Math.round(plan.items.reduce((a, b) => a + (b.matchScore || 0), 0) / plan.items.length)
+    : 0;
+  const hasPlanItems = plan.items.length > 0;
 
-  // 指标生建议（基于真实录取规则）
-  const indicatorSuggestions = useMemo(() => {
+  // 指标生建议（基于初中学校实际分配名额）
+  const indicatorContext = useMemo(() => {
     const studentType = plan.studentInfo.studentType;
     const score = plan.studentInfo.score;
-    const lineField = studentType === 'AC' ? 'indicatorLineAc' : 'indicatorLineD';
-    const planField = studentType === 'AC' ? 'indicatorAc2025' : 'indicatorD2025';
+    const juniorSchool = plan.studentInfo.juniorSchool?.trim();
 
-    function calcIndicatorProb(line: number, quota: number, schoolScore: number): number {
-      // 如果考生分数 >= 学校正取线，指标生几乎稳录（优先录取）
-      if (score >= schoolScore) return 95;
-      const diff = score - line;
-      let prob = 0;
-      if (diff >= 30) prob = 95;
-      else if (diff >= 20) prob = 80;
-      else if (diff >= 15) prob = 70;
-      else if (diff >= 10) prob = 60;
-      else if (diff >= 5) prob = 45;
-      else if (diff >= 0) prob = 30;
-      // 名额调整：名额越多，同分竞争压力越小
-      if (quota >= 200) prob = Math.min(99, prob + 10);
-      else if (quota >= 100) prob = Math.min(99, prob + 5);
-      else if (quota < 30) prob = Math.max(5, prob - 10);
-      else if (quota < 50) prob = Math.max(5, prob - 5);
-      return prob;
+    if (!juniorSchool) {
+      return { status: 'missing' } as const;
     }
 
-    const list = schools
-      .filter(s => s.type === '公办' && s[lineField] && score >= s[lineField]!)
-      .map(s => {
-        const line = s[lineField]!;
-        const quota = s[planField] || 0;
-        const schoolScore = getSchoolScore(s, studentType);
-        const diff = score - line;
-        const schoolDiff = score - schoolScore;
-        const prob = calcIndicatorProb(line, quota, schoolScore);
-        // 分类：冲高（正取线高于考生分） vs 稳妥（正取线低于考生分）
-        const category = schoolDiff < 0 ? 'rush' : 'safe';
+    const allocation = findJuniorSchoolIndicatorAllocation(juniorSchool);
+    if (!allocation) {
+      return { status: 'not_found', juniorSchool } as const;
+    }
+
+    const quotaMap = studentType === 'AC' ? allocation.acQuotas : allocation.dQuotas;
+    const quotaEntries = Object.entries(quotaMap).filter(([, quota]) => quota > 0);
+
+    if (quotaEntries.length === 0) {
+      return { status: 'no_quota', juniorSchool: allocation.juniorSchool, district: allocation.district } as const;
+    }
+
+    function calcIndicatorProb(indicatorLine: number, quota: number, regularGap: number): number {
+      let prob = regularGap <= 5 ? 78 : regularGap <= 10 ? 70 : regularGap <= 15 ? 62 : 54;
+      const controlLineMargin = score - indicatorLine;
+      if (controlLineMargin >= 20) prob += 10;
+      else if (controlLineMargin >= 10) prob += 5;
+      else if (controlLineMargin < 0) prob -= 15;
+
+      if (quota >= 3) prob += 8;
+      else if (quota === 2) prob += 4;
+
+      return Math.max(5, Math.min(99, prob));
+    }
+
+    const candidates = quotaEntries
+      .map(([schoolName, quota]) => {
+        const school = schools.find(item => item.name === schoolName);
+        if (!school) return null;
+        const isArtSchool = school.name.includes('艺术') || school.name.includes('美术') || school.features.some(feature => (
+          feature.includes('艺术') || feature.includes('美术') || feature.includes('音乐') || feature.includes('传媒')
+        ));
+        if (isArtSchool) return null;
+
+        const schoolScore = getSchoolScore(school, studentType);
+        const rawIndicatorLine = studentType === 'AC' ? school.indicatorLineAc : school.indicatorLineD;
+        const indicatorLine = convertRawScore610To630(rawIndicatorLine);
+        if (indicatorLine === undefined) return null;
+
+        const regularGap = schoolScore - score;
+        if (regularGap < 5 || regularGap > 25) return null;
+        if (score < indicatorLine) return null;
+
         return {
-          school: s,
-          line,
+          school,
           quota,
-          diff,
-          schoolDiff,
-          prob,
-          category,
+          indicatorLine,
+          regularGap,
+          controlLineMargin: score - indicatorLine,
+          prob: calcIndicatorProb(indicatorLine, quota, regularGap),
         };
       })
       .sort((a, b) => {
-        // 优先推荐冲高型（正取线高于考生分，指标生价值最大）
-        if (a.category !== b.category) return a.category === 'rush' ? -1 : 1;
-        // 同类别内按概率降序
+        if (!a || !b) return 0;
+        if (a.regularGap !== b.regularGap) return b.regularGap - a.regularGap;
         return b.prob - a.prob;
       })
-      .slice(0, 6);
+      .filter((item): item is NonNullable<typeof item> => item !== null);
 
-    return list;
-  }, [plan.studentInfo.score, plan.studentInfo.studentType]);
+    if (candidates.length === 0) {
+      return { status: 'no_candidate', juniorSchool: allocation.juniorSchool, district: allocation.district } as const;
+    }
+
+    return {
+      status: 'ready',
+      juniorSchool: allocation.juniorSchool,
+      district: allocation.district,
+      recommendation: candidates[0],
+    } as const;
+  }, [plan.studentInfo.juniorSchool, plan.studentInfo.score, plan.studentInfo.studentType]);
 
   return (
     <section className="py-20 bg-white">
@@ -199,7 +227,7 @@ export default function PlanResult({
             { label: '公办高中', value: `${plan.summary.publicCount}所`, color: 'text-indigo-600' },
             { label: '民办高中', value: `${plan.summary.privateCount}所`, color: 'text-purple-600' },
             { label: '平均录取概率', value: `${plan.summary.avgProbability}%`, color: 'text-emerald-600' },
-            { label: '平均匹配度', value: `${Math.round(plan.items.reduce((a, b) => a + (b.matchScore || 0), 0) / plan.items.length)}%`, color: 'text-indigo-600' },
+            { label: '平均匹配度', value: `${avgMatchScore}%`, color: 'text-indigo-600' },
             { label: '方案生成时间', value: new Date(plan.generatedAt).toLocaleTimeString(), color: 'text-gray-600' },
           ].map((item, i) => (
             <div key={i} className="bg-slate-50 rounded-xl p-4 text-center">
@@ -210,261 +238,249 @@ export default function PlanResult({
         </div>
 
         {/* Indicator Suggestions */}
-        {indicatorSuggestions.length > 0 && (
-          <div className="mb-6 scroll-animate">
-            {/* 标题栏 */}
-            <div className="flex items-center gap-2 mb-3">
-              <Target className="w-5 h-5 text-indigo-600" />
-              <h3 className="font-semibold text-gray-900">指标生志愿建议</h3>
-              <span className="text-xs font-medium text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">仅限填报1个</span>
-              <span className="text-xs text-indigo-500 bg-indigo-100 px-2 py-0.5 rounded-full">{plan.studentInfo.studentType}类</span>
-            </div>
+        <div className="mb-6 scroll-animate">
+          {/* 标题栏 */}
+          <div className="flex items-center gap-2 mb-3">
+            <Target className="w-5 h-5 text-indigo-600" />
+            <h3 className="font-semibold text-gray-900">指标生志愿建议</h3>
+            <span className="text-xs font-medium text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">仅限填报1个</span>
+            <span className="text-xs text-indigo-500 bg-indigo-100 px-2 py-0.5 rounded-full">{plan.studentInfo.studentType}类</span>
+          </div>
 
-            {/* 规则说明 */}
-            <div className="mb-4 p-4 bg-sky-50 border border-sky-200 rounded-xl">
-              <div className="flex items-start gap-2">
-                <Shield className="w-4 h-4 text-sky-600 mt-0.5 flex-shrink-0" />
-                <div className="text-sm text-sky-800 space-y-1">
-                  <p className="font-medium">指标生录取规则</p>
-                  <ul className="list-disc list-inside space-y-0.5 text-xs opacity-90">
-                    <li>控制线 = 该校前三年正取线平均值 <strong>下降20分</strong></li>
-                    <li>指标生批次 <strong>优先于</strong> 第一批次（正取）录取</li>
-                    <li>同校指标生按分数 <strong>从高到低</strong> 录取，录满名额为止</li>
-                    <li>指标生被录取后，后续正取志愿 <strong>自动失效</strong></li>
-                    <li>建议把指标生当作 <strong>"冲高额外机会"</strong> — 即使没录上也不影响正取</li>
-                  </ul>
-                </div>
+          <div className="mb-4 p-4 bg-sky-50 border border-sky-200 rounded-xl">
+            <div className="flex items-start gap-2">
+              <Shield className="w-4 h-4 text-sky-600 mt-0.5 flex-shrink-0" />
+              <div className="text-sm text-sky-800 space-y-1">
+                <p className="font-medium">指标生录取规则</p>
+                <ul className="list-disc list-inside space-y-0.5 text-xs opacity-90">
+                  <li>推荐基于您填写的初中学校在 Excel 指标分配表中的实际名额</li>
+                  <li>只推荐您所在初中有名额、且您达到指标控制线的高中</li>
+                  <li>冲高范围控制在该校正取线高出您当前分数 <strong>不超过20分</strong></li>
+                  <li>指标生批次 <strong>优先于</strong> 第一批次（正取）录取</li>
+                  <li>指标生被录取后，后续正取志愿 <strong>自动失效</strong></li>
+                </ul>
               </div>
             </div>
-
-            {/* 推荐策略说明 */}
-            <p className="text-sm text-gray-600 mb-3">
-              根据您的预估分 <strong className="text-indigo-600">{plan.studentInfo.score}分</strong>，以下学校您有资格填报指标生志愿。
-              <span className="text-red-500 font-medium">请从中选择1所最想冲高的学校填报。</span>
-            </p>
-
-            {/* 推荐列表 */}
-            <div className="space-y-3">
-              {/* 冲高推荐 */}
-              {indicatorSuggestions.filter(i => i.category === 'rush').length > 0 && (
-                <div>
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <TrendingUp className="w-4 h-4 text-purple-600" />
-                    <span className="text-sm font-semibold text-purple-700">冲高推荐（正取线高于您的分数，指标生是冲击该校的最佳机会）</span>
-                  </div>
-                  <div className="grid sm:grid-cols-2 gap-2">
-                    {indicatorSuggestions.filter(i => i.category === 'rush').map((item) => (
-                      <Link
-                        key={item.school.id}
-                        to={`/school/${item.school.id}`}
-                        className="p-3 bg-white rounded-xl border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium text-sm text-gray-900">{item.school.name}</span>
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                            item.prob >= 70 ? 'bg-emerald-100 text-emerald-700' :
-                            item.prob >= 40 ? 'bg-yellow-100 text-yellow-700' :
-                            'bg-red-100 text-red-700'
-                          }`}>{item.prob}% 概率</span>
-                        </div>
-                        <div className="grid grid-cols-3 gap-2 text-xs text-gray-500 mb-2">
-                          <div className="bg-gray-50 rounded-lg p-1.5 text-center">
-                            <div className="font-bold text-gray-700">{item.line}</div>
-                            <div className="text-[10px]">控制线</div>
-                          </div>
-                          <div className="bg-gray-50 rounded-lg p-1.5 text-center">
-                            <div className="font-bold text-gray-700">{getSchoolScore(item.school, plan.studentInfo.studentType)}</div>
-                            <div className="text-[10px]">正取线</div>
-                          </div>
-                          <div className="bg-gray-50 rounded-lg p-1.5 text-center">
-                            <div className="font-bold text-gray-700">{item.quota}</div>
-                            <div className="text-[10px]">名额</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                            <div className={`h-full rounded-full ${
-                              item.prob >= 70 ? 'bg-emerald-500' :
-                              item.prob >= 40 ? 'bg-yellow-500' :
-                              'bg-red-400'
-                            }`} style={{ width: `${item.prob}%` }} />
-                          </div>
-                          <span className="text-[10px] text-gray-400">超线+{item.diff}分</span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* 稳妥选择 */}
-              {indicatorSuggestions.filter(i => i.category === 'safe').length > 0 && (
-                <div>
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <Shield className="w-4 h-4 text-emerald-600" />
-                    <span className="text-sm font-semibold text-emerald-700">稳妥选择（您的分数已达到正取线，指标生是额外保险）</span>
-                  </div>
-                  <div className="grid sm:grid-cols-2 gap-2">
-                    {indicatorSuggestions.filter(i => i.category === 'safe').map((item) => (
-                      <Link
-                        key={item.school.id}
-                        to={`/school/${item.school.id}`}
-                        className="p-3 bg-white rounded-xl border border-emerald-200 hover:border-emerald-400 hover:shadow-md transition-all"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium text-sm text-gray-900">{item.school.name}</span>
-                          <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-700">{item.prob}% 概率</span>
-                        </div>
-                        <div className="grid grid-cols-3 gap-2 text-xs text-gray-500 mb-2">
-                          <div className="bg-gray-50 rounded-lg p-1.5 text-center">
-                            <div className="font-bold text-gray-700">{item.line}</div>
-                            <div className="text-[10px]">控制线</div>
-                          </div>
-                          <div className="bg-gray-50 rounded-lg p-1.5 text-center">
-                            <div className="font-bold text-gray-700">{getSchoolScore(item.school, plan.studentInfo.studentType)}</div>
-                            <div className="text-[10px]">正取线</div>
-                          </div>
-                          <div className="bg-gray-50 rounded-lg p-1.5 text-center">
-                            <div className="font-bold text-gray-700">{item.quota}</div>
-                            <div className="text-[10px]">名额</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                            <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${item.prob}%` }} />
-                          </div>
-                          <span className="text-[10px] text-gray-400">超线+{item.diff}分</span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* 风险提示 */}
-            <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-amber-800">
-                <strong>重要提醒：</strong>指标生志愿只能填报 <strong>1个</strong>。一旦被指标生录取，您的12个正取志愿将自动失效。因此建议把指标生当作"冲高机会"，填报略高于自己水平的学校。如果填报比自己水平低的学校，即使考上了也会"锁死"指标生批次，浪费正取志愿中更好的选择。
-              </p>
-            </div>
           </div>
-        )}
+
+          {indicatorContext.status === 'missing' && (
+            <div className="rounded-xl border border-dashed border-sky-200 bg-sky-50 p-4 text-sm text-sky-800">
+              还没有填写初中学校。补充初中学校后，系统才能按实际指标生分配名额给出 1 所主推荐。
+            </div>
+          )}
+
+          {indicatorContext.status === 'not_found' && (
+            <div className="rounded-xl border border-dashed border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+              未在指标分配表中匹配到“{indicatorContext.juniorSchool}”。请尽量使用表单下拉建议中的标准校名。
+            </div>
+          )}
+
+          {indicatorContext.status === 'no_quota' && (
+            <div className="rounded-xl border border-dashed border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+              {indicatorContext.juniorSchool} 当前没有可用的 {plan.studentInfo.studentType} 类指标生名额，系统不推荐指标生志愿。
+            </div>
+          )}
+
+          {indicatorContext.status === 'no_candidate' && (
+            <div className="rounded-xl border border-dashed border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+              {indicatorContext.juniorSchool} 虽然有指标生名额，但按“达到控制线且正取线高出当前分数不超过20分”的规则，当前没有合适的指标生冲高学校。
+            </div>
+          )}
+
+          {indicatorContext.status === 'ready' && (
+            <>
+              <p className="text-sm text-gray-600 mb-3">
+                您填写的初中学校为 <strong className="text-indigo-600">{indicatorContext.juniorSchool}</strong>。系统已按该校的实际指标分配名额，筛出最适合填报的 1 所指标生学校。
+              </p>
+              <div className="flex items-center gap-1.5 mb-2">
+                <TrendingUp className="w-4 h-4 text-purple-600" />
+                <span className="text-sm font-semibold text-purple-700">指标生主推荐: 冲高机会型</span>
+              </div>
+              <Link
+                to={`/school/${indicatorContext.recommendation.school.id}`}
+                className="block p-4 bg-white rounded-xl border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all"
+              >
+                <div className="flex items-center justify-between mb-3 gap-3">
+                  <div>
+                    <div className="font-semibold text-gray-900">{indicatorContext.recommendation.school.name}</div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      您所在初中分到 <strong>{indicatorContext.recommendation.quota}</strong> 个名额，且该校正取线仅高出您当前分数 <strong>{indicatorContext.recommendation.regularGap}</strong> 分。
+                    </div>
+                  </div>
+                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                    indicatorContext.recommendation.prob >= 70
+                      ? 'bg-emerald-100 text-emerald-700'
+                      : 'bg-yellow-100 text-yellow-700'
+                  }`}>
+                    {indicatorContext.recommendation.prob}% 概率
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-xs text-gray-500 mb-2">
+                  <div className="bg-gray-50 rounded-lg p-2 text-center">
+                    <div className="font-bold text-gray-700">{indicatorContext.recommendation.indicatorLine}</div>
+                    <div className="text-[10px]">控制线630分制</div>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-2 text-center">
+                    <div className="font-bold text-gray-700">{getSchoolScore(indicatorContext.recommendation.school, plan.studentInfo.studentType)}</div>
+                    <div className="text-[10px]">正取线</div>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-2 text-center">
+                    <div className="font-bold text-gray-700">{indicatorContext.recommendation.quota}</div>
+                    <div className="text-[10px]">分配名额</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${
+                        indicatorContext.recommendation.prob >= 70 ? 'bg-emerald-500' : 'bg-yellow-500'
+                      }`}
+                      style={{ width: `${indicatorContext.recommendation.prob}%` }}
+                    />
+                  </div>
+                  <span className="text-[10px] text-gray-400">超控制线+{indicatorContext.recommendation.controlLineMargin}分</span>
+                </div>
+              </Link>
+            </>
+          )}
+
+          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2">
+            <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+            <p className="text-xs text-amber-800">
+              <strong>重要提醒：</strong>指标生志愿只能填报 <strong>1个</strong>。若被指标生录取，您的12个正取志愿将自动失效，因此指标生更适合作为“正取线上方 0-20 分”的冲高机会使用。
+            </p>
+          </div>
+        </div>
 
         {/* Plan Note */}
         <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3 scroll-animate">
           <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-amber-800">
             <p className="font-medium mb-1">填报说明</p>
-            <p>以下方案按照"冲稳保"策略分配12个志愿。前4个为"冲一冲"，中间4个为"稳一稳"，最后4个为"保一保"。录取概率基于2025年分数线估算，仅供参考。实际录取受当年试题难度、报考人数等多种因素影响，建议结合实际情况调整。</p>
+            <p>正取志愿优先按 <strong>4个冲一冲 + 4个稳一稳 + 4个保一保</strong> 组织，并按录取分数线从高到低排列。录取概率基于考生预估分附近的正态分布、学校往年分数线波动和志愿所在梯度综合估算。前4个学校的分数线高于当前分数，中间4个接近当前分数，最后4个作为保底，分数线最多低于当前分数约50分。</p>
+            {!hasPlanItems && (
+              <p className="mt-2 text-xs font-medium">当前筛选条件下没有符合“冲稳保梯度”的学校，建议放宽区域、住宿或学校层次限制后重新生成。</p>
+            )}
+            {hasPlanItems && plan.items.length < 12 && (
+              <p className="mt-2 text-xs font-medium">当前只推荐了 {plan.items.length} 所学校，因为在您设定的筛选条件下，无法凑齐完整的 12 所且仍满足分数梯度约束的学校。</p>
+            )}
             <p className="mt-2 text-xs opacity-80">为降低共享设备上的隐私残留，考生信息和历史方案仅在本机缓存 24 小时，可随时手动清除。</p>
           </div>
         </div>
 
         {/* Volunteer Items */}
-        <div className="space-y-3">
-          {plan.items.map((item, idx) => (
-            <div
-              key={item.order}
-              className="scroll-animate border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition-all duration-200"
-              style={{ animationDelay: `${idx * 60}ms` }}
-            >
+        {hasPlanItems ? (
+          <div className="space-y-3">
+            {plan.items.map((item, idx) => (
               <div
-                className="p-4 sm:p-5 cursor-pointer"
-                onClick={() => setExpandedItem(expandedItem === item.order ? null : item.order)}
+                key={item.order}
+                className="scroll-animate border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition-all duration-200"
+                style={{ animationDelay: `${idx * 60}ms` }}
               >
-                <div className="flex items-center gap-3 sm:gap-4">
-                  {/* Order Number */}
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${
-                    item.strategy === '冲一冲' ? 'bg-purple-100 text-purple-700' :
-                    item.strategy === '稳一稳' ? 'bg-emerald-100 text-emerald-700' :
-                    'bg-blue-100 text-blue-700'
-                  }`}>
-                    {item.order}
+                <div
+                  className="p-4 sm:p-5 cursor-pointer"
+                  onClick={() => setExpandedItem(expandedItem === item.order ? null : item.order)}
+                >
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    {/* Order Number */}
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${
+                      item.strategy === '冲一冲' ? 'bg-purple-100 text-purple-700' :
+                      item.strategy === '稳一稳' ? 'bg-emerald-100 text-emerald-700' :
+                      'bg-blue-100 text-blue-700'
+                    }`}>
+                      {item.order}
+                    </div>
+
+                    {/* School Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Link to={`/school/${item.school.id}`} className="font-bold text-indigo-700 text-sm sm:text-base hover:underline flex items-center gap-1">
+                          {item.school.name}
+                          <ExternalLink className="w-3 h-3 opacity-50" />
+                        </Link>
+                        <span className={`text-xs px-2 py-0.5 rounded-full ${getLevelColor(item.school.level)}`}>{item.school.level}</span>
+                      </div>
+                      <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                        <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{item.school.district}</span>
+                        <span>{item.school.type}</span>
+                        {item.school.hasBoarding && <span className="flex items-center gap-1"><Home className="w-3 h-3" />可住宿</span>}
+                      </div>
+                    </div>
+
+                    {/* Score & Strategy */}
+                    <div className="text-right flex-shrink-0">
+                      <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium border ${getStrategyColor(item.strategy)}`}>
+                        {item.strategy}
+                      </span>
+                      <div className="text-xs text-gray-500 mt-1">
+                        分数线: {getSchoolScore(item.school, plan.studentInfo.studentType)}分
+                        {item.matchScore !== undefined && (
+                          <span className="ml-2 px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px]">
+                            匹配{item.matchScore}分
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
-                  {/* School Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Link to={`/school/${item.school.id}`} className="font-bold text-indigo-700 text-sm sm:text-base hover:underline flex items-center gap-1">
-                        {item.school.name}
-                        <ExternalLink className="w-3 h-3 opacity-50" />
-                      </Link>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${getLevelColor(item.school.level)}`}>{item.school.level}</span>
+                  {/* Probability Bar */}
+                  <div className="mt-3 flex items-center gap-3">
+                    <span className="text-xs text-gray-500 flex-shrink-0">录取概率</span>
+                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-1000 ${getProbabilityColor(item.probability)}`}
+                        style={{ width: `${item.probability}%` }}
+                      />
                     </div>
-                    <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
-                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{item.school.district}</span>
-                      <span>{item.school.type}</span>
-                      {item.school.hasBoarding && <span className="flex items-center gap-1"><Home className="w-3 h-3" />可住宿</span>}
-                    </div>
-                  </div>
-
-                  {/* Score & Strategy */}
-                  <div className="text-right flex-shrink-0">
-                    <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium border ${getStrategyColor(item.strategy)}`}>
-                      {item.strategy}
+                    <span className={`text-xs font-bold flex-shrink-0 ${
+                      item.probability >= 80 ? 'text-emerald-600' :
+                      item.probability >= 50 ? 'text-yellow-600' :
+                      'text-red-500'
+                    }`}>
+                      {item.probability}%
                     </span>
-                    <div className="text-xs text-gray-500 mt-1">
-                      分数线: {getSchoolScore(item.school, plan.studentInfo.studentType)}分
-                      {item.matchScore !== undefined && (
-                        <span className="ml-2 px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px]">
-                          匹配{item.matchScore}分
-                        </span>
-                      )}
-                    </div>
                   </div>
                 </div>
 
-                {/* Probability Bar */}
-                <div className="mt-3 flex items-center gap-3">
-                  <span className="text-xs text-gray-500 flex-shrink-0">录取概率</span>
-                  <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-1000 ${getProbabilityColor(item.probability)}`}
-                      style={{ width: `${item.probability}%` }}
-                    />
-                  </div>
-                  <span className={`text-xs font-bold flex-shrink-0 ${
-                    item.probability >= 80 ? 'text-emerald-600' :
-                    item.probability >= 50 ? 'text-yellow-600' :
-                    'text-red-500'
-                  }`}>
-                    {item.probability}%
-                  </span>
-                </div>
-              </div>
-
-              {/* Expanded Detail */}
-              {expandedItem === item.order && (
-                <div className="px-4 sm:px-5 pb-4 border-t border-gray-50 pt-3">
-                  <p className="text-sm text-gray-600 mb-2">{item.school.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {item.school.features.map((f, i) => (
-                      <span key={i} className="px-2 py-1 bg-indigo-50 text-indigo-600 text-xs rounded-lg">{f}</span>
-                    ))}
-                  </div>
-                  <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-gray-500">
-                    <div>AC类分数线: {item.school.acScore2025}分</div>
-                    <div>D类分数线: {item.school.dScore2025}分</div>
-                    <div>预估招生: {item.school.plan2026}人</div>
-                  </div>
-                  {/* Match Reasons */}
-                  {item.matchReasons && item.matchReasons.length > 0 && (
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {item.matchReasons.map((reason, i) => (
-                        <span key={i} className="px-2 py-1 bg-emerald-50 text-emerald-600 text-xs rounded-lg flex items-center gap-1">
-                          <CheckCircle className="w-3 h-3" />
-                          {reason}
-                        </span>
+                {/* Expanded Detail */}
+                {expandedItem === item.order && (
+                  <div className="px-4 sm:px-5 pb-4 border-t border-gray-50 pt-3">
+                    <p className="text-sm text-gray-600 mb-2">{item.school.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {item.school.features.map((f, i) => (
+                        <span key={i} className="px-2 py-1 bg-indigo-50 text-indigo-600 text-xs rounded-lg">{f}</span>
                       ))}
                     </div>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+                    <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-gray-500">
+                      <div>AC类分数线: {item.school.acScore2025}分</div>
+                      <div>D类分数线: {item.school.dScore2025}分</div>
+                      <div>预估招生: {item.school.plan2026}人</div>
+                    </div>
+                    {/* Match Reasons */}
+                    {item.matchReasons && item.matchReasons.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {item.matchReasons.map((reason, i) => (
+                          <span key={i} className="px-2 py-1 bg-emerald-50 text-emerald-600 text-xs rounded-lg flex items-center gap-1">
+                            <CheckCircle className="w-3 h-3" />
+                            {reason}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="scroll-animate rounded-2xl border border-dashed border-amber-200 bg-amber-50/70 p-8 text-center">
+            <AlertTriangle className="mx-auto mb-3 h-8 w-8 text-amber-600" />
+            <h3 className="text-lg font-semibold text-amber-900">当前没有可推荐的志愿</h3>
+            <p className="mt-2 text-sm text-amber-800">
+              在现有分数和筛选条件下，没有学校能同时满足冲稳保梯度和分数区间约束。建议先放宽区域、住宿或学校层次限制，再重新生成。
+            </p>
+          </div>
+        )}
 
         {/* Actions */}
         <div className="mt-8 flex flex-wrap gap-3 justify-center scroll-animate">

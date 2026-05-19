@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import type { StudentInfo, StrategyStyle, BioGeoGrade, District, SchoolLevel, Gender, Subject, CommuteTolerance } from '@/types';
+import type { StudentInfo, StrategyStyle, BioGeoGrade, District, SchoolLevel, Gender, Subject, CommuteTolerance, ApplicantTrack } from '@/types';
 import { MapPin, Building2, Home, AlertCircle, Sparkles, ChevronDown, ChevronUp, User, BookOpen, Bus, School } from 'lucide-react';
+import { juniorSchoolNames } from '@/data/indicatorAllocations';
 
 export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo) => void }) {
   const [form, setForm] = useState<Partial<StudentInfo>>({
     studentType: 'AC',
     bioGeoGrade: 'A',
+    applicantTrack: 'general',
     preferredDistricts: [],
     accommodation: 'any',
     preferredLevels: [],
@@ -87,6 +89,29 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
             {errors.score && <p className="mt-1 text-sm text-red-500 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.score}</p>}
           </div>
 
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              初中学校
+              <span className="text-xs font-normal text-gray-400 ml-2">（用于按实际指标生分配名额推荐，可输入或选择）</span>
+            </label>
+            <input
+              type="text"
+              list="junior-school-options"
+              value={form.juniorSchool || ''}
+              onChange={(e) => setForm(prev => ({ ...prev, juniorSchool: e.target.value }))}
+              placeholder="请输入考生初中学校名称"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-200"
+            />
+            <datalist id="junior-school-options">
+              {juniorSchoolNames.map((name) => (
+                <option key={name} value={name} />
+              ))}
+            </datalist>
+            <p className="mt-2 text-xs text-gray-400">
+              不填写也能生成 12 个正取志愿，但系统将无法按您所在初中的指标名额给出指标生主推荐。
+            </p>
+          </div>
+
           {/* Student Type */}
           <div className="mb-6">
             <label className="block text-sm font-semibold text-gray-700 mb-2">考生类型</label>
@@ -102,6 +127,25 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
                 >
                   <div className="font-semibold text-sm">{type.label}</div>
                   <div className="text-xs text-gray-500 mt-1">{type.desc}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">报考方向</label>
+            <div className="grid grid-cols-2 gap-3">
+              {([
+                { value: 'general', label: '普通生', desc: '默认排除艺术高中、综合高中、留学班等特殊路径' },
+                { value: 'art', label: '艺术生', desc: '允许进入艺术普高与艺术特色培养路径学校池' },
+              ] as const).map((track) => (
+                <button
+                  key={track.value}
+                  onClick={() => setForm(prev => ({ ...prev, applicantTrack: track.value as ApplicantTrack }))}
+                  className={`p-4 rounded-xl border-2 text-left transition-all duration-150 ${form.applicantTrack === track.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
+                >
+                  <div className="font-semibold text-sm">{track.label}</div>
+                  <div className="text-xs text-gray-500 mt-1">{track.desc}</div>
                 </button>
               ))}
             </div>
