@@ -15,4 +15,19 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 650,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined;
+          if (id.includes('recharts')) return 'vendor-recharts';
+          if (id.includes('react-router')) return 'vendor-router';
+          if (id.includes('lucide-react')) return 'vendor-icons';
+          if (id.includes('@radix-ui')) return 'vendor-radix';
+          return 'vendor';
+        },
+      },
+    },
+  },
 });

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
-import { GraduationCap, X, Menu, Activity, Scale } from 'lucide-react';
+import { GraduationCap, X, Menu, Activity, Scale, Database } from 'lucide-react';
 
 export default function Navbar({ onNavigate }: { onNavigate: (id: string) => void }) {
   const [scrolled, setScrolled] = useState(false);
@@ -25,12 +25,21 @@ export default function Navbar({ onNavigate }: { onNavigate: (id: string) => voi
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-md' : 'bg-white/80 backdrop-blur-sm'}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => onNavigate('hero')}>
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-white" />
+          {isHome ? (
+            <div className="flex items-center gap-2 cursor-pointer" onClick={() => onNavigate('hero')}>
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-bold text-gray-900 text-sm sm:text-base">Shenzhen High School Admission Application</span>
             </div>
-            <span className="font-bold text-gray-900 text-sm sm:text-base">Shenzhen High School Admission Application</span>
-          </div>
+          ) : (
+            <Link to="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-bold text-gray-900 text-sm sm:text-base">Shenzhen High School Admission Application</span>
+            </Link>
+          )}
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-6">
@@ -64,6 +73,13 @@ export default function Navbar({ onNavigate }: { onNavigate: (id: string) => voi
             >
               <Scale className="w-3.5 h-3.5" />
               学校对比
+            </Link>
+            <Link
+              to="/admission-plans-2026"
+              className="text-sm text-gray-600 hover:text-indigo-600 transition-colors duration-150 flex items-center gap-1"
+            >
+              <Database className="w-3.5 h-3.5" />
+              2026计划
             </Link>
             {isHome && (
               <button
@@ -122,6 +138,14 @@ export default function Navbar({ onNavigate }: { onNavigate: (id: string) => voi
             >
               <Scale className="w-4 h-4" />
               学校对比
+            </Link>
+            <Link
+              to="/admission-plans-2026"
+              onClick={() => setMobileOpen(false)}
+              className="text-lg text-gray-700 py-3 border-b border-gray-100 text-left flex items-center gap-2"
+            >
+              <Database className="w-4 h-4" />
+              2026计划
             </Link>
             {isHome && (
               <button

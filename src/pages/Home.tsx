@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { lazy, Suspense, useCallback, useEffect } from 'react';
 import type { StudentInfo, VolunteerPlan } from '@/types';
 import { useVolunteerPlan } from '@/hooks/useVolunteerPlan';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
@@ -6,15 +6,15 @@ import Navbar from '@/sections/Navbar';
 import HeroSection from '@/sections/HeroSection';
 import StepsSection from '@/sections/StepsSection';
 import StudentForm from '@/sections/StudentForm';
-import PlanResult from '@/sections/PlanResult';
-import SchoolLibrary from '@/sections/SchoolLibrary';
-import RulesSection from '@/sections/RulesSection';
 import Footer from '@/sections/Footer';
 import CountdownSection from '@/sections/CountdownSection';
-import TimelineSection from '@/sections/TimelineSection';
 import '../App.css';
 
 const PRIVATE_STORAGE_TTL_MS = 24 * 60 * 60 * 1000;
+const PlanResult = lazy(() => import('@/sections/PlanResult'));
+const SchoolLibrary = lazy(() => import('@/sections/SchoolLibrary'));
+const RulesSection = lazy(() => import('@/sections/RulesSection'));
+const TimelineSection = lazy(() => import('@/sections/TimelineSection'));
 
 function useScrollAnimation() {
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function Home() {
     [],
     { ttlMs: PRIVATE_STORAGE_TTL_MS }
   );
-  const plan = useVolunteerPlan(studentInfo);
+  const { plan, isLoading } = useVolunteerPlan(studentInfo);
   useScrollAnimation();
 
   const scrollTo = useCallback((id: string) => {
@@ -88,6 +88,8 @@ export default function Home() {
     clearSavedPlans();
   };
 
+  const sectionFallback = <div className="px-4 py-12 text-center text-sm text-slate-400">正在加载内容...</div>;
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar onNavigate={scrollTo} />
@@ -96,23 +98,37 @@ export default function Home() {
       <StepsSection />
       <StudentForm onSubmit={handleSubmit} />
 
-      {plan && (
-        <div id="result">
-          <PlanResult
-            plan={plan}
-            onRegenerate={() => setStudentInfo(null)}
-            onSavePlan={handleSavePlan}
-            savedPlans={savedPlans}
-            onLoadPlan={handleLoadPlan}
-            onDeletePlan={handleDeletePlan}
-            onClearStoredData={handleClearStoredData}
-          />
+      {isLoading && (
+        <div id="result" className="px-4 py-12 text-center text-sm text-slate-400">
+          正在生成志愿方案...
         </div>
       )}
 
-      <SchoolLibrary />
-      <TimelineSection />
-      <RulesSection />
+      {plan && !isLoading && (
+        <div id="result">
+          <Suspense fallback={sectionFallback}>
+            <PlanResult
+              plan={plan}
+              onRegenerate={() => setStudentInfo(null)}
+              onSavePlan={handleSavePlan}
+              savedPlans={savedPlans}
+              onLoadPlan={handleLoadPlan}
+              onDeletePlan={handleDeletePlan}
+              onClearStoredData={handleClearStoredData}
+            />
+          </Suspense>
+        </div>
+      )}
+
+      <Suspense fallback={sectionFallback}>
+        <SchoolLibrary />
+      </Suspense>
+      <Suspense fallback={sectionFallback}>
+        <TimelineSection />
+      </Suspense>
+      <Suspense fallback={sectionFallback}>
+        <RulesSection />
+      </Suspense>
       <Footer />
     </div>
   );

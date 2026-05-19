@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import type { StudentInfo, StrategyStyle, BioGeoGrade, District, SchoolLevel, Gender, Subject, CommuteTolerance, ApplicantTrack } from '@/types';
-import { MapPin, Building2, Home, AlertCircle, Sparkles, ChevronDown, ChevronUp, User, BookOpen, Bus, School } from 'lucide-react';
-import { juniorSchoolNames } from '@/data/indicatorAllocations';
+import type { StudentInfo, StrategyStyle, BioGeoGrade, District, SchoolLevel, Subject, CommuteTolerance, ApplicantTrack } from '@/types';
+import { MapPin, Building2, Home, AlertCircle, Sparkles, ChevronDown, ChevronUp, BookOpen, Bus, School, CheckCircle2 } from 'lucide-react';
+import { juniorSchoolNames } from '@/data/juniorSchoolNames';
 
 export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo) => void }) {
   const [form, setForm] = useState<Partial<StudentInfo>>({
@@ -11,21 +11,23 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
     preferredDistricts: [],
     accommodation: 'any',
     preferredLevels: [],
-    acceptPrivate: true,
+    acceptPrivate: false,
     strategyStyle: 'balanced',
-    gender: undefined,
     strongSubjects: [],
     commuteTolerance: 'medium',
     preferNewSchool: undefined,
     preferStrictManagement: undefined,
     preferArtSports: undefined,
+    subjectGradeOk: undefined,
+    isQuotaEligible: undefined,
+    boardingNeed: undefined,
   });
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [shaking, setShaking] = useState(false);
 
-  const districts: District[] = ['福田', '罗湖', '南山', '宝安', '龙岗', '龙华', '光明', '坪山', '盐田', '大鹏'];
-  const levels: SchoolLevel[] = ['四大名校', '八大名校', '区属重点', '普通公办', '民办'];
+  const districts: District[] = ['福田', '罗湖', '南山', '宝安', '龙岗', '龙华', '光明', '坪山', '盐田', '大鹏', '深汕'];
+  const levels: SchoolLevel[] = ['四大名校', '八大名校', '区属重点', '普通公办'];
 
   const toggleDistrict = (d: District) => {
     setForm(prev => ({
@@ -59,7 +61,19 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
     }
 
     setErrors({});
-    onSubmit(form as StudentInfo);
+    onSubmit({
+      ...form,
+      preferredDistricts: form.preferredDistricts || [],
+      preferredLevels: form.preferredLevels || [],
+      strongSubjects: form.strongSubjects || [],
+      riskPreference: form.riskPreference ?? form.strategyStyle ?? 'balanced',
+      boardingNeed: form.boardingNeed
+        ?? (form.accommodation === 'boarding'
+          ? 'hard'
+          : form.accommodation === 'day'
+            ? 'none'
+            : 'preferred'),
+    } as StudentInfo);
   };
 
   return (
@@ -110,6 +124,38 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
             <p className="mt-2 text-xs text-gray-400">
               不填写也能生成 12 个正取志愿，但系统将无法按您所在初中的指标名额给出指标生主推荐。
             </p>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              居住区域
+              <span className="text-xs font-normal text-gray-400 ml-2">（用于估算通勤与本区优先级）</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setForm(prev => ({ ...prev, homeDistrict: undefined }))}
+                className={`px-3 py-2 rounded-lg text-sm transition-all duration-150 flex items-center gap-1 ${
+                  !form.homeDistrict
+                    ? 'bg-indigo-500 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-indigo-100'
+                }`}
+              >
+                <MapPin className="w-3 h-3" />
+                未指定
+              </button>
+              {districts.map((d) => (
+                <button
+                  key={`home-${d}`}
+                  onClick={() => setForm(prev => ({ ...prev, homeDistrict: d }))}
+                  className={`px-3 py-2 rounded-lg text-sm transition-all duration-150 flex items-center gap-1 ${
+                    form.homeDistrict === d ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-indigo-100'
+                  }`}
+                >
+                  <MapPin className="w-3 h-3" />
+                  {d}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Student Type */}
@@ -224,7 +270,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
 
           {/* School Levels */}
           <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">学校类型偏好 <span className="text-gray-400 text-xs">（可多选，不选则为全部）</span></label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">学校层级偏好 <span className="text-gray-400 text-xs">（可多选，不选则为全部公办）</span></label>
             <div className="flex flex-wrap gap-2">
               {levels.map((l) => (
                 <button
@@ -238,23 +284,11 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
             </div>
           </div>
 
-          {/* Accept Private */}
+          {/* Public Focus */}
           <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">是否接受民办高中</label>
-            <div className="grid grid-cols-2 gap-3">
-              {([
-                { value: true, label: '接受', desc: '增加录取机会' },
-                { value: false, label: '不接受', desc: '仅公办高中' },
-              ] as const).map((opt) => (
-                <button
-                  key={String(opt.value)}
-                  onClick={() => setForm(prev => ({ ...prev, acceptPrivate: opt.value }))}
-                  className={`p-3 rounded-xl border-2 text-left transition-all duration-150 ${form.acceptPrivate === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
-                >
-                  <div className="font-medium text-sm">{opt.label}</div>
-                  <div className="text-xs text-gray-500">{opt.desc}</div>
-                </button>
-              ))}
+            <label className="block text-sm font-semibold text-gray-700 mb-2">推荐范围</label>
+            <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-800">
+              当前正取志愿主推荐聚焦 <strong>公办普高</strong>。当分数处于公办尾部区间时，系统会优先提高公办学校的推荐密度；若公办候选仍不足，会明确提示风险，而不会再用民办学校补齐。
             </div>
           </div>
 
@@ -295,28 +329,63 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
 
             {advancedOpen && (
               <div className="p-4 space-y-5">
-                {/* Gender */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    <User className="w-3.5 h-3.5 inline mr-1" />
-                    学生性别
-                  </label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">住宿优先级</label>
                   <div className="grid grid-cols-3 gap-3">
-                    {(['男', '女'] as Gender[]).map((g) => (
+                    {([
+                      { value: 'hard', label: '必须住宿', desc: '无宿舍不考虑' },
+                      { value: 'preferred', label: '优先住宿', desc: '有宿舍明显更优' },
+                      { value: 'none', label: '住宿不重要', desc: '可住可走读' },
+                    ] as const).map((opt) => (
                       <button
-                        key={g}
-                        onClick={() => setForm(prev => ({ ...prev, gender: g }))}
-                        className={`p-3 rounded-xl border-2 text-center transition-all duration-150 ${form.gender === g ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
+                        key={opt.value}
+                        onClick={() => setForm(prev => ({ ...prev, boardingNeed: opt.value }))}
+                        className={`p-3 rounded-xl border-2 text-center transition-all duration-150 ${form.boardingNeed === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
                       >
-                        <div className="font-medium text-sm">{g}</div>
+                        <div className="font-medium text-sm">{opt.label}</div>
+                        <div className="text-xs text-gray-500">{opt.desc}</div>
                       </button>
                     ))}
-                    <button
-                      onClick={() => setForm(prev => ({ ...prev, gender: undefined }))}
-                      className={`p-3 rounded-xl border-2 text-center transition-all duration-150 ${form.gender === undefined ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
-                    >
-                      <div className="font-medium text-sm text-gray-500">不透露</div>
-                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">单科等级情况</label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {([
+                      { value: true, label: '已满足', desc: '满足省一级学校单科等级要求' },
+                      { value: undefined, label: '暂不确定', desc: '先不过滤省一级学校' },
+                      { value: false, label: '可能不满足', desc: '自动排除相关硬要求学校' },
+                    ] as const).map((opt) => (
+                      <button
+                        key={opt.label}
+                        onClick={() => setForm(prev => ({ ...prev, subjectGradeOk: opt.value }))}
+                        className={`p-3 rounded-xl border-2 text-center transition-all duration-150 ${form.subjectGradeOk === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
+                      >
+                        <div className="font-medium text-sm">{opt.label}</div>
+                        <div className="text-xs text-gray-500">{opt.desc}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">指标生资格</label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {([
+                      { value: true, label: '具备资格', desc: '可参与名额分配录取' },
+                      { value: undefined, label: '暂不确定', desc: '先按未核实处理' },
+                      { value: false, label: '不具备资格', desc: '不生成指标生推荐' },
+                    ] as const).map((opt) => (
+                      <button
+                        key={`quota-${opt.label}`}
+                        onClick={() => setForm(prev => ({ ...prev, isQuotaEligible: opt.value }))}
+                        className={`p-3 rounded-xl border-2 text-center transition-all duration-150 ${form.isQuotaEligible === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
+                      >
+                        <div className="font-medium text-sm">{opt.label}</div>
+                        <div className="text-xs text-gray-500">{opt.desc}</div>
+                      </button>
+                    ))}
                   </div>
                 </div>
 
@@ -415,6 +484,11 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
                       </button>
                     ))}
                   </div>
+                </div>
+
+                <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800 flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <p>当前高级条件中，居住区域、单科等级、指标资格、住宿优先级、强势学科、通勤接受度和学校偏好都会进入智能推荐；没有实际算法作用的字段已移除。</p>
                 </div>
               </div>
             )}

@@ -3,6 +3,7 @@ export type StudentType = 'AC' | 'D';
 
 // 志愿填报风格
 export type StrategyStyle = 'conservative' | 'balanced' | 'aggressive';
+export type RiskPreference = StrategyStyle;
 
 // 住宿需求
 export type AccommodationNeed = 'boarding' | 'day' | 'any';
@@ -15,6 +16,7 @@ export type SchoolLevel = '四大名校' | '八大名校' | '区属重点' | '�
 
 // 策略类型
 export type StrategyType = '冲一冲' | '稳一稳' | '保一保';
+export type ProbabilityBucket = '冲' | '稳' | '保' | '强保';
 
 // 区域
 export type District = '福田' | '罗湖' | '南山' | '宝安' | '龙岗' | '龙华' | '光明' | '坪山' | '盐田' | '大鹏' | '深汕';
@@ -34,6 +36,16 @@ export type SchoolTrait = '竞赛强校' | '艺术特色' | '体育特色' | '�
 
 // 文理属性
 export type WenliType = '偏理' | '偏文' | '均衡' | '纯文';
+
+export interface PreferenceWeights {
+  district: number;
+  schoolLevel: number;
+  features: number;
+  boarding: number;
+  commute: number;
+  tuition: number;
+  management: number;
+}
 
 // 学校口碑
 export interface SchoolReputation {
@@ -56,6 +68,39 @@ export interface HistoricalScores {
     d: number;
     rank?: number;
   };
+}
+
+export interface HistoricalScorePoint {
+  year: number;
+  raw: number;
+  scaled630: number;
+  rank?: number;
+}
+
+export interface SchoolLineForecast {
+  muLine: number;
+  sigmaLine: number;
+  trendAdj: number;
+  planAdj: number;
+  popularityAdj: number;
+  quotaBackAdj: number;
+  weightedHistoricalLine: number;
+  stabilityScore: number;
+  tiePassProb: number;
+  commonSensitivity: number;
+}
+
+export interface StudentScoreModel {
+  muScore: number;
+  sigmaScore: number;
+  riskPreference: RiskPreference;
+  tieBreakAdvantage: number;
+}
+
+export interface QuotaProfile {
+  quotaPlan?: number;
+  quotaToJuniorSchool: number;
+  controlLine?: number;
 }
 
 // 学校数据
@@ -96,6 +141,11 @@ export interface School {
   indicatorD2025?: number;        // 2025年D类指标生计划
   indicatorLineAc?: number;       // 2025年AC类指标生控制线（610分制原始分）
   indicatorLineD?: number;        // 2025年D类指标生控制线（610分制原始分）
+  quotaPlan2026?: number;         // 2026年名额分配计划（如缺失则按2025指标生计划近似）
+  minSubjectRule?: boolean;       // 是否存在省一级/招生简章中的单科等级硬要求
+  provinceLevel?: boolean;        // 是否属于省一级学校
+  publicTuitionEstimate?: number; // 年学费预估（公办通常较低）
+  privateTuitionEstimate?: number;// 年学费预估（民办）
   selfRecruitClass1?: string;     // 一类自主招生简章链接
   selfRecruitClass2?: string;     // 二类自主招生简章链接
   admissionGuide?: string;        // 官方招生简章链接
@@ -113,15 +163,23 @@ export interface School {
 // 考生信息
 export interface StudentInfo {
   score: number;
+  muScore?: number;
+  sigmaScore?: number;
   studentType: StudentType;
   bioGeoGrade: BioGeoGrade;
   juniorSchool?: string;
+  homeDistrict?: District;
   applicantTrack?: ApplicantTrack;
+  isQuotaEligible?: boolean;
+  subjectGradeOk?: boolean;
   preferredDistricts: District[];
   accommodation: AccommodationNeed;
+  boardingNeed?: 'hard' | 'preferred' | 'none';
   preferredLevels: SchoolLevel[];
   acceptPrivate: boolean;
   strategyStyle: StrategyStyle;
+  riskPreference?: RiskPreference;
+  preferenceWeights?: Partial<PreferenceWeights>;
 
   // Phase 8: 新增字段
   gender?: Gender;
@@ -138,7 +196,11 @@ export interface VolunteerItem {
   school: School;
   strategy: StrategyType;
   probability: number;
+  bucket?: ProbabilityBucket;
   scoreDiff: number;
+  forecastLine?: number;
+  lineSigma?: number;
+  finalAdmissionProbability?: number;
   matchScore?: number;
   matchReasons?: string[];
 }
@@ -155,6 +217,8 @@ export interface VolunteerPlan {
     avgProbability: number;
     maxProbability: number;
     minProbability: number;
+    firstBatchAdmissionProbability?: number;
+    missRisk?: number;
   };
 }
 

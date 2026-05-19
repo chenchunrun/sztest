@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router';
-import { schools } from '@/data/schools';
+import { schoolCatalog } from '@/data/schoolCatalog';
 import { getGaokaoValueAdded } from '@/data/gaokaoValueAdded';
 import { ArrowLeft, MapPin, TrendingUp, Scale } from 'lucide-react';
 
@@ -9,7 +9,7 @@ export default function ComparePage() {
 
   const selected = useMemo(() => {
     const ids = searchParams.get('ids')?.split(',') || [];
-    return ids.map(id => schools.find(s => s.id === id)).filter(Boolean) as typeof schools;
+    return ids.map(id => schoolCatalog.find(s => s.id === id)).filter(Boolean) as typeof schoolCatalog;
   }, [searchParams]);
 
   if (selected.length === 0) {

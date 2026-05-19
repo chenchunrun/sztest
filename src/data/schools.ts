@@ -1,4 +1,16 @@
-import type { School, District, StudentType, SchoolTrait, WenliType } from '@/types';
+import type {
+  School,
+  District,
+  StudentType,
+  SchoolTrait,
+  WenliType,
+  HistoricalScorePoint,
+  SchoolLineForecast,
+  StudentInfo,
+  StudentScoreModel,
+  PreferenceWeights,
+} from '../types/index.ts';
+import { getPublicPlan2026BySchoolName, getQuotaPlan2026BySchoolName } from './admissionPlans2026Utils.ts';
 
 export const schools: School[] = [
   {
@@ -5170,4 +5182,202 @@ export function convertRawScore610To630(rawScore?: number): number | undefined {
 
 export function getSchoolById(id: string): School | undefined {
   return schools.find(s => s.id === id);
+}
+
+const DEFAULT_HISTORICAL_FULL_MARK = 610;
+const HISTORICAL_FULL_MARKS: Record<number, number> = {
+  2021: 610,
+  2022: 610,
+  2023: 610,
+  2024: 610,
+  2025: 610,
+};
+
+const DEFAULT_PREFERENCE_WEIGHTS: PreferenceWeights = {
+  district: 0.16,
+  schoolLevel: 0.24,
+  features: 0.16,
+  boarding: 0.14,
+  commute: 0.12,
+  tuition: 0.08,
+  management: 0.1,
+};
+
+export function convertScoreTo630(rawScore: number, fullMark = DEFAULT_HISTORICAL_FULL_MARK): number {
+  return Number(((rawScore / fullMark) * 630).toFixed(1));
+}
+
+export function getHistoricalScorePoints(school: School, studentType: StudentType): HistoricalScorePoint[] {
+  if (!school.historicalScores) return [];
+
+  return Object.entries(school.historicalScores)
+    .map(([yearText, data]) => {
+      const year = Number(yearText);
+      const raw = studentType === 'AC' ? data.ac : data.d;
+      const fullMark = HISTORICAL_FULL_MARKS[year] || DEFAULT_HISTORICAL_FULL_MARK;
+      return {
+        year,
+        raw,
+        scaled630: convertScoreTo630(raw, fullMark),
+        rank: data.rank,
+      };
+    })
+    .sort((a, b) => a.year - b.year);
+}
+
+function normalizeHistoricalPoints(points: HistoricalScorePoint[], recentLine630: number, school: School): HistoricalScorePoint[] {
+  if (points.length === 0) return [];
+
+  const maxAllowedGap = school.traits?.includes('新兴学校') ? 28 : 38;
+  const normalized = points.filter((point) => {
+    if (point.raw <= 0) return false;
+    if (school.founded && point.year < school.founded - 1) return false;
+    return Math.abs(point.scaled630 - recentLine630) <= maxAllowedGap;
+  });
+
+  return normalized.length > 0 ? normalized : points.slice(-2);
+}
+
+function getRecentRawLine630(school: School, studentType: StudentType): number {
+  const raw2025 = studentType === 'AC' ? school.acScore2025Raw : school.dScore2025Raw;
+  if (raw2025 !== undefined) return convertScoreTo630(raw2025, HISTORICAL_FULL_MARKS[2025]);
+  return getSchoolScore(school, studentType);
+}
+
+function getSchoolLineSigmaFloor(school: School): number {
+  if (school.type === '民办') return 9;
+  if (!school.historicalScores || Object.keys(school.historicalScores).length < 3) return 8;
+  if (school.level === '四大名校') return 4;
+  if (school.level === '八大名校') return 5;
+  if (school.traits?.includes('新兴学校')) return 7;
+  return 6;
+}
+
+function getSchoolCommonSensitivity(school: School): number {
+  if (school.level === '四大名校') return 0.7;
+  if (school.level === '八大名校') return 0.62;
+  if (school.traits?.includes('新兴学校')) return 0.45;
+  if (school.type === '民办') return 0.35;
+  return 0.55;
+}
+
+function getPlanAdjustment(school: School): number {
+  const publicPlan2026 = getPublicPlan2026BySchoolName(school.name);
+  const effectivePlan2026 = publicPlan2026?.totalPlan || school.plan2026;
+  if (!school.totalPlan2025 || !effectivePlan2026) return 0;
+  const planDeltaRatio = (effectivePlan2026 - school.totalPlan2025) / school.totalPlan2025;
+  return Number((-planDeltaRatio * 12).toFixed(1));
+}
+
+function getTrendAdjustment(points: HistoricalScorePoint[], recentLine630: number): number {
+  const all = [...points, { year: 2025, raw: recentLine630, scaled630: recentLine630 }];
+  if (all.length < 2) return 0;
+
+  const last = all[all.length - 1].scaled630;
+  const prev = all[all.length - 2].scaled630;
+  const earlier = all.length >= 3 ? all[all.length - 3].scaled630 : prev;
+  const recentTrend = last - prev;
+  const mediumTrend = prev - earlier;
+  return Number((recentTrend * 0.65 + mediumTrend * 0.35).toFixed(1));
+}
+
+function getPopularityAdjustment(school: School): number {
+  let adjustment = 0;
+  const reputation = school.reputation?.compositeScore || 0;
+  if (reputation >= 82) adjustment += 1.5;
+  else if (reputation >= 75) adjustment += 0.8;
+
+  if (school.level === '四大名校') adjustment += 1;
+  if (school.traits?.includes('竞赛强校')) adjustment += 0.8;
+  if (school.traits?.includes('外语特色')) adjustment += 0.4;
+  if (school.traits?.includes('新兴学校')) adjustment -= 0.8;
+
+  return Number(adjustment.toFixed(1));
+}
+
+function getQuotaBackAdjustment(school: School, studentType: StudentType): number {
+  const quotaPlan2026 = getQuotaPlan2026BySchoolName(school.name);
+  const quotaPlan = quotaPlan2026
+    ? ((studentType === 'AC' ? quotaPlan2026.acQuota : quotaPlan2026.dQuota) || quotaPlan2026.acdQuota)
+    : (studentType === 'AC' ? school.indicatorAc2025 : school.indicatorD2025);
+  const totalPlan = studentType === 'AC' ? school.acPlan2025 : school.dPlan2025;
+  if (!quotaPlan || !totalPlan) return 0;
+
+  const ratio = quotaPlan / Math.max(totalPlan, 1);
+  if (ratio >= 0.5) return -1.2;
+  if (ratio >= 0.35) return -0.6;
+  return 0;
+}
+
+function calculateStdDev(values: number[]): number {
+  if (values.length <= 1) return 0;
+  const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+  const variance = values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / values.length;
+  return Math.sqrt(variance);
+}
+
+export function buildSchoolLineForecast(school: School, studentType: StudentType): SchoolLineForecast {
+  const rawHistoricalPoints = getHistoricalScorePoints(school, studentType);
+  const recentLine630 = getRecentRawLine630(school, studentType);
+  const historicalPoints = normalizeHistoricalPoints(rawHistoricalPoints, recentLine630, school);
+  const weightedHistoricalLine = historicalPoints.length >= 3
+    ? historicalPoints[historicalPoints.length - 1].scaled630 * 0.2
+      + historicalPoints[historicalPoints.length - 2].scaled630 * 0.3
+      + recentLine630 * 0.5
+    : historicalPoints.length === 2
+      ? historicalPoints[0].scaled630 * 0.35 + historicalPoints[1].scaled630 * 0.25 + recentLine630 * 0.4
+      : historicalPoints.length === 1
+        ? historicalPoints[0].scaled630 * 0.3 + recentLine630 * 0.7
+    : recentLine630;
+
+  const trendAdj = getTrendAdjustment(historicalPoints, recentLine630);
+  const planAdj = getPlanAdjustment(school);
+  const popularityAdj = getPopularityAdjustment(school);
+  const quotaBackAdj = getQuotaBackAdjustment(school, studentType);
+
+  const historicalScaledScores = [...historicalPoints.map((point) => point.scaled630), recentLine630];
+  const sigmaFloor = getSchoolLineSigmaFloor(school);
+  const sigmaLine = Number(
+    Math.min(22, Math.max(calculateStdDev(historicalScaledScores), sigmaFloor)).toFixed(1)
+  );
+
+  const muLine = Number(
+    Math.max(0, Math.min(630, weightedHistoricalLine + trendAdj + planAdj + popularityAdj + quotaBackAdj)).toFixed(1)
+  );
+
+  return {
+    muLine,
+    sigmaLine,
+    trendAdj,
+    planAdj,
+    popularityAdj,
+    quotaBackAdj,
+    weightedHistoricalLine: Number(weightedHistoricalLine.toFixed(1)),
+    stabilityScore: Number(Math.max(0, 100 - sigmaLine * 8).toFixed(1)),
+    tiePassProb: school.reputation?.teacherAttention && school.reputation.teacherAttention >= 80 ? 0.58 : 0.5,
+    commonSensitivity: getSchoolCommonSensitivity(school),
+  };
+}
+
+export function buildStudentScoreModel(studentInfo: StudentInfo): StudentScoreModel {
+  const inferredSigma = studentInfo.sigmaScore
+    ?? (studentInfo.strategyStyle === 'conservative' ? 8 : studentInfo.strategyStyle === 'aggressive' ? 13 : 10);
+
+  let tieBreakAdvantage = 0.5;
+  if (studentInfo.bioGeoGrade === 'A+' || studentInfo.bioGeoGrade === 'A') tieBreakAdvantage += 0.08;
+  else if (studentInfo.bioGeoGrade === 'C' || studentInfo.bioGeoGrade === 'D') tieBreakAdvantage -= 0.08;
+
+  return {
+    muScore: studentInfo.muScore ?? studentInfo.score,
+    sigmaScore: inferredSigma,
+    riskPreference: studentInfo.riskPreference ?? studentInfo.strategyStyle,
+    tieBreakAdvantage: Number(Math.max(0.2, Math.min(0.8, tieBreakAdvantage)).toFixed(2)),
+  };
+}
+
+export function getDefaultPreferenceWeights(overrides?: Partial<PreferenceWeights>): PreferenceWeights {
+  return {
+    ...DEFAULT_PREFERENCE_WEIGHTS,
+    ...overrides,
+  };
 }

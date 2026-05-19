@@ -1,0 +1,2387 @@
+export type IndicatorDistrictKey = 'guangming' | 'nanshan' | 'pingshan' | 'dapeng' | 'baoan' | 'yantian' | 'futian' | 'luohu' | 'longhua' | 'longgang';
+
+export const DISTRICT_SLUG_MAP = {
+  "光明区": "guangming",
+  "南山区": "nanshan",
+  "坪山区": "pingshan",
+  "大鹏新区": "dapeng",
+  "宝安区": "baoan",
+  "盐田区": "yantian",
+  "福田区": "futian",
+  "罗湖区": "luohu",
+  "龙华区": "longhua",
+  "龙岗区": "longgang"
+} as const;
+
+export const juniorSchoolDistrictIndex = [
+  {
+    "normalized": "中山大学深圳附属学校",
+    "district": "光明区",
+    "juniorSchool": "中山大学深圳附属学校"
+  },
+  {
+    "normalized": "光明区光明中学",
+    "district": "光明区",
+    "juniorSchool": "光明区光明中学"
+  },
+  {
+    "normalized": "光明区公明中学",
+    "district": "光明区",
+    "juniorSchool": "光明区公明中学"
+  },
+  {
+    "normalized": "光明区公明中英文学校",
+    "district": "光明区",
+    "juniorSchool": "光明区公明中英文学校"
+  },
+  {
+    "normalized": "光明区凤凰城实验学校",
+    "district": "光明区",
+    "juniorSchool": "光明区凤凰城实验学校"
+  },
+  {
+    "normalized": "光明区凤凰培英文武实验学校",
+    "district": "光明区",
+    "juniorSchool": "光明区凤凰培英文武实验学校"
+  },
+  {
+    "normalized": "光明区博华学校",
+    "district": "光明区",
+    "juniorSchool": "光明区博华学校"
+  },
+  {
+    "normalized": "光明区培英文武实验学校",
+    "district": "光明区",
+    "juniorSchool": "光明区培英文武实验学校"
+  },
+  {
+    "normalized": "光明区外国语学校",
+    "district": "光明区",
+    "juniorSchool": "光明区外国语学校"
+  },
+  {
+    "normalized": "光明区实验学校",
+    "district": "光明区",
+    "juniorSchool": "光明区实验学校"
+  },
+  {
+    "normalized": "光明区尔雅学校",
+    "district": "光明区",
+    "juniorSchool": "光明区尔雅学校"
+  },
+  {
+    "normalized": "光明区春蕾学校",
+    "district": "光明区",
+    "juniorSchool": "光明区春蕾学校"
+  },
+  {
+    "normalized": "光明区李松蓢学校",
+    "district": "光明区",
+    "juniorSchool": "光明区李松蓢学校"
+  },
+  {
+    "normalized": "光明区民众学校",
+    "district": "光明区",
+    "juniorSchool": "光明区民众学校"
+  },
+  {
+    "normalized": "光明区玉律学校",
+    "district": "光明区",
+    "juniorSchool": "光明区玉律学校"
+  },
+  {
+    "normalized": "光明区理创实验学校",
+    "district": "光明区",
+    "juniorSchool": "光明区理创实验学校"
+  },
+  {
+    "normalized": "光明区百花实验学校",
+    "district": "光明区",
+    "juniorSchool": "光明区百花实验学校"
+  },
+  {
+    "normalized": "光明区第二中学",
+    "district": "光明区",
+    "juniorSchool": "光明区第二中学"
+  },
+  {
+    "normalized": "光明区精华学校",
+    "district": "光明区",
+    "juniorSchool": "光明区精华学校"
+  },
+  {
+    "normalized": "光明区英才学校",
+    "district": "光明区",
+    "juniorSchool": "光明区英才学校"
+  },
+  {
+    "normalized": "光明区荔林学校",
+    "district": "光明区",
+    "juniorSchool": "光明区荔林学校"
+  },
+  {
+    "normalized": "光明区诚铭学校",
+    "district": "光明区",
+    "juniorSchool": "光明区诚铭学校"
+  },
+  {
+    "normalized": "光明区长圳学校",
+    "district": "光明区",
+    "juniorSchool": "光明区长圳学校"
+  },
+  {
+    "normalized": "光明区高级中学",
+    "district": "光明区",
+    "juniorSchool": "光明区高级中学"
+  },
+  {
+    "normalized": "华中师范大学附属光明勤诚达学校",
+    "district": "光明区",
+    "juniorSchool": "华中师范大学附属光明勤诚达学校"
+  },
+  {
+    "normalized": "南方科技大学附属光明凤凰学校",
+    "district": "光明区",
+    "juniorSchool": "南方科技大学附属光明凤凰学校"
+  },
+  {
+    "normalized": "深圳中学光明科学城学校",
+    "district": "光明区",
+    "juniorSchool": "深圳中学光明科学城学校"
+  },
+  {
+    "normalized": "深圳实验光明学校",
+    "district": "光明区",
+    "juniorSchool": "深圳实验光明学校"
+  },
+  {
+    "normalized": "深圳市光明书院",
+    "district": "光明区",
+    "juniorSchool": "深圳市光明书院"
+  },
+  {
+    "normalized": "深圳市光明区华夏中学",
+    "district": "光明区",
+    "juniorSchool": "深圳市光明区华夏中学"
+  },
+  {
+    "normalized": "深圳市光明区科育学校",
+    "district": "光明区",
+    "juniorSchool": "深圳市光明区科育学校"
+  },
+  {
+    "normalized": "深圳市教育科学研究院实验学校光明",
+    "district": "光明区",
+    "juniorSchool": "深圳市教育科学研究院实验学校 （光明）"
+  },
+  {
+    "normalized": "深圳市育新学校",
+    "district": "光明区",
+    "juniorSchool": "深圳市育新学校"
+  },
+  {
+    "normalized": "深圳技术大学附属学校光明",
+    "district": "光明区",
+    "juniorSchool": "深圳技术大学附属学校（光明）"
+  },
+  {
+    "normalized": "北京师范大学南山附属学校",
+    "district": "南山区",
+    "juniorSchool": "北京师范大学南山附属学校"
+  },
+  {
+    "normalized": "深圳大学附属中学初中部",
+    "district": "南山区",
+    "juniorSchool": "深圳大学附属中学（初中部）"
+  },
+  {
+    "normalized": "深圳大学附属教育集团外国语中学",
+    "district": "南山区",
+    "juniorSchool": "深圳大学附属教育集团外国语中学"
+  },
+  {
+    "normalized": "深圳市南山中英文学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山中英文学校"
+  },
+  {
+    "normalized": "深圳市南山为明学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山为明学校"
+  },
+  {
+    "normalized": "深圳市南山区中国科学院深圳先进技术研究院实验学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区中国科学院深圳先 进技术研究院实验学校"
+  },
+  {
+    "normalized": "深圳市南山区丽山学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区丽山学校"
+  },
+  {
+    "normalized": "深圳市南山区丽林维育学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区丽林维育学校"
+  },
+  {
+    "normalized": "深圳市南山区丽湖学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区丽湖学校"
+  },
+  {
+    "normalized": "深圳市南山区仁智实验学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区仁智实验学校"
+  },
+  {
+    "normalized": "深圳市南山区哈尔滨工业大学深圳实验学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区哈尔滨工业大学 ( 深圳 ) 实验学校"
+  },
+  {
+    "normalized": "深圳市南山区教育科学研究院附属学校教育集团南头城学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区教育科学研究院附 属学校教育集团南头城学校"
+  },
+  {
+    "normalized": "深圳市南山区教育科学研究院附属学校教育集团荔香学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区教育科学研究院附 属学校教育集团荔香学校"
+  },
+  {
+    "normalized": "深圳市南山区教育科学研究院附属学校集团同乐实验学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区教育科学研究院附 属学校集团同乐实验学校"
+  },
+  {
+    "normalized": "深圳市南山区教育科学研究院附属学校集团松坪学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区教育科学研究院附 属学校集团松坪学校"
+  },
+  {
+    "normalized": "深圳市南山区文理实验学校集团文理学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区文理实验学校（集团）文理学校"
+  },
+  {
+    "normalized": "深圳市南山区文理实验学校集团科创学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区文理实验学校（集团）科创学校"
+  },
+  {
+    "normalized": "深圳市南山区深圳湾学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区深圳湾学校"
+  },
+  {
+    "normalized": "深圳市南山区百旺学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区百旺学校"
+  },
+  {
+    "normalized": "深圳市南山区福华学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区福华学校"
+  },
+  {
+    "normalized": "深圳市南山区第二外国语学校集团前海学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区第二外国语学校 （集团）前海学校"
+  },
+  {
+    "normalized": "深圳市南山区第二外国语学校集团学府中学",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区第二外国语学校 （集团）学府中学"
+  },
+  {
+    "normalized": "深圳市南山区第二外国语学校集团海德学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区第二外国语学校 （集团）海德学校"
+  },
+  {
+    "normalized": "深圳市南山区第二外国语学校集团赤湾学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区第二外国语学校 （集团）赤湾学校"
+  },
+  {
+    "normalized": "深圳市南山区蛇口学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区蛇口学校"
+  },
+  {
+    "normalized": "深圳市南山区道新学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区道新学校"
+  },
+  {
+    "normalized": "深圳市南山区龙苑学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山区龙苑学校"
+  },
+  {
+    "normalized": "深圳市南山外国语学校集团滨海学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山外国语学校 ( 集团 ) 滨海学校"
+  },
+  {
+    "normalized": "深圳市南山外国语学校集团华侨城中学",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山外国语学校（集团） 华侨城中学"
+  },
+  {
+    "normalized": "深圳市南山外国语学校集团大冲学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山外国语学校（集团） 大冲学校"
+  },
+  {
+    "normalized": "深圳市南山外国语学校集团文华学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山外国语学校（集团） 文华学校"
+  },
+  {
+    "normalized": "深圳市南山外国语学校集团桃源中学",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山外国语学校（集团） 桃源中学"
+  },
+  {
+    "normalized": "深圳市南山外国语学校集团科华学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山外国语学校（集团） 科华学校"
+  },
+  {
+    "normalized": "深圳市南山外国语学校集团第二实验学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山外国语学校（集团） 第二实验学校"
+  },
+  {
+    "normalized": "深圳市南山外国语学校集团高新中学",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山外国语学校（集团） 高新中学"
+  },
+  {
+    "normalized": "深圳市南山实验教育集团前海港湾学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山实验教育集团前海港湾学校"
+  },
+  {
+    "normalized": "深圳市南山实验教育集团华侨城高级中学",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山实验教育集团华侨城 高级中学"
+  },
+  {
+    "normalized": "深圳市南山实验教育集团南海中学",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山实验教育集团南海中学"
+  },
+  {
+    "normalized": "深圳市南山实验教育集团南海中学北校区",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山实验教育集团南海中学（北校区）"
+  },
+  {
+    "normalized": "深圳市南山实验教育集团园丁学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山实验教育集团园丁学校"
+  },
+  {
+    "normalized": "深圳市南山实验教育集团麒麟中学",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山实验教育集团麒麟中学"
+  },
+  {
+    "normalized": "深圳市南山实验教育集团麒麟第二中学",
+    "district": "南山区",
+    "juniorSchool": "深圳市南山实验教育集团麒麟第二中学"
+  },
+  {
+    "normalized": "深圳市深中南山创新学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市深中南山创新学校"
+  },
+  {
+    "normalized": "深圳市蛇口育才教育集团太子湾学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市蛇口育才教育集团太子湾 学校"
+  },
+  {
+    "normalized": "深圳市蛇口育才教育集团育才三中",
+    "district": "南山区",
+    "juniorSchool": "深圳市蛇口育才教育集团育才三中"
+  },
+  {
+    "normalized": "深圳市蛇口育才教育集团育才二中",
+    "district": "南山区",
+    "juniorSchool": "深圳市蛇口育才教育集团育才二中"
+  },
+  {
+    "normalized": "深圳市蛇口育才教育集团龙珠学校",
+    "district": "南山区",
+    "juniorSchool": "深圳市蛇口育才教育集团龙珠学校"
+  },
+  {
+    "normalized": "东北师范大学深圳坪山实验学校",
+    "district": "坪山区",
+    "juniorSchool": "东北师范大学深圳坪山实验学校"
+  },
+  {
+    "normalized": "南方科技大学附属坪山学校",
+    "district": "坪山区",
+    "juniorSchool": "南方科技大学附属坪山学校"
+  },
+  {
+    "normalized": "坪山区东部湾区实验学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区东部湾区实验学校"
+  },
+  {
+    "normalized": "坪山区中山中学",
+    "district": "坪山区",
+    "juniorSchool": "坪山区中山中学"
+  },
+  {
+    "normalized": "坪山区光祖中学",
+    "district": "坪山区",
+    "juniorSchool": "坪山区光祖中学"
+  },
+  {
+    "normalized": "坪山区华明星学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区华明星学校"
+  },
+  {
+    "normalized": "坪山区华朗学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区华朗学校"
+  },
+  {
+    "normalized": "坪山区博明学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区博明学校"
+  },
+  {
+    "normalized": "坪山区坪山中学",
+    "district": "坪山区",
+    "juniorSchool": "坪山区坪山中学"
+  },
+  {
+    "normalized": "坪山区培英学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区培英学校"
+  },
+  {
+    "normalized": "坪山区外国语学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区外国语学校"
+  },
+  {
+    "normalized": "坪山区外国语文源学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区外国语文源学校"
+  },
+  {
+    "normalized": "坪山区实验学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区实验学校"
+  },
+  {
+    "normalized": "坪山区弘金地学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区弘金地学校"
+  },
+  {
+    "normalized": "坪山区新合实验学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区新合实验学校"
+  },
+  {
+    "normalized": "坪山区星辉实验学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区星辉实验学校"
+  },
+  {
+    "normalized": "坪山区景园外国语学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区景园外国语学校"
+  },
+  {
+    "normalized": "坪山区秀新学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区秀新学校"
+  },
+  {
+    "normalized": "坪山区秋宝学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区秋宝学校"
+  },
+  {
+    "normalized": "坪山区科源实验学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区科源实验学校"
+  },
+  {
+    "normalized": "坪山区第二外国语学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区第二外国语学校"
+  },
+  {
+    "normalized": "坪山区精致实验学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区精致实验学校"
+  },
+  {
+    "normalized": "坪山区锦绣实验学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区锦绣实验学校"
+  },
+  {
+    "normalized": "坪山区龙山学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区龙山学校"
+  },
+  {
+    "normalized": "坪山区龙翔学校",
+    "district": "坪山区",
+    "juniorSchool": "坪山区龙翔学校"
+  },
+  {
+    "normalized": "深圳中学坪山创新学校",
+    "district": "坪山区",
+    "juniorSchool": "深圳中学坪山创新学校"
+  },
+  {
+    "normalized": "深圳高级中学集团东校区初中部",
+    "district": "坪山区",
+    "juniorSchool": "深圳高级中学（集团）东校区初中部"
+  },
+  {
+    "normalized": "人大附中深圳学校",
+    "district": "大鹏新区",
+    "juniorSchool": "人大附中深圳学校"
+  },
+  {
+    "normalized": "大鹏新区南澳中学",
+    "district": "大鹏新区",
+    "juniorSchool": "大鹏新区南澳中学"
+  },
+  {
+    "normalized": "大鹏新区布新学校",
+    "district": "大鹏新区",
+    "juniorSchool": "大鹏新区布新学校"
+  },
+  {
+    "normalized": "大鹏新区星宇学校",
+    "district": "大鹏新区",
+    "juniorSchool": "大鹏新区星宇学校"
+  },
+  {
+    "normalized": "大鹏新区葵涌中学",
+    "district": "大鹏新区",
+    "juniorSchool": "大鹏新区葵涌中学"
+  },
+  {
+    "normalized": "深圳亚迪学校",
+    "district": "大鹏新区",
+    "juniorSchool": "深圳亚迪学校"
+  },
+  {
+    "normalized": "红岭教育集团大鹏华侨中学",
+    "district": "大鹏新区",
+    "juniorSchool": "红岭教育集团大鹏华侨中学"
+  },
+  {
+    "normalized": "南方科技大学附属中学宝安学校",
+    "district": "宝安区",
+    "juniorSchool": "南方科技大学附属中学宝安学校"
+  },
+  {
+    "normalized": "宝安中学集团初中部",
+    "district": "宝安区",
+    "juniorSchool": "宝安中学（集团）初中部"
+  },
+  {
+    "normalized": "宝安中学集团塘头学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安中学（集团）塘头学校"
+  },
+  {
+    "normalized": "宝安中学集团实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安中学（集团）实验学校"
+  },
+  {
+    "normalized": "宝安中学集团石岩外国语学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安中学（集团）石岩外国语学校"
+  },
+  {
+    "normalized": "宝安中学集团第二外国语学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安中学（集团）第二外国语学校"
+  },
+  {
+    "normalized": "宝安区上星学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区上星学校"
+  },
+  {
+    "normalized": "宝安区东升实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区东升实验学校"
+  },
+  {
+    "normalized": "宝安区东方英文书院",
+    "district": "宝安区",
+    "juniorSchool": "宝安区东方英文书院"
+  },
+  {
+    "normalized": "宝安区中英公学",
+    "district": "宝安区",
+    "juniorSchool": "宝安区中英公学"
+  },
+  {
+    "normalized": "宝安区为明双语实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区为明双语实验学校"
+  },
+  {
+    "normalized": "宝安区冠华育才学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区冠华育才学校"
+  },
+  {
+    "normalized": "宝安区冠群实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区冠群实验学校"
+  },
+  {
+    "normalized": "宝安区凤凰学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区凤凰学校"
+  },
+  {
+    "normalized": "宝安区北亭实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区北亭实验学校"
+  },
+  {
+    "normalized": "宝安区华一实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区华一实验学校"
+  },
+  {
+    "normalized": "宝安区华中师大宝安附属学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区华中师大宝安附属学校"
+  },
+  {
+    "normalized": "宝安区华侨康桥书院",
+    "district": "宝安区",
+    "juniorSchool": "宝安区华侨（康桥）书院"
+  },
+  {
+    "normalized": "宝安区华南中英文学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区华南中英文学校"
+  },
+  {
+    "normalized": "宝安区华文学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区华文学校"
+  },
+  {
+    "normalized": "宝安区华源学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区华源学校"
+  },
+  {
+    "normalized": "宝安区华胜实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区华胜实验学校"
+  },
+  {
+    "normalized": "宝安区和平中英文实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区和平中英文实验学校"
+  },
+  {
+    "normalized": "宝安区塘尾万里学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区塘尾万里学校"
+  },
+  {
+    "normalized": "宝安区孝德学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区孝德学校"
+  },
+  {
+    "normalized": "宝安区宁远实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区宁远实验学校"
+  },
+  {
+    "normalized": "宝安区官田学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区官田学校"
+  },
+  {
+    "normalized": "宝安区宝华学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区宝华学校"
+  },
+  {
+    "normalized": "宝安区富源学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区富源学校"
+  },
+  {
+    "normalized": "宝安区崇文学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区崇文学校"
+  },
+  {
+    "normalized": "宝安区崛起实验中学",
+    "district": "宝安区",
+    "juniorSchool": "宝安区崛起实验中学"
+  },
+  {
+    "normalized": "宝安区才华学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区才华学校"
+  },
+  {
+    "normalized": "宝安区振兴学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区振兴学校"
+  },
+  {
+    "normalized": "宝安区振华学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区振华学校"
+  },
+  {
+    "normalized": "宝安区文汇学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区文汇学校"
+  },
+  {
+    "normalized": "宝安区料坑学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区料坑学校"
+  },
+  {
+    "normalized": "宝安区新安中学集团初中部",
+    "district": "宝安区",
+    "juniorSchool": "宝安区新安中学（集团）初中部"
+  },
+  {
+    "normalized": "宝安区新安中学集团外国语学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区新安中学（集团）外国语 学校"
+  },
+  {
+    "normalized": "宝安区明德外语实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区明德外语实验学校"
+  },
+  {
+    "normalized": "宝安区景山实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区景山实验学校"
+  },
+  {
+    "normalized": "宝安区松岗中学",
+    "district": "宝安区",
+    "juniorSchool": "宝安区松岗中学"
+  },
+  {
+    "normalized": "宝安区松岗中英文实验学校溪头校区",
+    "district": "宝安区",
+    "juniorSchool": "宝安区松岗中英文实验学校溪头 校区"
+  },
+  {
+    "normalized": "宝安区松岗中英文实验学校本部",
+    "district": "宝安区",
+    "juniorSchool": "宝安区松岗中英文实验学校（本部）"
+  },
+  {
+    "normalized": "宝安区松岗实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区松岗实验学校"
+  },
+  {
+    "normalized": "宝安区标尚学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区标尚学校"
+  },
+  {
+    "normalized": "宝安区桃源居中澳实验学校公办",
+    "district": "宝安区",
+    "juniorSchool": "宝安区桃源居中澳实验学校 ( 公办)"
+  },
+  {
+    "normalized": "宝安区桃源居中澳实验学校民办",
+    "district": "宝安区",
+    "juniorSchool": "宝安区桃源居中澳实验学校 ( 民办)"
+  },
+  {
+    "normalized": "宝安区桥兴学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区桥兴学校"
+  },
+  {
+    "normalized": "宝安区桥头学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区桥头学校"
+  },
+  {
+    "normalized": "宝安区水田实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区水田实验学校"
+  },
+  {
+    "normalized": "宝安区永联学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区永联学校"
+  },
+  {
+    "normalized": "宝安区沙井上南学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区沙井上南学校"
+  },
+  {
+    "normalized": "宝安区沙井东山书院",
+    "district": "宝安区",
+    "juniorSchool": "宝安区沙井东山书院"
+  },
+  {
+    "normalized": "宝安区沙井中学",
+    "district": "宝安区",
+    "juniorSchool": "宝安区沙井中学"
+  },
+  {
+    "normalized": "宝安区海乐实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区海乐实验学校"
+  },
+  {
+    "normalized": "宝安区海旺学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区海旺学校"
+  },
+  {
+    "normalized": "宝安区海湾中学",
+    "district": "宝安区",
+    "juniorSchool": "宝安区海湾中学"
+  },
+  {
+    "normalized": "宝安区海滨中学",
+    "district": "宝安区",
+    "juniorSchool": "宝安区海滨中学"
+  },
+  {
+    "normalized": "宝安区海韵学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区海韵学校"
+  },
+  {
+    "normalized": "宝安区清平实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区清平实验学校"
+  },
+  {
+    "normalized": "宝安区燕山学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区燕山学校"
+  },
+  {
+    "normalized": "宝安区石岩湖学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区石岩湖学校"
+  },
+  {
+    "normalized": "宝安区碧头文武学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区碧头文武学校"
+  },
+  {
+    "normalized": "宝安区福民学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区福民学校"
+  },
+  {
+    "normalized": "宝安区福永中学",
+    "district": "宝安区",
+    "juniorSchool": "宝安区福永中学"
+  },
+  {
+    "normalized": "宝安区立才实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区立才实验学校"
+  },
+  {
+    "normalized": "宝安区立新湖外国语学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区立新湖外国语学校"
+  },
+  {
+    "normalized": "宝安区翻身实验学校西校区",
+    "district": "宝安区",
+    "juniorSchool": "宝安区翻身实验学校西校区"
+  },
+  {
+    "normalized": "宝安区翻身实验学校东校区",
+    "district": "宝安区",
+    "juniorSchool": "宝安区翻身实验学校（东校区）"
+  },
+  {
+    "normalized": "宝安区育才学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区育才学校"
+  },
+  {
+    "normalized": "宝安区航城学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区航城学校"
+  },
+  {
+    "normalized": "宝安区航瑞中学",
+    "district": "宝安区",
+    "juniorSchool": "宝安区航瑞中学"
+  },
+  {
+    "normalized": "宝安区荣根学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区荣根学校"
+  },
+  {
+    "normalized": "宝安区西乡中学",
+    "district": "宝安区",
+    "juniorSchool": "宝安区西乡中学"
+  },
+  {
+    "normalized": "宝安区西乡实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区西乡实验学校"
+  },
+  {
+    "normalized": "宝安区西乡龙山学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区西乡龙山学校"
+  },
+  {
+    "normalized": "宝安区金源学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区金源学校"
+  },
+  {
+    "normalized": "宝安区金碧实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区金碧实验学校"
+  },
+  {
+    "normalized": "宝安区陶园中英文实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区陶园中英文实验学校"
+  },
+  {
+    "normalized": "宝安区鹏晖中英文学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区鹏晖中英文学校"
+  },
+  {
+    "normalized": "宝安区鹤洲学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区鹤洲学校"
+  },
+  {
+    "normalized": "宝安区黄麻布学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安区黄麻布学校"
+  },
+  {
+    "normalized": "宝安实验学校",
+    "district": "宝安区",
+    "juniorSchool": "宝安实验学校"
+  },
+  {
+    "normalized": "宝安第一外国语学校初中部",
+    "district": "宝安区",
+    "juniorSchool": "宝安第一外国语学校初中部"
+  },
+  {
+    "normalized": "新安中学集团第一实验学校",
+    "district": "宝安区",
+    "juniorSchool": "新安中学（集团）第一实验学校"
+  },
+  {
+    "normalized": "新安中学集团第二外国语学校",
+    "district": "宝安区",
+    "juniorSchool": "新安中学（集团）第二外国语学校"
+  },
+  {
+    "normalized": "深圳外国语学校宝安学校",
+    "district": "宝安区",
+    "juniorSchool": "深圳外国语学校宝安学校"
+  },
+  {
+    "normalized": "深圳市宝安中学外国语学校",
+    "district": "宝安区",
+    "juniorSchool": "深圳市宝安中学外国语学校"
+  },
+  {
+    "normalized": "深圳市宝安区宝龙学校",
+    "district": "宝安区",
+    "juniorSchool": "深圳市宝安区宝龙学校"
+  },
+  {
+    "normalized": "深圳市宝安区实验学校集团燕川实验学校",
+    "district": "宝安区",
+    "juniorSchool": "深圳市宝安区实验学校（集团） 燕川实验学校"
+  },
+  {
+    "normalized": "深圳市宝安区湖光学校",
+    "district": "宝安区",
+    "juniorSchool": "深圳市宝安区湖光学校"
+  },
+  {
+    "normalized": "深圳市高级中学盐田学校",
+    "district": "盐田区",
+    "juniorSchool": "深圳市高级中学盐田学校"
+  },
+  {
+    "normalized": "盐田区云海学校",
+    "district": "盐田区",
+    "juniorSchool": "盐田区云海学校"
+  },
+  {
+    "normalized": "盐田区外国语学校",
+    "district": "盐田区",
+    "juniorSchool": "盐田区外国语学校"
+  },
+  {
+    "normalized": "盐田区实验学校",
+    "district": "盐田区",
+    "juniorSchool": "盐田区实验学校"
+  },
+  {
+    "normalized": "盐田区梅沙双语学校",
+    "district": "盐田区",
+    "juniorSchool": "盐田区梅沙双语学校"
+  },
+  {
+    "normalized": "盐田区田东中学",
+    "district": "盐田区",
+    "juniorSchool": "盐田区田东中学"
+  },
+  {
+    "normalized": "深圳外国语学校",
+    "district": "福田区",
+    "juniorSchool": "深圳外国语学校"
+  },
+  {
+    "normalized": "深圳实验学校中学部",
+    "district": "福田区",
+    "juniorSchool": "深圳实验学校中学部"
+  },
+  {
+    "normalized": "深圳实验学校初中部",
+    "district": "福田区",
+    "juniorSchool": "深圳实验学校初中部"
+  },
+  {
+    "normalized": "深圳市福田区红岭教育集团深康学校",
+    "district": "福田区",
+    "juniorSchool": "深圳市福田区红岭教育集团深康 学校"
+  },
+  {
+    "normalized": "深圳市福田区红岭教育集团石厦中学",
+    "district": "福田区",
+    "juniorSchool": "深圳市福田区红岭教育集团石厦 中学"
+  },
+  {
+    "normalized": "深圳市福田区西交利物浦大学基础教育集团外国语学校上步",
+    "district": "福田区",
+    "juniorSchool": "深圳市福田区西交利物浦大学基 础教育集团外国语学校（上步）"
+  },
+  {
+    "normalized": "深圳市第三高级中学初中部",
+    "district": "福田区",
+    "juniorSchool": "深圳市第三高级中学初中部"
+  },
+  {
+    "normalized": "深圳明德实验学校集团碧海校区",
+    "district": "福田区",
+    "juniorSchool": "深圳明德实验学校（集团）碧海 校区"
+  },
+  {
+    "normalized": "深圳高级中学集团南校区",
+    "district": "福田区",
+    "juniorSchool": "深圳高级中学（集团）南校区"
+  },
+  {
+    "normalized": "福田区云顶学校",
+    "district": "福田区",
+    "juniorSchool": "福田区云顶学校"
+  },
+  {
+    "normalized": "福田区北京大学附属中学深圳学校集团黄埔学校",
+    "district": "福田区",
+    "juniorSchool": "福田区北京大学附属中学深圳学 校 ( 集团 ) 黄埔学校"
+  },
+  {
+    "normalized": "福田区外国语学校",
+    "district": "福田区",
+    "juniorSchool": "福田区外国语学校"
+  },
+  {
+    "normalized": "福田区外国语学校香蜜",
+    "district": "福田区",
+    "juniorSchool": "福田区外国语学校 ( 香蜜 )"
+  },
+  {
+    "normalized": "福田区外国语学校景秀",
+    "district": "福田区",
+    "juniorSchool": "福田区外国语学校（景秀）"
+  },
+  {
+    "normalized": "福田区外国语学校福保",
+    "district": "福田区",
+    "juniorSchool": "福田区外国语学校（福保）"
+  },
+  {
+    "normalized": "福田区外国语学校竹林",
+    "district": "福田区",
+    "juniorSchool": "福田区外国语学校（竹林）"
+  },
+  {
+    "normalized": "福田区实验教育集团侨香学校北校",
+    "district": "福田区",
+    "juniorSchool": "福田区实验教育集团侨香学校 ( 北校 )"
+  },
+  {
+    "normalized": "福田区实验教育集团侨香学校南校",
+    "district": "福田区",
+    "juniorSchool": "福田区实验教育集团侨香学校 （南校）"
+  },
+  {
+    "normalized": "福田区实验教育集团翰林学校",
+    "district": "福田区",
+    "juniorSchool": "福田区实验教育集团翰林学校"
+  },
+  {
+    "normalized": "福田区方方乐趣中英文学校",
+    "district": "福田区",
+    "juniorSchool": "福田区方方乐趣中英文学校"
+  },
+  {
+    "normalized": "福田区明德实验学校香蜜校区",
+    "district": "福田区",
+    "juniorSchool": "福田区明德实验学校香蜜校区"
+  },
+  {
+    "normalized": "福田区梅山中学",
+    "district": "福田区",
+    "juniorSchool": "福田区梅山中学"
+  },
+  {
+    "normalized": "福田区深圳中学梅香学校",
+    "district": "福田区",
+    "juniorSchool": "福田区深圳中学梅香学校"
+  },
+  {
+    "normalized": "福田区深大附中创新中学",
+    "district": "福田区",
+    "juniorSchool": "福田区深大附中创新中学"
+  },
+  {
+    "normalized": "福田区皇岗创新实验学校",
+    "district": "福田区",
+    "juniorSchool": "福田区皇岗创新实验学校"
+  },
+  {
+    "normalized": "福田区益田花园学校",
+    "district": "福田区",
+    "juniorSchool": "福田区益田花园学校"
+  },
+  {
+    "normalized": "福田区石厦学校",
+    "district": "福田区",
+    "juniorSchool": "福田区石厦学校"
+  },
+  {
+    "normalized": "福田区福景外国语学校",
+    "district": "福田区",
+    "juniorSchool": "福田区福景外国语学校"
+  },
+  {
+    "normalized": "福田区福港艺林学校",
+    "district": "福田区",
+    "juniorSchool": "福田区福港艺林学校"
+  },
+  {
+    "normalized": "福田区第二实验学校",
+    "district": "福田区",
+    "juniorSchool": "福田区第二实验学校"
+  },
+  {
+    "normalized": "福田区第二实验学校北校区",
+    "district": "福田区",
+    "juniorSchool": "福田区第二实验学校（北校区）"
+  },
+  {
+    "normalized": "福田区第二实验学校皇御苑",
+    "district": "福田区",
+    "juniorSchool": "福田区第二实验学校（皇御苑）"
+  },
+  {
+    "normalized": "福田区红岭中学集团园岭部",
+    "district": "福田区",
+    "juniorSchool": "福田区红岭中学（集团）园岭部"
+  },
+  {
+    "normalized": "福田区红岭实验学校上沙",
+    "district": "福田区",
+    "juniorSchool": "福田区红岭实验学校（上沙）"
+  },
+  {
+    "normalized": "福田区红岭实验学校新洲",
+    "district": "福田区",
+    "juniorSchool": "福田区红岭实验学校（新洲）"
+  },
+  {
+    "normalized": "福田区红岭教育集团华富中学",
+    "district": "福田区",
+    "juniorSchool": "福田区红岭教育集团华富中学"
+  },
+  {
+    "normalized": "福田区美林学校",
+    "district": "福田区",
+    "juniorSchool": "福田区美林学校"
+  },
+  {
+    "normalized": "福田区耀华实验学校",
+    "district": "福田区",
+    "juniorSchool": "福田区耀华实验学校"
+  },
+  {
+    "normalized": "福田区致远学校",
+    "district": "福田区",
+    "juniorSchool": "福田区致远学校"
+  },
+  {
+    "normalized": "福田区莲花中学北校区",
+    "district": "福田区",
+    "juniorSchool": "福田区莲花中学北校区"
+  },
+  {
+    "normalized": "福田区莲花中学南校区",
+    "district": "福田区",
+    "juniorSchool": "福田区莲花中学南校区"
+  },
+  {
+    "normalized": "福田区贝赛思学校",
+    "district": "福田区",
+    "juniorSchool": "福田区贝赛思学校"
+  },
+  {
+    "normalized": "福田区香港中文大学深圳附属彩田学校",
+    "district": "福田区",
+    "juniorSchool": "福田区香港中文大学 ( 深圳 ) 附属彩田学校"
+  },
+  {
+    "normalized": "荔园教育集团笔架山学校",
+    "district": "福田区",
+    "juniorSchool": "荔园教育集团笔架山学校"
+  },
+  {
+    "normalized": "深圳中学初中部",
+    "district": "罗湖区",
+    "juniorSchool": "深圳中学初中部"
+  },
+  {
+    "normalized": "深圳市第二实验学校初中部",
+    "district": "罗湖区",
+    "juniorSchool": "深圳市第二实验学校初中部"
+  },
+  {
+    "normalized": "深圳市罗湖区侨香实验学校",
+    "district": "罗湖区",
+    "juniorSchool": "深圳市罗湖区侨香实验学校"
+  },
+  {
+    "normalized": "深圳市罗湖区翠园东晓创新学校",
+    "district": "罗湖区",
+    "juniorSchool": "深圳市罗湖区翠园东晓创新学校"
+  },
+  {
+    "normalized": "深圳市罗湖区香港中文大学深圳附属礼文学校",
+    "district": "罗湖区",
+    "juniorSchool": "深圳市罗湖区香港中文大学（深 圳）附属礼文学校"
+  },
+  {
+    "normalized": "深圳市罗湖教科院附属学校",
+    "district": "罗湖区",
+    "juniorSchool": "深圳市罗湖教科院附属学校"
+  },
+  {
+    "normalized": "深圳市翠园文锦中学",
+    "district": "罗湖区",
+    "juniorSchool": "深圳市翠园文锦中学"
+  },
+  {
+    "normalized": "罗湖区东湖中学",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区东湖中学"
+  },
+  {
+    "normalized": "罗湖区华美外国语学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区华美外国语学校"
+  },
+  {
+    "normalized": "罗湖区华英学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区华英学校"
+  },
+  {
+    "normalized": "罗湖区大望学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区大望学校"
+  },
+  {
+    "normalized": "罗湖区布心中学",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区布心中学"
+  },
+  {
+    "normalized": "罗湖区文德学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区文德学校"
+  },
+  {
+    "normalized": "罗湖区新华外国语学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区新华外国语学校"
+  },
+  {
+    "normalized": "罗湖区松泉中学",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区松泉中学"
+  },
+  {
+    "normalized": "罗湖区桂园中学",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区桂园中学"
+  },
+  {
+    "normalized": "罗湖区滨河实验中学",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区滨河实验中学"
+  },
+  {
+    "normalized": "罗湖区红桂中学",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区红桂中学"
+  },
+  {
+    "normalized": "罗湖区罗湖中学",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区罗湖中学"
+  },
+  {
+    "normalized": "罗湖区翠园东晓中学",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区翠园东晓中学"
+  },
+  {
+    "normalized": "罗湖区翠园初级中学",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区翠园初级中学"
+  },
+  {
+    "normalized": "罗湖区翠园实验学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区翠园实验学校"
+  },
+  {
+    "normalized": "罗湖区莲城学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区莲城学校"
+  },
+  {
+    "normalized": "罗湖区诺思外语实验学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区诺思外语实验学校"
+  },
+  {
+    "normalized": "罗湖区鹏兴实验学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区鹏兴实验学校"
+  },
+  {
+    "normalized": "罗湖区龙园外语实验学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖区龙园外语实验学校"
+  },
+  {
+    "normalized": "罗湖外语初中学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖外语初中学校"
+  },
+  {
+    "normalized": "罗湖外语实验学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖外语实验学校"
+  },
+  {
+    "normalized": "罗湖实验学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖实验学校"
+  },
+  {
+    "normalized": "罗湖未来学校",
+    "district": "罗湖区",
+    "juniorSchool": "罗湖未来学校"
+  },
+  {
+    "normalized": "华东师范大学附属深圳龙华学校教育集团",
+    "district": "龙华区",
+    "juniorSchool": "华东师范大学附属深圳龙华学校 教育集团"
+  },
+  {
+    "normalized": "深圳外国语学校龙华学校",
+    "district": "龙华区",
+    "juniorSchool": "深圳外国语学校龙华学校"
+  },
+  {
+    "normalized": "深圳市格致中学民治校区",
+    "district": "龙华区",
+    "juniorSchool": "深圳市格致中学民治校区"
+  },
+  {
+    "normalized": "深圳市红山中学",
+    "district": "龙华区",
+    "juniorSchool": "深圳市红山中学"
+  },
+  {
+    "normalized": "深圳市艺术高中民治学校",
+    "district": "龙华区",
+    "juniorSchool": "深圳市艺术高中民治学校"
+  },
+  {
+    "normalized": "深圳市观澜第二中学教育集团",
+    "district": "龙华区",
+    "juniorSchool": "深圳市观澜第二中学教育集团"
+  },
+  {
+    "normalized": "深圳市龙华区民治中学教育集团初中部",
+    "district": "龙华区",
+    "juniorSchool": "深圳市龙华区民治中学教育集团 初中部"
+  },
+  {
+    "normalized": "深圳市龙华区潜龙学校教育集团",
+    "district": "龙华区",
+    "juniorSchool": "深圳市龙华区潜龙学校教育集团"
+  },
+  {
+    "normalized": "深圳市龙华区行知外国语学校",
+    "district": "龙华区",
+    "juniorSchool": "深圳市龙华区行知外国语学校"
+  },
+  {
+    "normalized": "深圳香港培侨书院龙华信义学校",
+    "district": "龙华区",
+    "juniorSchool": "深圳香港培侨书院龙华信义学校"
+  },
+  {
+    "normalized": "深圳高级中学集团北校区",
+    "district": "龙华区",
+    "juniorSchool": "深圳高级中学（集团）北校区"
+  },
+  {
+    "normalized": "龙华中学弘毅校区",
+    "district": "龙华区",
+    "juniorSchool": "龙华中学弘毅校区"
+  },
+  {
+    "normalized": "龙华中英文实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华中英文实验学校"
+  },
+  {
+    "normalized": "龙华区万安学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区万安学校"
+  },
+  {
+    "normalized": "龙华区万科双语学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区万科双语学校"
+  },
+  {
+    "normalized": "龙华区三联永恒学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区三联永恒学校"
+  },
+  {
+    "normalized": "龙华区丹堤实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区丹堤实验学校"
+  },
+  {
+    "normalized": "龙华区六一学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区六一学校"
+  },
+  {
+    "normalized": "龙华区创新实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区创新实验学校"
+  },
+  {
+    "normalized": "龙华区华南实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区华南实验学校"
+  },
+  {
+    "normalized": "龙华区华盛学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区华盛学校"
+  },
+  {
+    "normalized": "龙华区博恒实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区博恒实验学校"
+  },
+  {
+    "normalized": "龙华区博文学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区博文学校"
+  },
+  {
+    "normalized": "龙华区博雅实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区博雅实验学校"
+  },
+  {
+    "normalized": "龙华区同胜学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区同胜学校"
+  },
+  {
+    "normalized": "龙华区外国语学校教育集团观湖校区",
+    "district": "龙华区",
+    "juniorSchool": "龙华区外国语学校教育集团观湖 校区"
+  },
+  {
+    "normalized": "龙华区外国语学校教育集团高新校区",
+    "district": "龙华区",
+    "juniorSchool": "龙华区外国语学校教育集团高新 校区"
+  },
+  {
+    "normalized": "龙华区大浪实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区大浪实验学校"
+  },
+  {
+    "normalized": "龙华区宝文学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区宝文学校"
+  },
+  {
+    "normalized": "龙华区实验学校教育集团",
+    "district": "龙华区",
+    "juniorSchool": "龙华区实验学校教育集团"
+  },
+  {
+    "normalized": "龙华区展华实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区展华实验学校"
+  },
+  {
+    "normalized": "龙华区振能学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区振能学校"
+  },
+  {
+    "normalized": "龙华区教育科学研究院第二附属学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区教育科学研究院第二附属 学校"
+  },
+  {
+    "normalized": "龙华区教育科学研究院附属外国语学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区教育科学研究院附属外国语学校"
+  },
+  {
+    "normalized": "龙华区教育科学研究院附属学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区教育科学研究院附属学校"
+  },
+  {
+    "normalized": "龙华区教育科学研究院附属实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区教育科学研究院附属实验学校"
+  },
+  {
+    "normalized": "龙华区新华中学教育集团",
+    "district": "龙华区",
+    "juniorSchool": "龙华区新华中学教育集团"
+  },
+  {
+    "normalized": "龙华区民治中学教育集团民新学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区民治中学教育集团民新学校"
+  },
+  {
+    "normalized": "龙华区清泉外国语学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区清泉外国语学校"
+  },
+  {
+    "normalized": "龙华区爱义学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区爱义学校"
+  },
+  {
+    "normalized": "龙华区爱孚实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区爱孚实验学校"
+  },
+  {
+    "normalized": "龙华区牛栏前学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区牛栏前学校"
+  },
+  {
+    "normalized": "龙华区玉龙学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区玉龙学校"
+  },
+  {
+    "normalized": "龙华区福城实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区福城实验学校"
+  },
+  {
+    "normalized": "龙华区科技学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区科技学校"
+  },
+  {
+    "normalized": "龙华区第三外国语学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区第三外国语学校"
+  },
+  {
+    "normalized": "龙华区第三实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区第三实验学校"
+  },
+  {
+    "normalized": "龙华区第二外国语学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区第二外国语学校"
+  },
+  {
+    "normalized": "龙华区第二实验学校教育集团华仁校区",
+    "district": "龙华区",
+    "juniorSchool": "龙华区第二实验学校教育集团华仁校区"
+  },
+  {
+    "normalized": "龙华区美中学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区美中学校"
+  },
+  {
+    "normalized": "龙华区虔贞学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区虔贞学校"
+  },
+  {
+    "normalized": "龙华区行知学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区行知学校"
+  },
+  {
+    "normalized": "龙华区观湖外国语学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区观湖外国语学校"
+  },
+  {
+    "normalized": "龙华区观澜中学",
+    "district": "龙华区",
+    "juniorSchool": "龙华区观澜中学"
+  },
+  {
+    "normalized": "龙华区观澜中心学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区观澜中心学校"
+  },
+  {
+    "normalized": "龙华区锦华实验学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区锦华实验学校"
+  },
+  {
+    "normalized": "龙华区锦明学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区锦明学校"
+  },
+  {
+    "normalized": "龙华区高峰学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区高峰学校"
+  },
+  {
+    "normalized": "龙华区龙丰学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区龙丰学校"
+  },
+  {
+    "normalized": "龙华区龙华中学",
+    "district": "龙华区",
+    "juniorSchool": "龙华区龙华中学"
+  },
+  {
+    "normalized": "龙华区龙腾学校",
+    "district": "龙华区",
+    "juniorSchool": "龙华区龙腾学校"
+  },
+  {
+    "normalized": "龙华高级中学教育集团大浪校区",
+    "district": "龙华区",
+    "juniorSchool": "龙华高级中学教育集团大浪校区"
+  },
+  {
+    "normalized": "龙华高级中学教育集团观澜校区",
+    "district": "龙华区",
+    "juniorSchool": "龙华高级中学教育集团观澜校区"
+  },
+  {
+    "normalized": "华中师范大学附属龙园学校",
+    "district": "龙岗区",
+    "juniorSchool": "华中师范大学附属龙园学校"
+  },
+  {
+    "normalized": "华南师范大学附属龙岗大运学校",
+    "district": "龙岗区",
+    "juniorSchool": "华南师范大学附属龙岗大运学校"
+  },
+  {
+    "normalized": "广东实验中学深圳学校",
+    "district": "龙岗区",
+    "juniorSchool": "广东实验中学深圳学校"
+  },
+  {
+    "normalized": "深圳中学龙岗学校集团兰著学校",
+    "district": "龙岗区",
+    "juniorSchool": "深圳中学龙岗学校（集团）兰著 学校"
+  },
+  {
+    "normalized": "深圳体育运动学校",
+    "district": "龙岗区",
+    "juniorSchool": "深圳体育运动学校"
+  },
+  {
+    "normalized": "深圳元平特殊教育学校",
+    "district": "龙岗区",
+    "juniorSchool": "深圳元平特殊教育学校"
+  },
+  {
+    "normalized": "深圳北理莫斯科大学附属龙岗园山学校",
+    "district": "龙岗区",
+    "juniorSchool": "深圳北理莫斯科大学附属龙岗园山学校"
+  },
+  {
+    "normalized": "深圳实验学校坂田部",
+    "district": "龙岗区",
+    "juniorSchool": "深圳实验学校坂田部"
+  },
+  {
+    "normalized": "深圳市建文外国语学校",
+    "district": "龙岗区",
+    "juniorSchool": "深圳市建文外国语学校"
+  },
+  {
+    "normalized": "深圳市高级中学龙岗学校",
+    "district": "龙岗区",
+    "juniorSchool": "深圳市高级中学龙岗学校"
+  },
+  {
+    "normalized": "深圳科学高中龙岗五和学校",
+    "district": "龙岗区",
+    "juniorSchool": "深圳科学高中龙岗五和学校"
+  },
+  {
+    "normalized": "深圳科学高中龙岗分校",
+    "district": "龙岗区",
+    "juniorSchool": "深圳科学高中龙岗分校"
+  },
+  {
+    "normalized": "香港中文大学深圳附属知新学校",
+    "district": "龙岗区",
+    "juniorSchool": "香港中文大学（深圳）附属知新 学校"
+  },
+  {
+    "normalized": "香港中文大学深圳附属道远学校",
+    "district": "龙岗区",
+    "juniorSchool": "香港中文大学（深圳）附属道远 学校"
+  },
+  {
+    "normalized": "龙城高级中学教育集团东兴外国语学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙城高级中学（教育集团）东兴 外国语学校"
+  },
+  {
+    "normalized": "龙城高级中学教育集团宝龙外国语学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙城高级中学（教育集团）宝龙外国语学校"
+  },
+  {
+    "normalized": "龙城高级中学教育集团龙城创新学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙城高级中学（教育集团）龙城 创新学校"
+  },
+  {
+    "normalized": "龙城高级中学教育集团龙城初级中学",
+    "district": "龙岗区",
+    "juniorSchool": "龙城高级中学（教育集团）龙城 初级中学"
+  },
+  {
+    "normalized": "龙岗区三联储运学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区三联储运学校"
+  },
+  {
+    "normalized": "龙岗区上海外国语大学附属龙岗学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区上海外国语大学附属龙岗 学校"
+  },
+  {
+    "normalized": "龙岗区东升学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区东升学校"
+  },
+  {
+    "normalized": "龙岗区东珠学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区东珠学校"
+  },
+  {
+    "normalized": "龙岗区丰丽学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区丰丽学校"
+  },
+  {
+    "normalized": "龙岗区丽湖学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区丽湖学校"
+  },
+  {
+    "normalized": "龙岗区乐淮实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区乐淮实验学校"
+  },
+  {
+    "normalized": "龙岗区五联崇和学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区五联崇和学校"
+  },
+  {
+    "normalized": "龙岗区仙田外国语学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区仙田外国语学校"
+  },
+  {
+    "normalized": "龙岗区信德学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区信德学校"
+  },
+  {
+    "normalized": "龙岗区六约学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区六约学校"
+  },
+  {
+    "normalized": "龙岗区兰陵学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区兰陵学校"
+  },
+  {
+    "normalized": "龙岗区兴文学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区兴文学校"
+  },
+  {
+    "normalized": "龙岗区兴泰实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区兴泰实验学校"
+  },
+  {
+    "normalized": "龙岗区凯瑞特学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区凯瑞特学校"
+  },
+  {
+    "normalized": "龙岗区华升学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区华升学校"
+  },
+  {
+    "normalized": "龙岗区华南师范大学附属平湖学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区华南师范大学附属平湖学校"
+  },
+  {
+    "normalized": "龙岗区华城学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区华城学校"
+  },
+  {
+    "normalized": "龙岗区华德学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区华德学校"
+  },
+  {
+    "normalized": "龙岗区华龙学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区华龙学校"
+  },
+  {
+    "normalized": "龙岗区南京师范大学附属龙岗学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区南京师范大学附属龙岗学校"
+  },
+  {
+    "normalized": "龙岗区南园学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区南园学校"
+  },
+  {
+    "normalized": "龙岗区南湾学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区南湾学校"
+  },
+  {
+    "normalized": "龙岗区南湾沙塘布学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区南湾沙塘布学校"
+  },
+  {
+    "normalized": "龙岗区南联学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区南联学校"
+  },
+  {
+    "normalized": "龙岗区南芳塘坑学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区南芳塘坑学校"
+  },
+  {
+    "normalized": "龙岗区南芳学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区南芳学校"
+  },
+  {
+    "normalized": "龙岗区可园学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区可园学校"
+  },
+  {
+    "normalized": "龙岗区同乐主力学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区同乐主力学校"
+  },
+  {
+    "normalized": "龙岗区同兴学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区同兴学校"
+  },
+  {
+    "normalized": "龙岗区同心实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区同心实验学校"
+  },
+  {
+    "normalized": "龙岗区名星学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区名星学校"
+  },
+  {
+    "normalized": "龙岗区启英学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区启英学校"
+  },
+  {
+    "normalized": "龙岗区嘉联学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区嘉联学校"
+  },
+  {
+    "normalized": "龙岗区园山实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区园山实验学校"
+  },
+  {
+    "normalized": "龙岗区坂田实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区坂田实验学校"
+  },
+  {
+    "normalized": "龙岗区坪东学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区坪东学校"
+  },
+  {
+    "normalized": "龙岗区坪地中学",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区坪地中学"
+  },
+  {
+    "normalized": "龙岗区坪西学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区坪西学校"
+  },
+  {
+    "normalized": "龙岗区外国语学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区外国语学校"
+  },
+  {
+    "normalized": "龙岗区外国语学校集团云和学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区外国语学校 （集团）云和学校"
+  },
+  {
+    "normalized": "龙岗区外国语学校集团新亚洲学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区外国语学校（集团）新亚洲学校"
+  },
+  {
+    "normalized": "龙岗区外国语学校集团星河学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区外国语学校（集团）星河 学校"
+  },
+  {
+    "normalized": "龙岗区外国语学校集团致美学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区外国语学校（集团）致美 学校"
+  },
+  {
+    "normalized": "龙岗区天成学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区天成学校"
+  },
+  {
+    "normalized": "龙岗区天誉实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区天誉实验学校"
+  },
+  {
+    "normalized": "龙岗区安康学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区安康学校"
+  },
+  {
+    "normalized": "龙岗区宏扬学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区宏扬学校"
+  },
+  {
+    "normalized": "龙岗区宝荷学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区宝荷学校"
+  },
+  {
+    "normalized": "龙岗区宝龙科技城实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区宝龙科技城实验学校"
+  },
+  {
+    "normalized": "龙岗区实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区实验学校"
+  },
+  {
+    "normalized": "龙岗区布吉中学",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区布吉中学"
+  },
+  {
+    "normalized": "龙岗区平南学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区平南学校"
+  },
+  {
+    "normalized": "龙岗区平安里学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区平安里学校"
+  },
+  {
+    "normalized": "龙岗区平湖中学",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区平湖中学"
+  },
+  {
+    "normalized": "龙岗区平湖中心学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区平湖中心学校"
+  },
+  {
+    "normalized": "龙岗区平湖外国语学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区平湖外国语学校"
+  },
+  {
+    "normalized": "龙岗区平湖实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区平湖实验学校"
+  },
+  {
+    "normalized": "龙岗区平湖第二实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区平湖第二实验学校"
+  },
+  {
+    "normalized": "龙岗区康乐学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区康乐学校"
+  },
+  {
+    "normalized": "龙岗区康艺学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区康艺学校"
+  },
+  {
+    "normalized": "龙岗区弘文学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区弘文学校"
+  },
+  {
+    "normalized": "龙岗区德琳学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区德琳学校"
+  },
+  {
+    "normalized": "龙岗区德龙学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区德龙学校"
+  },
+  {
+    "normalized": "龙岗区怡翠实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区怡翠实验学校"
+  },
+  {
+    "normalized": "龙岗区惠华学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区惠华学校"
+  },
+  {
+    "normalized": "龙岗区扬美实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区扬美实验学校"
+  },
+  {
+    "normalized": "龙岗区承翰学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区承翰学校"
+  },
+  {
+    "normalized": "龙岗区文龙学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区文龙学校"
+  },
+  {
+    "normalized": "龙岗区新梓学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区新梓学校"
+  },
+  {
+    "normalized": "龙岗区时代学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区时代学校"
+  },
+  {
+    "normalized": "龙岗区智民实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区智民实验学校"
+  },
+  {
+    "normalized": "龙岗区木棉湾学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区木棉湾学校"
+  },
+  {
+    "normalized": "龙岗区木棉湾实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区木棉湾实验学校"
+  },
+  {
+    "normalized": "龙岗区枫叶学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区枫叶学校"
+  },
+  {
+    "normalized": "龙岗区梧桐学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区梧桐学校"
+  },
+  {
+    "normalized": "龙岗区横岗中学",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区横岗中学"
+  },
+  {
+    "normalized": "龙岗区横岗中心学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区横岗中心学校"
+  },
+  {
+    "normalized": "龙岗区沙湾中学",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区沙湾中学"
+  },
+  {
+    "normalized": "龙岗区沙湾实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区沙湾实验学校"
+  },
+  {
+    "normalized": "龙岗区深圳中学龙岗学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区深圳中学龙岗学校"
+  },
+  {
+    "normalized": "龙岗区深圳大学附属坂田学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区深圳大学附属坂田学校"
+  },
+  {
+    "normalized": "龙岗区爱义学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区爱义学校"
+  },
+  {
+    "normalized": "龙岗区爱华学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区爱华学校"
+  },
+  {
+    "normalized": "龙岗区爱文学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区爱文学校"
+  },
+  {
+    "normalized": "龙岗区甘李学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区甘李学校"
+  },
+  {
+    "normalized": "龙岗区百合外国语学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区百合外国语学校"
+  },
+  {
+    "normalized": "龙岗区石芽岭学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区石芽岭学校"
+  },
+  {
+    "normalized": "龙岗区科城实验学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区科城实验学校"
+  },
+  {
+    "normalized": "龙岗区科技城外国语学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区科技城外国语学校"
+  },
+  {
+    "normalized": "龙岗区简壹学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区简壹学校"
+  },
+  {
+    "normalized": "龙岗区翠枫学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区翠枫学校"
+  },
+  {
+    "normalized": "龙岗区联邦学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区联邦学校"
+  },
+  {
+    "normalized": "龙岗区融美学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区融美学校"
+  },
+  {
+    "normalized": "龙岗区贤义外国语学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区贤义外国语学校"
+  },
+  {
+    "normalized": "龙岗区金稻田学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区金稻田学校"
+  },
+  {
+    "normalized": "龙岗区雪象学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区雪象学校"
+  },
+  {
+    "normalized": "龙岗区鹏达学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区鹏达学校"
+  },
+  {
+    "normalized": "龙岗区龙岗中学",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区龙岗中学"
+  },
+  {
+    "normalized": "龙岗区龙岗中心学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区龙岗中心学校"
+  },
+  {
+    "normalized": "龙岗区龙岭初级中学",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区龙岭初级中学"
+  },
+  {
+    "normalized": "龙岗区龙岭学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区龙岭学校"
+  },
+  {
+    "normalized": "龙岗区龙洲学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区龙洲学校"
+  },
+  {
+    "normalized": "龙岗区龙湖学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区龙湖学校"
+  },
+  {
+    "normalized": "龙岗区龙盛学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区龙盛学校"
+  },
+  {
+    "normalized": "龙岗区龙联学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗区龙联学校"
+  },
+  {
+    "normalized": "龙岗街道珊蒂泉外国语学校",
+    "district": "龙岗区",
+    "juniorSchool": "龙岗街道珊蒂泉外国语学校"
+  }
+] as const;

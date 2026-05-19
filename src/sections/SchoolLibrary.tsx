@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import type { District, SchoolTrait } from '@/types';
-import { schools } from '@/data/schools';
+import { schoolCatalog } from '@/data/schoolCatalog';
 import { getGaokaoValueAdded } from '@/data/gaokaoValueAdded';
 import { Search, CheckCircle, X, ExternalLink, TrendingUp, Scale, LibraryBig } from 'lucide-react';
 
@@ -27,7 +27,7 @@ export default function SchoolLibrary() {
 
   const districts: District[] = ['福田', '罗湖', '南山', '宝安', '龙岗', '龙华', '光明', '坪山', '盐田', '大鹏', '深汕'];
 
-  const filtered = schools
+  const filtered = schoolCatalog
     .filter(s => {
       if (search && !s.name.includes(search)) return false;
       if (filterType !== 'all' && s.type !== filterType) return false;
@@ -65,7 +65,7 @@ export default function SchoolLibrary() {
     return 'bg-slate-100 text-slate-600';
   };
 
-  const getHistoryRows = (school: typeof schools[number]) => {
+  const getHistoryRows = (school: typeof schoolCatalog[number]) => {
     if (!school.historicalScores) return [];
     return Object.entries(school.historicalScores)
       .sort(([yearA], [yearB]) => Number(yearB) - Number(yearA))

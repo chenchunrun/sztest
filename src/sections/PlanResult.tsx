@@ -1,9 +1,9 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import type { VolunteerPlan } from '@/types';
-import { convertRawScore610To630, getSchoolScore, schools } from '@/data/schools';
-import { findJuniorSchoolIndicatorAllocation } from '@/data/indicatorAllocations';
+import { getSchoolScore } from '@/data/schools';
 import { MapPin, Home, Info, RotateCcw, Download, Target, ExternalLink, TrendingUp, Shield, AlertTriangle, CheckCircle, Save, History, Trash2, ChevronDown, ChevronUp, FileText, Copy } from 'lucide-react';
+import type { QuotaRecommendationContext } from '@/lib/quotaRecommendation';
 
 function useScrollAnimation() {
   useEffect(() => {
@@ -51,6 +51,7 @@ export default function PlanResult({
   const [historyOpen, setHistoryOpen] = useState(false);
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [indicatorContext, setIndicatorContext] = useState<QuotaRecommendationContext>({ status: 'missing' });
   useScrollAnimation();
 
   const exportAsText = () => {
@@ -124,87 +125,35 @@ export default function PlanResult({
     ? Math.round(plan.items.reduce((a, b) => a + (b.matchScore || 0), 0) / plan.items.length)
     : 0;
   const hasPlanItems = plan.items.length > 0;
+  const missRisk = plan.summary.missRisk ?? 0;
+  const firstBatchAdmissionProbability = plan.summary.firstBatchAdmissionProbability ?? 0;
 
-  // 指标生建议（基于初中学校实际分配名额）
-  const indicatorContext = useMemo(() => {
-    const studentType = plan.studentInfo.studentType;
-    const score = plan.studentInfo.score;
-    const juniorSchool = plan.studentInfo.juniorSchool?.trim();
+  useEffect(() => {
+    let cancelled = false;
 
-    if (!juniorSchool) {
-      return { status: 'missing' } as const;
+    if (!plan.studentInfo.juniorSchool?.trim()) {
+      setIndicatorContext({ status: 'missing' });
+      return () => {
+        cancelled = true;
+      };
     }
 
-    const allocation = findJuniorSchoolIndicatorAllocation(juniorSchool);
-    if (!allocation) {
-      return { status: 'not_found', juniorSchool } as const;
-    }
-
-    const quotaMap = studentType === 'AC' ? allocation.acQuotas : allocation.dQuotas;
-    const quotaEntries = Object.entries(quotaMap).filter(([, quota]) => quota > 0);
-
-    if (quotaEntries.length === 0) {
-      return { status: 'no_quota', juniorSchool: allocation.juniorSchool, district: allocation.district } as const;
-    }
-
-    function calcIndicatorProb(indicatorLine: number, quota: number, regularGap: number): number {
-      let prob = regularGap <= 5 ? 78 : regularGap <= 10 ? 70 : regularGap <= 15 ? 62 : 54;
-      const controlLineMargin = score - indicatorLine;
-      if (controlLineMargin >= 20) prob += 10;
-      else if (controlLineMargin >= 10) prob += 5;
-      else if (controlLineMargin < 0) prob -= 15;
-
-      if (quota >= 3) prob += 8;
-      else if (quota === 2) prob += 4;
-
-      return Math.max(5, Math.min(99, prob));
-    }
-
-    const candidates = quotaEntries
-      .map(([schoolName, quota]) => {
-        const school = schools.find(item => item.name === schoolName);
-        if (!school) return null;
-        const isArtSchool = school.name.includes('艺术') || school.name.includes('美术') || school.features.some(feature => (
-          feature.includes('艺术') || feature.includes('美术') || feature.includes('音乐') || feature.includes('传媒')
-        ));
-        if (isArtSchool) return null;
-
-        const schoolScore = getSchoolScore(school, studentType);
-        const rawIndicatorLine = studentType === 'AC' ? school.indicatorLineAc : school.indicatorLineD;
-        const indicatorLine = convertRawScore610To630(rawIndicatorLine);
-        if (indicatorLine === undefined) return null;
-
-        const regularGap = schoolScore - score;
-        if (regularGap < 5 || regularGap > 25) return null;
-        if (score < indicatorLine) return null;
-
-        return {
-          school,
-          quota,
-          indicatorLine,
-          regularGap,
-          controlLineMargin: score - indicatorLine,
-          prob: calcIndicatorProb(indicatorLine, quota, regularGap),
-        };
+    import('@/lib/quotaRecommendation')
+      .then(async ({ getQuotaRecommendationContext }) => {
+        if (cancelled) return;
+        const context = await getQuotaRecommendationContext(plan.studentInfo);
+        if (cancelled) return;
+        setIndicatorContext(context);
       })
-      .sort((a, b) => {
-        if (!a || !b) return 0;
-        if (a.regularGap !== b.regularGap) return b.regularGap - a.regularGap;
-        return b.prob - a.prob;
-      })
-      .filter((item): item is NonNullable<typeof item> => item !== null);
+      .catch(() => {
+        if (cancelled) return;
+        setIndicatorContext({ status: 'missing' });
+      });
 
-    if (candidates.length === 0) {
-      return { status: 'no_candidate', juniorSchool: allocation.juniorSchool, district: allocation.district } as const;
-    }
-
-    return {
-      status: 'ready',
-      juniorSchool: allocation.juniorSchool,
-      district: allocation.district,
-      recommendation: candidates[0],
-    } as const;
-  }, [plan.studentInfo.juniorSchool, plan.studentInfo.score, plan.studentInfo.studentType]);
+    return () => {
+      cancelled = true;
+    };
+  }, [plan.studentInfo]);
 
   return (
     <section className="py-20 bg-white">
@@ -222,13 +171,15 @@ export default function PlanResult({
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8 scroll-animate">
+        <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 mb-8 scroll-animate">
           {[
             { label: '公办高中', value: `${plan.summary.publicCount}所`, color: 'text-indigo-600' },
             { label: '民办高中', value: `${plan.summary.privateCount}所`, color: 'text-purple-600' },
-            { label: '平均录取概率', value: `${plan.summary.avgProbability}%`, color: 'text-emerald-600' },
+            { label: '平均达线概率', value: `${plan.summary.avgProbability}%`, color: 'text-emerald-600' },
+            { label: '第一批总录取率', value: `${plan.summary.firstBatchAdmissionProbability ?? 0}%`, color: 'text-sky-600' },
+            { label: '未录取风险', value: `${plan.summary.missRisk ?? 0}%`, color: 'text-rose-600' },
             { label: '平均匹配度', value: `${avgMatchScore}%`, color: 'text-indigo-600' },
-            { label: '方案生成时间', value: new Date(plan.generatedAt).toLocaleTimeString(), color: 'text-gray-600' },
+            { label: '生成时间', value: new Date(plan.generatedAt).toLocaleTimeString(), color: 'text-gray-600' },
           ].map((item, i) => (
             <div key={i} className="bg-slate-50 rounded-xl p-4 text-center">
               <div className={`text-xl font-bold ${item.color}`}>{item.value}</div>
@@ -236,6 +187,18 @@ export default function PlanResult({
             </div>
           ))}
         </div>
+
+        {(missRisk >= 10 || plan.items.length < 12) && (
+          <div className="mb-6 scroll-animate rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
+            <p className="font-semibold mb-1">公办风险提示</p>
+            {plan.items.length < 12 && (
+              <p>当前仅筛出 <strong>{plan.items.length}</strong> 所公办普高，说明您所在分数段的公办候选已经接近尾部，系统没有用民办学校强行补齐。</p>
+            )}
+            {missRisk >= 10 && (
+              <p className={plan.items.length < 12 ? 'mt-1' : ''}>按当前公办志愿顺序模拟，第一批公办总录取率约 <strong>{firstBatchAdmissionProbability}%</strong>，未录取风险约 <strong>{missRisk}%</strong>。建议结合区域、住宿和学校层次偏好继续放宽筛选。</p>
+            )}
+          </div>
+        )}
 
         {/* Indicator Suggestions */}
         <div className="mb-6 scroll-animate">
@@ -266,6 +229,12 @@ export default function PlanResult({
           {indicatorContext.status === 'missing' && (
             <div className="rounded-xl border border-dashed border-sky-200 bg-sky-50 p-4 text-sm text-sky-800">
               还没有填写初中学校。补充初中学校后，系统才能按实际指标生分配名额给出 1 所主推荐。
+            </div>
+          )}
+
+          {indicatorContext.status === 'ineligible' && (
+            <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              您已标记为 <strong>不具备指标生资格</strong>，系统不会生成指标生推荐，正取志愿不受影响。
             </div>
           )}
 
@@ -308,11 +277,11 @@ export default function PlanResult({
                     </div>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    indicatorContext.recommendation.prob >= 70
+                    indicatorContext.recommendation.probability >= 70
                       ? 'bg-emerald-100 text-emerald-700'
                       : 'bg-yellow-100 text-yellow-700'
                   }`}>
-                    {indicatorContext.recommendation.prob}% 概率
+                    {indicatorContext.recommendation.probability}% 概率
                   </span>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-xs text-gray-500 mb-2">
@@ -329,13 +298,23 @@ export default function PlanResult({
                     <div className="text-[10px]">分配名额</div>
                   </div>
                 </div>
+                <div className="grid grid-cols-2 gap-2 text-xs text-gray-500 mb-2">
+                  <div className="bg-gray-50 rounded-lg p-2 text-center">
+                    <div className="font-bold text-gray-700">{indicatorContext.recommendation.expectedCompetitors}</div>
+                    <div className="text-[10px]">预计竞争人数</div>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-2 text-center">
+                    <div className="font-bold text-gray-700">{indicatorContext.recommendation.competitorScoreMean}</div>
+                    <div className="text-[10px]">竞争均分</div>
+                  </div>
+                </div>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full ${
-                        indicatorContext.recommendation.prob >= 70 ? 'bg-emerald-500' : 'bg-yellow-500'
+                        indicatorContext.recommendation.probability >= 70 ? 'bg-emerald-500' : 'bg-yellow-500'
                       }`}
-                      style={{ width: `${indicatorContext.recommendation.prob}%` }}
+                      style={{ width: `${indicatorContext.recommendation.probability}%` }}
                     />
                   </div>
                   <span className="text-[10px] text-gray-400">超控制线+{indicatorContext.recommendation.controlLineMargin}分</span>
@@ -357,7 +336,7 @@ export default function PlanResult({
           <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-amber-800">
             <p className="font-medium mb-1">填报说明</p>
-            <p>正取志愿优先按 <strong>4个冲一冲 + 4个稳一稳 + 4个保一保</strong> 组织，并按录取分数线从高到低排列。录取概率基于考生预估分附近的正态分布、学校往年分数线波动和志愿所在梯度综合估算。前4个学校的分数线高于当前分数，中间4个接近当前分数，最后4个作为保底，分数线最多低于当前分数约50分。</p>
+            <p>系统同时展示两类概率：一是单校“达线概率”，反映您的分数达到该校预测线的机会；二是“最终录取概率”，反映按当前 12 个志愿顺序实际落到该校的机会。当前正取志愿推荐聚焦公办普高，公办候选不足时会少推荐，不再用民办学校强行补齐。</p>
             {!hasPlanItems && (
               <p className="mt-2 text-xs font-medium">当前筛选条件下没有符合“冲稳保梯度”的学校，建议放宽区域、住宿或学校层次限制后重新生成。</p>
             )}
@@ -425,7 +404,7 @@ export default function PlanResult({
 
                   {/* Probability Bar */}
                   <div className="mt-3 flex items-center gap-3">
-                    <span className="text-xs text-gray-500 flex-shrink-0">录取概率</span>
+                    <span className="text-xs text-gray-500 flex-shrink-0">达线概率</span>
                     <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all duration-1000 ${getProbabilityColor(item.probability)}`}
@@ -439,6 +418,10 @@ export default function PlanResult({
                     }`}>
                       {item.probability}%
                     </span>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between text-[11px] text-gray-500">
+                    <span>最终录取概率 {item.finalAdmissionProbability ?? item.probability}%</span>
+                    <span>预测线 {item.forecastLine ?? '-'} ± {item.lineSigma ?? '-'}</span>
                   </div>
                 </div>
 
@@ -455,6 +438,9 @@ export default function PlanResult({
                       <div>AC类分数线: {item.school.acScore2025}分</div>
                       <div>D类分数线: {item.school.dScore2025}分</div>
                       <div>预估招生: {item.school.plan2026}人</div>
+                      <div>预测线均值: {item.forecastLine ?? '-'}分</div>
+                      <div>线波动: {item.lineSigma ?? '-'}分</div>
+                      <div>最终录取概率: {item.finalAdmissionProbability ?? item.probability}%</div>
                     </div>
                     {/* Match Reasons */}
                     {item.matchReasons && item.matchReasons.length > 0 && (
