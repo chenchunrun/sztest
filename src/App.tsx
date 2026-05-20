@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router';
 import Home from '@/pages/Home';
 
 const SchoolDetail = lazy(() => import('@/pages/SchoolDetail'));
-const SportsCalculator = lazy(() => import('@/pages/SportsCalculator'));
 const ComparePage = lazy(() => import('@/pages/ComparePage'));
 const AdmissionPlans2026Page = lazy(() => import('@/pages/AdmissionPlans2026Page'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
@@ -25,14 +24,6 @@ function App() {
         element={(
           <LazyRoute message="正在加载学校详情...">
             <SchoolDetail />
-          </LazyRoute>
-        )}
-      />
-      <Route
-        path="/sports-calculator"
-        element={(
-          <LazyRoute message="正在加载体育计算器...">
-            <SportsCalculator />
           </LazyRoute>
         )}
       />

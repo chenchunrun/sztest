@@ -2,61 +2,20 @@ import { useState } from 'react';
 import { timelineEvents } from '@/data/timeline';
 import { ChevronDown, ChevronUp, CalendarDays, Flag } from 'lucide-react';
 
-function getEventStatus(dateStr: string): 'past' | 'current' | 'future' {
+function getEventStatus(event: (typeof timelineEvents)[number]): 'past' | 'current' | 'future' {
+  if (!event.startDate) return 'future';
+
   const now = new Date();
-  // 简单判断：如果日期字符串包含月份，尝试解析
-  // 由于数据格式不统一，我们使用一个简化的判断逻辑
-  // 将事件按顺序分为 past/current/future，基于当前日期
+  const start = new Date(`${event.startDate}T00:00:00+08:00`);
+  const end = new Date(`${event.endDate ?? event.startDate}T23:59:59+08:00`);
 
-  // 定义关键时间节点（2026年，基于2025年数据推后一年）
-  const keyDates: Record<string, Date> = {
-    '中考报名': new Date('2026-03-25'),
-    '体育中考': new Date('2026-04-20'),
-    '英语听说': new Date('2026-05-18'),
-    '理化实验': new Date('2026-05-25'),
-    '志愿填报': new Date('2026-05-28'),
-    '中考': new Date('2026-06-26'),
-    '成绩公布': new Date('2026-07-16'),
-    '录取': new Date('2026-07-25'),
-  };
-
-  let eventDate: Date | null = null;
-  for (const [key, d] of Object.entries(keyDates)) {
-    if (dateStr.includes(key) || timelineEvents.find(e => e.title === dateStr)?.description?.includes(key)) {
-      eventDate = d;
-      break;
-    }
-  }
-
-  // 如果找不到具体日期，根据事件在列表中的位置推断
-  if (!eventDate) {
-    // 默认未来
-    return 'future';
-  }
-
-  const diffDays = (eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
-  if (diffDays < -7) return 'past';
-  if (diffDays <= 7) return 'current';
+  if (now > end) return 'past';
+  if (now >= start && now <= end) return 'current';
   return 'future';
 }
 
 export default function TimelineSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  // 合并同类事件
-  const groupedEvents: { title: string; date: string; items: string[] }[] = [];
-  let currentGroup: { title: string; date: string; items: string[] } | null = null;
-
-  for (const event of timelineEvents) {
-    if (event.title && event.title !== '事件' && !event.title.includes('http')) {
-      if (currentGroup && currentGroup.title === event.title) {
-        currentGroup.items.push(event.description);
-      } else {
-        currentGroup = { title: event.title, date: event.date, items: [event.description] };
-        groupedEvents.push(currentGroup);
-      }
-    }
-  }
 
   const getStatusStyle = (status: string) => {
     switch (status) {
@@ -96,9 +55,9 @@ export default function TimelineSection() {
           {/* Vertical line */}
           <div className="absolute left-4 sm:left-6 top-0 bottom-0 w-0.5 bg-gray-100" />
 
-          <div className="space-y-4">
-            {groupedEvents.map((event, i) => {
-              const status = getEventStatus(event.title);
+        <div className="space-y-4">
+            {timelineEvents.map((event, i) => {
+              const status = getEventStatus(event);
               const isOpen = openIndex === i;
 
               return (
@@ -139,13 +98,11 @@ export default function TimelineSection() {
                     </div>
 
                     {isOpen && (
-                      <div className="mt-3 pt-3 border-t border-current border-opacity-10 space-y-2">
-                        {event.items.map((item, j) => (
-                          <div key={j} className="flex items-start gap-2">
-                            <Flag className="w-3 h-3 mt-0.5 opacity-50 flex-shrink-0" />
-                            <p className="text-sm opacity-80 leading-relaxed">{item}</p>
-                          </div>
-                        ))}
+                      <div className="mt-3 pt-3 border-t border-current border-opacity-10">
+                        <div className="flex items-start gap-2">
+                          <Flag className="w-3 h-3 mt-0.5 opacity-50 flex-shrink-0" />
+                          <p className="text-sm opacity-80 leading-relaxed">{event.description}</p>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -156,7 +113,7 @@ export default function TimelineSection() {
         </div>
 
         <p className="mt-6 text-xs text-gray-400 text-center">
-          注：时间节点参考2025年安排，2026年具体日期以深圳市招考办官方通知为准
+          注：以上时间轴按截至2026年5月19日深圳市教育局、深圳市招考办已公开发布的信息整理；尚未公布的后续节点以官方后续通知为准。
         </p>
       </div>
     </section>

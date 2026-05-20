@@ -18,6 +18,16 @@ const TimelineSection = lazy(() => import('@/sections/TimelineSection'));
 
 function useScrollAnimation() {
   useEffect(() => {
+    const revealVisibleElements = () => {
+      document.querySelectorAll('.scroll-animate').forEach((element) => {
+        if (!(element instanceof HTMLElement)) return;
+        const rect = element.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          element.classList.add('animate-in');
+        }
+      });
+    };
+
     const observeElement = (element: Element, observer: IntersectionObserver) => {
       if (!(element instanceof HTMLElement)) return;
       if (!element.classList.contains('scroll-animate')) return;
@@ -47,6 +57,13 @@ function useScrollAnimation() {
     document.querySelectorAll('.scroll-animate').forEach((el) => {
       observeElement(el, observer);
     });
+    revealVisibleElements();
+
+    const scheduleReveal = () => {
+      requestAnimationFrame(() => {
+        revealVisibleElements();
+      });
+    };
 
     const mutationObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
@@ -56,13 +73,22 @@ function useScrollAnimation() {
           node.querySelectorAll?.('.scroll-animate').forEach((el) => observeElement(el, observer));
         });
       });
+      scheduleReveal();
     });
 
     mutationObserver.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('hashchange', scheduleReveal);
+    window.addEventListener('scroll', scheduleReveal, { passive: true });
+    window.addEventListener('resize', scheduleReveal);
+    window.setTimeout(scheduleReveal, 0);
+    window.setTimeout(scheduleReveal, 180);
 
     return () => {
       observer.disconnect();
       mutationObserver.disconnect();
+      window.removeEventListener('hashchange', scheduleReveal);
+      window.removeEventListener('scroll', scheduleReveal);
+      window.removeEventListener('resize', scheduleReveal);
     };
   }, []);
 }

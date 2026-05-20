@@ -227,6 +227,8 @@ export interface TimelineEvent {
   title: string;
   date: string;
   description: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 // 高考增值性评价
