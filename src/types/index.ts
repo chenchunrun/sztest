@@ -4,6 +4,7 @@ export type StudentType = 'AC' | 'D';
 // 志愿填报风格
 export type StrategyStyle = 'conservative' | 'balanced' | 'aggressive';
 export type RiskPreference = StrategyStyle;
+export type VolunteerPattern = '4-4-4' | '3-6-3';
 
 // 住宿需求
 export type AccommodationNeed = 'boarding' | 'day' | 'any';
@@ -178,6 +179,7 @@ export interface StudentInfo {
   preferredLevels: SchoolLevel[];
   acceptPrivate: boolean;
   strategyStyle: StrategyStyle;
+  volunteerPattern?: VolunteerPattern;
   riskPreference?: RiskPreference;
   preferenceWeights?: Partial<PreferenceWeights>;
 

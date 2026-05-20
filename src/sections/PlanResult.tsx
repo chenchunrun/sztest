@@ -121,6 +121,7 @@ export default function PlanResult({
 
   const studentTypeLabel = plan.studentInfo.studentType === 'AC' ? 'AC类（深户）' : 'D类（非深户）';
   const styleLabel = plan.studentInfo.strategyStyle === 'conservative' ? '保守稳妥' : plan.studentInfo.strategyStyle === 'aggressive' ? '激进冲刺' : '均衡搭配';
+  const patternLabel = plan.studentInfo.volunteerPattern === '3-6-3' ? '冲3稳6保3' : '冲4稳4保4';
   const avgMatchScore = plan.items.length > 0
     ? Math.round(plan.items.reduce((a, b) => a + (b.matchScore || 0), 0) / plan.items.length)
     : 0;
@@ -170,6 +171,7 @@ export default function PlanResult({
             <span className="px-3 py-1 bg-indigo-50 rounded-full">预估分: <strong className="text-indigo-600">{plan.studentInfo.score}分</strong></span>
             <span className="px-3 py-1 bg-indigo-50 rounded-full">{studentTypeLabel}</span>
             <span className="px-3 py-1 bg-indigo-50 rounded-full">{styleLabel}</span>
+            <span className="px-3 py-1 bg-indigo-50 rounded-full">{patternLabel}</span>
           </div>
         </div>
 

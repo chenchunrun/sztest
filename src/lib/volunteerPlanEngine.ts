@@ -1,10 +1,6 @@
-import type { StudentInfo, VolunteerItem, VolunteerPlan, School, SchoolLineForecast } from '../types/index.ts';
+import type { StudentInfo, VolunteerItem, VolunteerPlan, School, SchoolLineForecast, VolunteerPattern } from '../types/index.ts';
 import { schools, getSchoolScore, buildSchoolLineForecast, buildStudentScoreModel, getDefaultPreferenceWeights } from '../data/schools.ts';
 
-const RUSH_COUNT = 4;
-const STEADY_COUNT = 4;
-const SAFE_COUNT = 4;
-const TOTAL_TARGET_COUNT = RUSH_COUNT + STEADY_COUNT + SAFE_COUNT;
 const SHARED_LINE_CORRELATION = 0.28;
 const MONTE_CARLO_SIMULATIONS = 8000;
 const OUTER_DISTRICTS = ['光明', '坪山', '盐田', '大鹏', '深汕'];
@@ -30,6 +26,22 @@ type RankedSchoolCandidate = {
 type FinalStrategyCandidate = RankedSchoolCandidate & {
   strategy: VolunteerItem['strategy'];
 };
+
+type PatternConfig = {
+  rush: number;
+  steady: number;
+  safe: number;
+  total: number;
+};
+
+const PATTERN_CONFIGS: Record<VolunteerPattern, PatternConfig> = {
+  '4-4-4': { rush: 4, steady: 4, safe: 4, total: 12 },
+  '3-6-3': { rush: 3, steady: 6, safe: 3, total: 12 },
+};
+
+function getPatternConfig(pattern?: VolunteerPattern): PatternConfig {
+  return PATTERN_CONFIGS[pattern ?? '4-4-4'] ?? PATTERN_CONFIGS['4-4-4'];
+}
 
 function isPreferredDistrictSchool(school: School, preferredDistricts: string[]) {
   return preferredDistricts.length > 0 && preferredDistricts.includes(school.district);
@@ -406,24 +418,28 @@ function sortByForecastLineDesc(candidatePool: RankedSchoolCandidate[], studentT
   });
 }
 
-function rebalanceStrategiesByForecast(candidates: RankedSchoolCandidate[], studentType: StudentInfo['studentType']) {
-  const ordered = sortByForecastLineDesc(dedupeRankedSchools(candidates), studentType).slice(0, TOTAL_TARGET_COUNT);
+function rebalanceStrategiesByForecast(
+  candidates: RankedSchoolCandidate[],
+  studentType: StudentInfo['studentType'],
+  patternConfig: PatternConfig,
+) {
+  const ordered = sortByForecastLineDesc(dedupeRankedSchools(candidates), studentType).slice(0, patternConfig.total);
   return ordered.map((candidate, index) => ({
     ...candidate,
-    strategy: index < RUSH_COUNT ? '冲一冲' as const : index < RUSH_COUNT + STEADY_COUNT ? '稳一稳' as const : '保一保' as const,
+    strategy: index < patternConfig.rush ? '冲一冲' as const : index < patternConfig.rush + patternConfig.steady ? '稳一稳' as const : '保一保' as const,
   }));
 }
 
-function hasTargetStrategyMix(items: FinalStrategyCandidate[]) {
+function hasTargetStrategyMix(items: FinalStrategyCandidate[], patternConfig: PatternConfig) {
   const counts = items.reduce<Record<VolunteerItem['strategy'], number>>((acc, candidate) => {
     acc[candidate.strategy] = (acc[candidate.strategy] || 0) + 1;
     return acc;
   }, { '冲一冲': 0, '稳一稳': 0, '保一保': 0 });
 
   return (
-    counts['冲一冲'] === RUSH_COUNT &&
-    counts['稳一稳'] === STEADY_COUNT &&
-    counts['保一保'] === SAFE_COUNT
+    counts['冲一冲'] === patternConfig.rush &&
+    counts['稳一稳'] === patternConfig.steady &&
+    counts['保一保'] === patternConfig.safe
   );
 }
 
@@ -505,7 +521,8 @@ function enforceSafetyTail(
   steadyFinal: RankedSchoolCandidate[],
   safeFinal: RankedSchoolCandidate[],
   allSafeOrdered: RankedSchoolCandidate[],
-  studentInfo: StudentInfo
+  studentInfo: StudentInfo,
+  patternConfig: PatternConfig,
 ) {
   let nextRush = [...rushFinal];
   let nextSteady = [...steadyFinal];
@@ -522,19 +539,19 @@ function enforceSafetyTail(
     } else if (nextSteady.length > 0) {
       const removed = nextSteady.shift();
       if (removed) usedIds.delete(removed.school.id);
-    } else if (nextSafe.length >= SAFE_COUNT) {
+    } else if (nextSafe.length >= patternConfig.safe) {
       const removed = nextSafe.shift();
       if (removed) usedIds.delete(removed.school.id);
     }
     nextSafe.push(replacement);
     usedIds.add(replacement.school.id);
-    nextSafe = dedupeRankedSchools(nextSafe).sort((a, b) => a.probability - b.probability).slice(-SAFE_COUNT);
+    nextSafe = dedupeRankedSchools(nextSafe).sort((a, b) => a.probability - b.probability).slice(-patternConfig.safe);
     usedIds = rebuildUsedIds([nextRush, nextSteady, nextSafe]);
   };
 
   ensureSafeSlot((candidate) => isStrongSafetyCandidate(candidate, studentInfo));
 
-  while (nextSafe.filter(isSafetyCandidate).length < Math.min(2, SAFE_COUNT)) {
+  while (nextSafe.filter(isSafetyCandidate).length < Math.min(2, patternConfig.safe)) {
     const replacement = allSafeOrdered.find((candidate) => !usedIds.has(candidate.school.id) && isSafetyCandidate(candidate));
     if (!replacement) break;
     if (nextRush.length > 0) {
@@ -548,14 +565,14 @@ function enforceSafetyTail(
     }
     nextSafe.push(replacement);
     usedIds.add(replacement.school.id);
-    nextSafe = dedupeRankedSchools(nextSafe).sort((a, b) => a.probability - b.probability).slice(-SAFE_COUNT);
+    nextSafe = dedupeRankedSchools(nextSafe).sort((a, b) => a.probability - b.probability).slice(-patternConfig.safe);
     usedIds = rebuildUsedIds([nextRush, nextSteady, nextSafe]);
   }
 
   return {
-    rushFinal: nextRush.slice(0, RUSH_COUNT),
-    steadyFinal: nextSteady.slice(0, STEADY_COUNT),
-    safeFinal: nextSafe.slice(-SAFE_COUNT),
+    rushFinal: nextRush.slice(0, patternConfig.rush),
+    steadyFinal: nextSteady.slice(0, patternConfig.steady),
+    safeFinal: nextSafe.slice(-patternConfig.safe),
   };
 }
 
@@ -613,6 +630,7 @@ function simulateOrderedAdmissions(orderedCandidates: FinalStrategyCandidate[], 
 export function generateVolunteerPlan(studentInfo: StudentInfo | null): VolunteerPlan | null {
   if (!studentInfo) return null;
 
+  const patternConfig = getPatternConfig(studentInfo.volunteerPattern);
   const { score, studentType, preferredDistricts, accommodation, preferredLevels, applicantTrack } = studentInfo;
   const hasDistrictPreference = preferredDistricts.length > 0;
   const isArtApplicant = applicantTrack === 'art';
@@ -688,37 +706,37 @@ export function generateVolunteerPlan(studentInfo: StudentInfo | null): Voluntee
     studentInfo,
     primarySchoolIds
   );
-  const publicFloorBand = sortPublicTailCandidates(regularPublicCandidates).slice(0, Math.max(TOTAL_TARGET_COUNT, 12));
+  const publicFloorBand = sortPublicTailCandidates(regularPublicCandidates).slice(0, Math.max(patternConfig.total, 12));
   const publicCeilingBand = sortByForecastLineDesc(
     regularPublicCandidates.filter((candidate) => candidate.forecast.muLine >= studentModel.muScore - 18),
     studentType
-  ).slice(0, TOTAL_TARGET_COUNT);
+  ).slice(0, patternConfig.total);
 
   const rushPublic = sortCandidatePool(rankedCandidates.filter((candidate) => candidate.bucket === 'rush' && candidate.school.type === '公办'), studentInfo, primarySchoolIds);
   const steadyPublic = sortCandidatePool(rankedCandidates.filter((candidate) => candidate.bucket === 'steady' && candidate.school.type === '公办'), studentInfo, primarySchoolIds);
   const safePublic = sortCandidatePool(rankedCandidates.filter((candidate) => candidate.bucket === 'safe' && candidate.school.type === '公办'), studentInfo, primarySchoolIds);
   const diversificationGap = studentModel.muScore >= 560 ? 4 : studentModel.muScore >= 500 ? 5 : 6;
-  const rushFinal = buildCategoryCandidates(rushPublic, RUSH_COUNT, diversificationGap);
+  const rushFinal = buildCategoryCandidates(rushPublic, patternConfig.rush, diversificationGap);
   const usedIds = new Set(rushFinal.map((candidate) => candidate.school.id));
 
   const steadyFinal = buildCategoryCandidates(
     steadyPublic.filter((candidate) => !usedIds.has(candidate.school.id)),
-    STEADY_COUNT,
+    patternConfig.steady,
     diversificationGap
   );
   steadyFinal.forEach((candidate) => usedIds.add(candidate.school.id));
 
   const safeStrong = safePublic.filter((candidate) => !usedIds.has(candidate.school.id) && candidate.probability >= 0.97).sort((a, b) => b.probability - a.probability);
   const safeRegular = safePublic.filter((candidate) => !usedIds.has(candidate.school.id) && candidate.probability < 0.97);
-  const safeFinalBase = buildCategoryCandidates(safeRegular, SAFE_COUNT, diversificationGap);
+  const safeFinalBase = buildCategoryCandidates(safeRegular, patternConfig.safe, diversificationGap);
   const safeFinal = safeStrong.length > 0
-    ? [...safeFinalBase.filter((candidate) => candidate.school.id !== safeStrong[0].school.id).slice(0, Math.max(0, SAFE_COUNT - 1)), safeStrong[0]]
-    : safeFinalBase.slice(0, SAFE_COUNT);
+    ? [...safeFinalBase.filter((candidate) => candidate.school.id !== safeStrong[0].school.id).slice(0, Math.max(0, patternConfig.safe - 1)), safeStrong[0]]
+    : safeFinalBase.slice(0, patternConfig.safe);
 
   const allSafeOrdered = sortCandidatePool(rankedCandidates.filter((candidate) => candidate.bucket === 'safe'), studentInfo, primarySchoolIds)
     .sort((a, b) => b.probability - a.probability || getBucketSortScore(b) - getBucketSortScore(a));
 
-  const enforced = enforceSafetyTail(rushFinal, steadyFinal, safeFinal, allSafeOrdered, studentInfo);
+  const enforced = enforceSafetyTail(rushFinal, steadyFinal, safeFinal, allSafeOrdered, studentInfo, patternConfig);
   const finalSelected = sortByStrategyAndScore(
     [
       ...enforced.rushFinal.map((candidate) => ({ ...candidate, strategy: '冲一冲' as const })),
@@ -726,7 +744,7 @@ export function generateVolunteerPlan(studentInfo: StudentInfo | null): Voluntee
       ...enforced.safeFinal.map((candidate) => ({ ...candidate, strategy: '保一保' as const })),
     ],
     studentType
-  ).slice(0, TOTAL_TARGET_COUNT);
+  ).slice(0, patternConfig.total);
 
   const selectedIds = new Set(finalSelected.map((candidate) => candidate.school.id));
   const denseFallback = dedupeRankedSchools([...densePublicTail, ...publicFloorBand, ...publicCeilingBand])
@@ -737,7 +755,7 @@ export function generateVolunteerPlan(studentInfo: StudentInfo | null): Voluntee
     } as FinalStrategyCandidate));
 
   let completedSelected = sortByStrategyAndScore(
-    dedupeRankedSchools([...finalSelected, ...denseFallback]).slice(0, TOTAL_TARGET_COUNT),
+    dedupeRankedSchools([...finalSelected, ...denseFallback]).slice(0, patternConfig.total),
     studentType
   );
 
@@ -758,7 +776,7 @@ export function generateVolunteerPlan(studentInfo: StudentInfo | null): Voluntee
 
   if (shouldRebalanceLowScore) {
     completedSelected = sortByStrategyAndScore(
-      rebalanceStrategiesByForecast(dedupeRankedSchools([...completedSelected, ...publicFloorBand]), studentType),
+      rebalanceStrategiesByForecast(dedupeRankedSchools([...completedSelected, ...publicFloorBand]), studentType, patternConfig),
       studentType
     );
   }
@@ -770,34 +788,34 @@ export function generateVolunteerPlan(studentInfo: StudentInfo | null): Voluntee
       ...sortByForecastLineDesc(
         regularPublicCandidates.filter((candidate) => candidate.forecast.muLine >= studentModel.muScore - 25),
         studentType
-      ).slice(0, TOTAL_TARGET_COUNT),
-    ]).slice(0, TOTAL_TARGET_COUNT);
+      ).slice(0, patternConfig.total),
+    ]).slice(0, patternConfig.total);
 
     completedSelected = sortByStrategyAndScore(
-      rebalanceStrategiesByForecast(highReachableBand, studentType),
+      rebalanceStrategiesByForecast(highReachableBand, studentType, patternConfig),
       studentType
     );
   }
 
-  if (completedSelected.length < TOTAL_TARGET_COUNT) {
+  if (completedSelected.length < patternConfig.total) {
     const filledBand = dedupeRankedSchools([
       ...completedSelected,
       ...sortByForecastLineDesc([...publicCeilingBand, ...densePublicTail, ...publicFloorBand], studentType),
-    ]).slice(0, TOTAL_TARGET_COUNT);
+    ]).slice(0, patternConfig.total);
 
     completedSelected = sortByStrategyAndScore(
-      rebalanceStrategiesByForecast(filledBand, studentType),
+      rebalanceStrategiesByForecast(filledBand, studentType, patternConfig),
       studentType
     );
   }
 
   if (
     studentModel.muScore >= 490 &&
-    completedSelected.length === TOTAL_TARGET_COUNT &&
-    !hasTargetStrategyMix(completedSelected)
+    completedSelected.length === patternConfig.total &&
+    !hasTargetStrategyMix(completedSelected, patternConfig)
   ) {
     completedSelected = sortByStrategyAndScore(
-      rebalanceStrategiesByForecast(completedSelected, studentType),
+      rebalanceStrategiesByForecast(completedSelected, studentType, patternConfig),
       studentType
     );
   }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { StudentInfo, StrategyStyle, BioGeoGrade, District, SchoolLevel, Subject, CommuteTolerance, ApplicantTrack } from '@/types';
+import type { StudentInfo, StrategyStyle, BioGeoGrade, District, SchoolLevel, Subject, CommuteTolerance, ApplicantTrack, VolunteerPattern } from '@/types';
 import { MapPin, Building2, Home, AlertCircle, Sparkles, ChevronDown, ChevronUp, BookOpen, Bus, School, CheckCircle2 } from 'lucide-react';
 import { juniorSchoolNames } from '@/data/juniorSchoolNames';
 
@@ -13,6 +13,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
     preferredLevels: [],
     acceptPrivate: false,
     strategyStyle: 'balanced',
+    volunteerPattern: '4-4-4',
     strongSubjects: [],
     commuteTolerance: 'medium',
     preferNewSchool: undefined,
@@ -314,6 +315,28 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
                 </button>
               ))}
             </div>
+          </div>
+
+          <div className="mb-8">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">志愿结构模式</label>
+            <div className="grid grid-cols-2 gap-3">
+              {([
+                { value: '4-4-4', label: '冲4稳4保4', desc: '更均衡，适合标准梯度配置' },
+                { value: '3-6-3', label: '冲3稳6保3', desc: '稳妥区更密集，主力录取带更宽' },
+              ] as const).map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setForm(prev => ({ ...prev, volunteerPattern: opt.value as VolunteerPattern }))}
+                  className={`p-4 rounded-xl border-2 text-left transition-all duration-150 ${form.volunteerPattern === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
+                >
+                  <div className="font-semibold text-sm text-gray-800">{opt.label}</div>
+                  <div className="text-xs text-gray-500 mt-1">{opt.desc}</div>
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-gray-400">
+              两种模式都遵循同一套推荐算法，只调整 12 个公办志愿在冲、稳、保三类中的数量配比。
+            </p>
           </div>
 
           {/* Advanced Preferences */}
