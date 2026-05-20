@@ -53,12 +53,14 @@ export default function PlanResult({
   const [copied, setCopied] = useState(false);
   const [indicatorContext, setIndicatorContext] = useState<QuotaRecommendationContext>({ status: 'missing' });
   useScrollAnimation();
+  const patternLabel = plan.studentInfo.volunteerPattern === '3-6-3' ? '冲3稳6保3' : '冲4稳4保4';
 
   const exportAsText = () => {
     const lines: string[] = [];
     lines.push(`Shenzhen High School Admission Application`);
     lines.push(`生成时间: ${new Date(plan.generatedAt).toLocaleString()}`);
     lines.push(`考生信息: ${plan.studentInfo.score}分 · ${plan.studentInfo.studentType}类 · ${plan.studentInfo.strategyStyle === 'conservative' ? '保守' : plan.studentInfo.strategyStyle === 'aggressive' ? '激进' : '均衡'}`);
+    lines.push(`志愿结构: ${patternLabel}`);
     lines.push(`意向区域: ${plan.studentInfo.preferredDistricts.join('、') || '不限'}`);
     lines.push('');
     lines.push('志愿列表:');
@@ -83,6 +85,7 @@ export default function PlanResult({
   const copyAsText = async () => {
     const lines: string[] = [];
     lines.push(`Shenzhen High School Admission Application (${plan.studentInfo.score}分${plan.studentInfo.studentType}类)`);
+    lines.push(`志愿结构: ${patternLabel}`);
     lines.push('');
     plan.items.forEach(item => {
       lines.push(`${item.order}. ${item.school.name} (${getSchoolScore(item.school, plan.studentInfo.studentType)}分)`);
@@ -121,7 +124,6 @@ export default function PlanResult({
 
   const studentTypeLabel = plan.studentInfo.studentType === 'AC' ? 'AC类（深户）' : 'D类（非深户）';
   const styleLabel = plan.studentInfo.strategyStyle === 'conservative' ? '保守稳妥' : plan.studentInfo.strategyStyle === 'aggressive' ? '激进冲刺' : '均衡搭配';
-  const patternLabel = plan.studentInfo.volunteerPattern === '3-6-3' ? '冲3稳6保3' : '冲4稳4保4';
   const avgMatchScore = plan.items.length > 0
     ? Math.round(plan.items.reduce((a, b) => a + (b.matchScore || 0), 0) / plan.items.length)
     : 0;

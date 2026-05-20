@@ -136,7 +136,17 @@ function simulateQuotaProbability(
   const studentModel = buildStudentScoreModel(student);
   const competitorModel = buildCompetitorModel(student, school, quota, regularLine, controlLine);
   const random = createSeededRandom(JSON.stringify({
-    student,
+    student: {
+      score: student.score,
+      muScore: student.muScore,
+      sigmaScore: student.sigmaScore,
+      studentType: student.studentType,
+      bioGeoGrade: student.bioGeoGrade,
+      juniorSchool: student.juniorSchool,
+      isQuotaEligible: student.isQuotaEligible,
+      strategyStyle: student.strategyStyle,
+      riskPreference: student.riskPreference,
+    },
     schoolId: school.id,
     controlLine,
     quota,
