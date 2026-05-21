@@ -1,10 +1,13 @@
 import { DISTRICT_SLUG_MAP, juniorSchoolDistrictIndex, type IndicatorDistrictKey } from './indicatorAllocationsIndex.ts';
+import { applyOfficialGuideJuniorSchoolAlias } from './juniorSchoolAliasMap.ts';
+import { officialGuideJuniorSchoolDistrictHints2026 } from './officialGuideJuniorSchools2026.ts';
 
 export interface JuniorSchoolIndicatorAllocation {
   district: string;
   juniorSchool: string;
   acQuotas: Record<string, number>;
   dQuotas: Record<string, number>;
+  acdQuotas?: Record<string, number>;
 }
 
 type DistrictModule = {
@@ -12,7 +15,11 @@ type DistrictModule = {
 };
 
 function normalizeJuniorSchool(value: string) {
-  return value.toLowerCase().replace(/[\s()（）-]/g, '');
+  return applyOfficialGuideJuniorSchoolAlias(value).toLowerCase().replace(/[\s()（）-]/g, '');
+}
+
+function hasPositiveQuotaMap(map: Record<string, number> | undefined) {
+  return !!map && Object.values(map).some((quota) => quota > 0);
 }
 
 function getDistrictKeyByJuniorSchool(input: string): IndicatorDistrictKey | null {
@@ -25,8 +32,11 @@ function getDistrictKeyByJuniorSchool(input: string): IndicatorDistrictKey | nul
     || normalizedInput.includes(item.normalized)
   ));
 
-  if (!matched) return null;
-  return DISTRICT_SLUG_MAP[matched.district as keyof typeof DISTRICT_SLUG_MAP] ?? null;
+  if (matched) return DISTRICT_SLUG_MAP[matched.district as keyof typeof DISTRICT_SLUG_MAP] ?? null;
+
+  const guideHint = officialGuideJuniorSchoolDistrictHints2026.find((item) => normalizeJuniorSchool(item.name) === normalizedInput);
+  if (!guideHint) return null;
+  return DISTRICT_SLUG_MAP[guideHint.district as keyof typeof DISTRICT_SLUG_MAP] ?? null;
 }
 
 async function loadDistrictAllocations(districtKey: IndicatorDistrictKey): Promise<JuniorSchoolIndicatorAllocation[]> {
@@ -48,15 +58,37 @@ async function loadDistrictAllocations(districtKey: IndicatorDistrictKey): Promi
 }
 
 export async function findJuniorSchoolIndicatorAllocation(input: string): Promise<JuniorSchoolIndicatorAllocation | undefined> {
-  const normalizedInput = normalizeJuniorSchool(input.trim());
+  const officialInput = applyOfficialGuideJuniorSchoolAlias(input.trim());
+  const normalizedInput = normalizeJuniorSchool(officialInput);
   if (!normalizedInput) return undefined;
 
   const districtKey = getDistrictKeyByJuniorSchool(input);
   if (!districtKey) return undefined;
 
   const districtAllocations = await loadDistrictAllocations(districtKey);
-  return districtAllocations.find((item) => {
+  const matched = districtAllocations.find((item) => {
     const normalizedName = normalizeJuniorSchool(item.juniorSchool);
     return normalizedName === normalizedInput || normalizedName.includes(normalizedInput) || normalizedInput.includes(normalizedName);
   });
+
+  const shared = districtAllocations.find((item) => item.juniorSchool.includes('未分配到名额的学校共享'));
+  if (!matched) {
+    if (!shared) return undefined;
+    return {
+      district: shared.district,
+      juniorSchool: officialInput,
+      acQuotas: shared.acQuotas || {},
+      dQuotas: shared.dQuotas || {},
+      acdQuotas: shared.acdQuotas || {},
+    };
+  }
+
+  if (!shared || matched.juniorSchool.includes('未分配到名额的学校共享')) return matched;
+
+  return {
+    ...matched,
+    acQuotas: hasPositiveQuotaMap(matched.acQuotas) ? matched.acQuotas : (shared.acQuotas || {}),
+    dQuotas: hasPositiveQuotaMap(matched.dQuotas) ? matched.dQuotas : (shared.dQuotas || {}),
+    acdQuotas: hasPositiveQuotaMap(matched.acdQuotas) ? matched.acdQuotas : (shared.acdQuotas || {}),
+  };
 }

@@ -6,6 +6,8 @@ import { schoolCatalog } from '@/data/schoolCatalog';
 import {
   ADMISSION_PLAN_2026_DATA_NOTES,
   getAdmissionPlanCoverageSummary,
+  getPrivateGuideMeta2026BySchoolName,
+  getPublicGuideMeta2026BySchoolName,
   getValidatedPublicHighSchoolPlans2026,
   getValidatedQuotaPlans2026,
   normalizeAdmissionPlanSchoolName,
@@ -40,12 +42,19 @@ export default function AdmissionPlans2026Page() {
 
   const filteredItems = useMemo(() => {
     const term = keyword.trim();
-    const filterByTerm = <T extends { name: string }>(items: readonly T[]) =>
-      items.filter((item) => !term || item.name.includes(term));
+    const filterByTerm = <T extends { name: string }>(
+      items: readonly T[],
+      getMeta?: (name: string) => { schoolCodes?: readonly string[] } | undefined
+    ) =>
+      items.filter((item) => {
+        if (!term) return true;
+        const codes = getMeta?.(item.name)?.schoolCodes?.join(' ') || '';
+        return item.name.includes(term) || codes.includes(term);
+      });
 
-    if (activeTab === 'public') return filterByTerm(publicPlans);
-    if (activeTab === 'quota') return filterByTerm(quotaPlans);
-    if (activeTab === 'private') return filterByTerm(privateHighSchoolPlans2026);
+    if (activeTab === 'public') return filterByTerm(publicPlans, getPublicGuideMeta2026BySchoolName);
+    if (activeTab === 'quota') return filterByTerm(quotaPlans, getPublicGuideMeta2026BySchoolName);
+    if (activeTab === 'private') return filterByTerm(privateHighSchoolPlans2026, getPrivateGuideMeta2026BySchoolName);
     return filterByTerm(vocationalPlans2026);
   }, [activeTab, keyword, publicPlans, quotaPlans]);
 
@@ -134,18 +143,18 @@ export default function AdmissionPlans2026Page() {
                 <input
                   value={keyword}
                   onChange={(event) => setKeyword(event.target.value)}
-                  placeholder="按学校名称搜索"
+                  placeholder="按学校名称或学校代码搜索"
                   className="w-56 bg-transparent outline-none placeholder:text-slate-400"
                 />
               </label>
             </div>
 
             <div className="mt-5 overflow-hidden rounded-3xl border border-slate-200">
-              <div className="grid grid-cols-[96px,1.6fr,1fr,1fr,1fr] gap-3 bg-slate-900 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-100">
+              <div className="grid grid-cols-[96px,1.6fr,1fr,1fr,1.3fr] gap-3 bg-slate-900 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-100">
                 <div>序号</div>
                 <div>学校</div>
                 <div>计划</div>
-                <div>住宿/分类</div>
+                <div>代码/范围</div>
                 <div>详情</div>
               </div>
 
@@ -160,8 +169,9 @@ export default function AdmissionPlans2026Page() {
 
                   if (activeTab === 'public') {
                     const planItem = item as (typeof publicPlans)[number];
+                    const guideMeta = getPublicGuideMeta2026BySchoolName(planItem.name);
                     return (
-                      <div key={`${activeTab}-${planItem.serial}-${planItem.name}`} className="grid grid-cols-1 gap-3 px-4 py-4 text-sm text-slate-700 lg:grid-cols-[96px,1.6fr,1fr,1fr,1fr]">
+                      <div key={`${activeTab}-${planItem.serial}-${planItem.name}`} className="grid grid-cols-1 gap-3 px-4 py-4 text-sm text-slate-700 lg:grid-cols-[96px,1.6fr,1fr,1fr,1.3fr]">
                         <div className="font-semibold text-slate-900">{planItem.serial}</div>
                         <div>
                           <div className="font-semibold text-slate-900">{planItem.name}</div>
@@ -171,8 +181,16 @@ export default function AdmissionPlans2026Page() {
                           <div>总计划 <strong>{planItem.totalPlan}</strong></div>
                           <div className="text-xs text-slate-500">住宿 {planItem.boardingPlan} / 走读 {planItem.dayPlan}</div>
                         </div>
-                        <div>公办普高</div>
                         <div>
+                          <div>{guideMeta?.schoolCodes.join(' / ') || '未注明'}</div>
+                          <div className="mt-1 text-xs text-slate-500">
+                            {guideMeta?.recruitRanges.join('；') || '面向范围以官方计划表为准'}
+                          </div>
+                        </div>
+                        <div>
+                          {guideMeta?.remarks.length ? (
+                            <div className="mb-1 text-xs leading-5 text-slate-500">{guideMeta.remarks.join('；')}</div>
+                          ) : null}
                           {schoolId ? (
                             <Link to={`/school/${schoolId}`} className="text-indigo-600 hover:text-indigo-800">
                               查看学校详情
@@ -187,18 +205,27 @@ export default function AdmissionPlans2026Page() {
 
                   if (activeTab === 'quota') {
                     const quotaItem = item as (typeof quotaPlans)[number];
+                    const guideMeta = getPublicGuideMeta2026BySchoolName(quotaItem.name);
                     return (
-                      <div key={`${activeTab}-${quotaItem.serial}-${quotaItem.name}`} className="grid grid-cols-1 gap-3 px-4 py-4 text-sm text-slate-700 lg:grid-cols-[96px,1.6fr,1fr,1fr,1fr]">
+                      <div key={`${activeTab}-${quotaItem.serial}-${quotaItem.name}`} className="grid grid-cols-1 gap-3 px-4 py-4 text-sm text-slate-700 lg:grid-cols-[96px,1.6fr,1fr,1fr,1.3fr]">
                         <div className="font-semibold text-slate-900">{quotaItem.serial}</div>
                         <div>
                           <div className="font-semibold text-slate-900">{quotaItem.name}</div>
                         </div>
                         <div>
                           <div>AC <strong>{quotaItem.acQuota}</strong></div>
-                          <div className="text-xs text-slate-500">D {quotaItem.dQuota}</div>
+                          <div className="text-xs text-slate-500">D {quotaItem.dQuota} / ACD {quotaItem.acdQuota}</div>
                         </div>
-                        <div>名额分配</div>
                         <div>
+                          <div>{guideMeta?.schoolCodes.join(' / ') || '未注明'}</div>
+                          <div className="mt-1 text-xs text-slate-500">
+                            {guideMeta?.recruitRanges.join('；') || '面向范围以官方计划表为准'}
+                          </div>
+                        </div>
+                        <div>
+                          {guideMeta?.remarks.length ? (
+                            <div className="mb-1 text-xs leading-5 text-slate-500">{guideMeta.remarks.join('；')}</div>
+                          ) : null}
                           {schoolId ? (
                             <Link to={`/school/${schoolId}`} className="text-indigo-600 hover:text-indigo-800">
                               查看学校详情
@@ -213,23 +240,35 @@ export default function AdmissionPlans2026Page() {
 
                   if (activeTab === 'private') {
                     const privateItem = item as (typeof privateHighSchoolPlans2026)[number];
+                    const guideMeta = getPrivateGuideMeta2026BySchoolName(privateItem.name);
                     return (
-                      <div key={`${activeTab}-${privateItem.serial}-${privateItem.name}`} className="grid grid-cols-1 gap-3 px-4 py-4 text-sm text-slate-700 lg:grid-cols-[96px,1.6fr,1fr,1fr,1fr]">
+                      <div key={`${activeTab}-${privateItem.serial}-${privateItem.name}`} className="grid grid-cols-1 gap-3 px-4 py-4 text-sm text-slate-700 lg:grid-cols-[96px,1.6fr,1fr,1fr,1.3fr]">
                         <div className="font-semibold text-slate-900">{privateItem.serial}</div>
                         <div>
                           <div className="font-semibold text-slate-900">{privateItem.name}</div>
                           {privateItem.level && <div className="mt-1 text-xs text-slate-500">{privateItem.level}</div>}
                         </div>
                         <div>总计划 <strong>{privateItem.totalPlan}</strong></div>
-                        <div>{privateItem.accommodation || '未注明'}</div>
-                        <div className="text-slate-400">计划信息展示</div>
+                        <div>
+                          <div>{guideMeta?.schoolCodes.join(' / ') || '未注明'}</div>
+                          <div className="mt-1 text-xs text-slate-500">
+                            {guideMeta?.recruitRanges.join('；') || privateItem.accommodation || '未注明'}
+                          </div>
+                        </div>
+                        <div>
+                          {guideMeta?.remarks.length ? (
+                            <div className="text-xs leading-5 text-slate-500">{guideMeta.remarks.join('；')}</div>
+                          ) : (
+                            <div className="text-slate-400">计划信息展示</div>
+                          )}
+                        </div>
                       </div>
                     );
                   }
 
                   const vocationalItem = item as (typeof vocationalPlans2026)[number];
                   return (
-                    <div key={`${activeTab}-${vocationalItem.serial}-${vocationalItem.name}`} className="grid grid-cols-1 gap-3 px-4 py-4 text-sm text-slate-700 lg:grid-cols-[96px,1.6fr,1fr,1fr,1fr]">
+                    <div key={`${activeTab}-${vocationalItem.serial}-${vocationalItem.name}`} className="grid grid-cols-1 gap-3 px-4 py-4 text-sm text-slate-700 lg:grid-cols-[96px,1.6fr,1fr,1fr,1.3fr]">
                       <div className="font-semibold text-slate-900">{vocationalItem.serial}</div>
                       <div>
                         <div className="font-semibold text-slate-900">{vocationalItem.name}</div>

@@ -1,7 +1,16 @@
-import { privateHighSchoolPlans2026, publicHighSchoolPlans2026, quotaPlans2026, vocationalPlans2026 } from './admissionPlans2026.ts';
+import {
+  privateGuideMeta2026,
+  privateHighSchoolPlans2026,
+  publicGuideMeta2026,
+  publicHighSchoolPlans2026,
+  quotaPlans2026,
+  vocationalPlans2026,
+} from './admissionPlans2026.ts';
 
 type PublicPlan = (typeof publicHighSchoolPlans2026)[number];
 type QuotaPlan = (typeof quotaPlans2026)[number];
+type PublicGuideMeta = (typeof publicGuideMeta2026)[number];
+type PrivateGuideMeta = (typeof privateGuideMeta2026)[number];
 
 const SCHOOL_NAME_ALIASES: Record<string, string> = {
   '深圳大学附属中学中心校区（深大附中中心校区）': '深圳大学附属中学（深大附中）',
@@ -40,8 +49,8 @@ const NORMALIZED_NAME_ALIASES: Record<string, string> = {
 };
 
 export const ADMISSION_PLAN_2026_DATA_NOTES = {
-  source: '深圳市 2026 年 4 份官方招生计划 PDF',
-  runtimePolicy: '页面展示数据为经校验后的招生计划信息，学校名称按统一口径进行规范匹配。',
+  source: '深圳市 2026 年 5 份官方 PDF（含招生计划表、名额分配表、报考指导手册）',
+  runtimePolicy: '页面展示数据为经校验后的招生计划信息；学校名称、学校代码、招生范围和备注按统一口径进行规范匹配。',
   coveragePolicy: '覆盖统计分别按公办普通高中计划和应参与名额分配的公办学校进行计算。',
 } as const;
 
@@ -129,14 +138,26 @@ export function getQuotaPlan2026BySchoolName(schoolName: string) {
   return matchByName(getValidatedQuotaPlans2026(), schoolName);
 }
 
+export function getPublicGuideMeta2026BySchoolName(schoolName: string) {
+  return matchByName(publicGuideMeta2026, schoolName);
+}
+
+export function getPrivateGuideMeta2026BySchoolName(schoolName: string) {
+  return matchByName(privateGuideMeta2026, schoolName);
+}
+
 export {
+  privateGuideMeta2026,
   publicHighSchoolPlans2026,
+  publicGuideMeta2026,
   quotaPlans2026,
   privateHighSchoolPlans2026,
   vocationalPlans2026,
 };
 
 export type {
+  PrivateGuideMeta,
   PublicPlan,
+  PublicGuideMeta,
   QuotaPlan,
 };

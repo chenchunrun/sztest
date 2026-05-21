@@ -5,6 +5,7 @@ export type StudentType = 'AC' | 'D';
 export type StrategyStyle = 'conservative' | 'balanced' | 'aggressive';
 export type RiskPreference = StrategyStyle;
 export type VolunteerPattern = '4-4-4' | '3-6-3';
+export type WalkDayAdjustmentPreference = 'none' | 'selective';
 
 // 住宿需求
 export type AccommodationNeed = 'boarding' | 'day' | 'any';
@@ -180,6 +181,7 @@ export interface StudentInfo {
   acceptPrivate: boolean;
   strategyStyle: StrategyStyle;
   volunteerPattern?: VolunteerPattern;
+  walkDayAdjustmentPreference?: WalkDayAdjustmentPreference;
   riskPreference?: RiskPreference;
   preferenceWeights?: Partial<PreferenceWeights>;
 
@@ -205,6 +207,14 @@ export interface VolunteerItem {
   finalAdmissionProbability?: number;
   matchScore?: number;
   matchReasons?: string[];
+  walkDayEligible?: boolean;
+  walkDayRecommended?: boolean;
+}
+
+export interface WalkDayAdjustmentSuggestion {
+  schoolId: string;
+  schoolName: string;
+  reason: string;
 }
 
 // 志愿方案
@@ -222,6 +232,7 @@ export interface VolunteerPlan {
     firstBatchAdmissionProbability?: number;
     missRisk?: number;
   };
+  walkDayAdjustmentSuggestions?: WalkDayAdjustmentSuggestion[];
 }
 
 // 中考时间节点

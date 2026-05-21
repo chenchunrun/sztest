@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { StudentInfo, StrategyStyle, BioGeoGrade, District, SchoolLevel, Subject, CommuteTolerance, ApplicantTrack, VolunteerPattern } from '@/types';
 import { MapPin, Building2, Home, AlertCircle, Sparkles, ChevronDown, ChevronUp, BookOpen, Bus, School, CheckCircle2 } from 'lucide-react';
 import { juniorSchoolNames } from '@/data/juniorSchoolNames';
+import { officialGuideJuniorSchoolNames2026 } from '@/data/officialGuideJuniorSchools2026';
 
 const DEFAULT_FORM: Partial<StudentInfo> = {
   studentType: 'AC',
@@ -13,6 +14,7 @@ const DEFAULT_FORM: Partial<StudentInfo> = {
   acceptPrivate: false,
   strategyStyle: 'balanced',
   volunteerPattern: '4-4-4',
+  walkDayAdjustmentPreference: 'selective',
   strongSubjects: [],
   commuteTolerance: 'medium',
   preferNewSchool: undefined,
@@ -106,6 +108,7 @@ export default function StudentForm({
 
   const districts: District[] = ['福田', '罗湖', '南山', '宝安', '龙岗', '龙华', '光明', '坪山', '盐田', '大鹏', '深汕'];
   const levels: SchoolLevel[] = ['四大名校', '八大名校', '区属重点', '普通公办'];
+  const juniorSchoolOptions = Array.from(new Set([...juniorSchoolNames, ...officialGuideJuniorSchoolNames2026])).sort((a, b) => a.localeCompare(b, 'zh-Hans-CN'));
 
   const toggleDistrict = (d: District) => {
     updateForm(prev => ({
@@ -183,7 +186,7 @@ export default function StudentForm({
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-200"
             />
             <datalist id="junior-school-options">
-              {juniorSchoolNames.map((name) => (
+              {juniorSchoolOptions.map((name) => (
                 <option key={name} value={name} />
               ))}
             </datalist>
@@ -192,6 +195,9 @@ export default function StudentForm({
             </p>
             <p className="mt-1 text-xs text-amber-600">
               指标生属于优先批次，定位是冲高机会，不是保稳志愿。若被指标生录取，后续 12 个正取志愿自动失效。
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              2026 年正式网报中，如想同时参加该校第一批正取录取，仍需在第一批志愿中再次填报该校。
             </p>
           </div>
 
@@ -332,6 +338,28 @@ export default function StudentForm({
                 >
                   <opt.icon className={`w-5 h-5 mx-auto mb-1 ${form.accommodation === opt.value ? 'text-indigo-600' : 'text-gray-400'}`} />
                   <div className="text-sm font-medium">{opt.label}</div>
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-slate-500">
+              2026 年第一批统一招生中，最多只有 4 所公办普高可勾选“接受走读调剂”；生成方案后，系统会在结果页给出可勾选学校建议，并限制在 4 所以内。
+            </p>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">走读调剂态度</label>
+            <div className="grid grid-cols-2 gap-3">
+              {([
+                { value: 'selective', label: '可选择性接受', desc: '结果页最多确认4所适合走读调剂的学校' },
+                { value: 'none', label: '不接受走读调剂', desc: '结果页不再推荐走读调剂学校' },
+              ] as const).map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => updateForm(prev => ({ ...prev, walkDayAdjustmentPreference: opt.value }))}
+                  className={`p-4 rounded-xl border-2 text-left transition-all duration-150 ${form.walkDayAdjustmentPreference === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
+                >
+                  <div className="font-semibold text-sm text-gray-800">{opt.label}</div>
+                  <div className="text-xs text-gray-500 mt-1">{opt.desc}</div>
                 </button>
               ))}
             </div>
@@ -478,6 +506,9 @@ export default function StudentForm({
                       </button>
                     ))}
                   </div>
+                  <p className="mt-2 text-xs text-slate-500">
+                    2026 年名额分配一般要求考生从初一上学期起一直在当前初中就读并取得三年学籍；市外转入考生须从初三上学期起在当前学校就读，且之后不能再市内转学。往届生和在市外初中毕业的深圳户籍考生不具备名额分配资格。
+                  </p>
                 </div>
 
                 {/* Strong Subjects */}

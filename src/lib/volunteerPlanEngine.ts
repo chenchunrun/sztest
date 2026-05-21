@@ -1,4 +1,4 @@
-import type { StudentInfo, VolunteerItem, VolunteerPlan, School, SchoolLineForecast, VolunteerPattern } from '../types/index.ts';
+import type { StudentInfo, VolunteerItem, VolunteerPlan, School, SchoolLineForecast, VolunteerPattern, WalkDayAdjustmentSuggestion } from '../types/index.ts';
 import { schools, getSchoolScore, buildSchoolLineForecast, buildStudentScoreModel, getDefaultPreferenceWeights } from '../data/schools.ts';
 
 const SHARED_LINE_CORRELATION = 0.28;
@@ -457,6 +457,49 @@ function sortByStrategyAndScore(items: FinalStrategyCandidate[], studentType: St
   });
 }
 
+function getWalkDayAdjustmentReason(candidate: FinalStrategyCandidate, studentInfo: StudentInfo) {
+  const commuteMinutes = getEstimatedCommuteMinutes(studentInfo, candidate.school);
+  if (studentInfo.preferredDistricts.includes(candidate.school.district)) return '位于意向区域，走读通勤更可控';
+  if (studentInfo.homeDistrict && studentInfo.homeDistrict === candidate.school.district) return '与居住区域一致，适合作为走读调剂选择';
+  if (commuteMinutes <= 35) return '预估通勤较近，适合接受走读调剂';
+  if (candidate.strategy === '稳一稳') return '处于主力录取带，适合用走读调剂增强录取机会';
+  return '学校支持走读，且梯度位置适合作为备用走读选择';
+}
+
+function buildWalkDayAdjustmentSuggestions(items: FinalStrategyCandidate[], studentInfo: StudentInfo): WalkDayAdjustmentSuggestion[] {
+  if (studentInfo.walkDayAdjustmentPreference === 'none') return [];
+  if (studentInfo.accommodation === 'boarding' || studentInfo.boardingNeed === 'hard') return [];
+
+  const eligible = items
+    .filter((candidate) => candidate.school.type === '公办' && candidate.school.hasDay)
+    .map((candidate) => ({
+      candidate,
+      commuteMinutes: getEstimatedCommuteMinutes(studentInfo, candidate.school),
+      isPreferredDistrict: isPreferredDistrictSchool(candidate.school, studentInfo.preferredDistricts),
+      strategyWeight: candidate.strategy === '稳一稳' ? 0 : candidate.strategy === '保一保' ? 1 : 2,
+    }))
+    .filter(({ commuteMinutes }) => {
+      if (studentInfo.commuteTolerance === 'near') return commuteMinutes <= 45;
+      if (studentInfo.commuteTolerance === 'medium') return commuteMinutes <= 70;
+      return commuteMinutes <= 90;
+    })
+    .sort((a, b) => {
+      const preferredDiff = Number(b.isPreferredDistrict) - Number(a.isPreferredDistrict);
+      if (preferredDiff !== 0) return preferredDiff;
+      if (a.strategyWeight !== b.strategyWeight) return a.strategyWeight - b.strategyWeight;
+      if (a.commuteMinutes !== b.commuteMinutes) return a.commuteMinutes - b.commuteMinutes;
+      if (b.candidate.forecast.muLine !== a.candidate.forecast.muLine) return b.candidate.forecast.muLine - a.candidate.forecast.muLine;
+      return b.candidate.probability - a.candidate.probability;
+    })
+    .slice(0, 4);
+
+  return eligible.map(({ candidate }) => ({
+    schoolId: candidate.school.id,
+    schoolName: candidate.school.name,
+    reason: getWalkDayAdjustmentReason(candidate, studentInfo),
+  }));
+}
+
 function enforceDistrictPreference(
   items: FinalStrategyCandidate[],
   preferredCandidates: RankedSchoolCandidate[],
@@ -830,6 +873,8 @@ export function generateVolunteerPlan(studentInfo: StudentInfo | null): Voluntee
     studentType
   );
 
+  const walkDayAdjustmentSuggestions = buildWalkDayAdjustmentSuggestions(completedSelected, studentInfo);
+  const walkDaySuggestionIds = new Set(walkDayAdjustmentSuggestions.map((item) => item.schoolId));
   const simulationResult = simulateOrderedAdmissions(completedSelected, studentInfo);
   const items: VolunteerItem[] = completedSelected.map(({ school, strategy, probability, forecast, bucket }, idx) => {
     const schoolScore = getSchoolScore(school, studentType);
@@ -846,6 +891,8 @@ export function generateVolunteerPlan(studentInfo: StudentInfo | null): Voluntee
       finalAdmissionProbability: Math.round((simulationResult.admissionBySchoolId[school.id] || 0) * 100),
       matchScore: calculateMatchScore(school, studentInfo),
       matchReasons: generateMatchReasons(school, studentInfo),
+      walkDayEligible: school.type === '公办' && school.hasDay && studentInfo.walkDayAdjustmentPreference !== 'none' && studentInfo.accommodation !== 'boarding' && studentInfo.boardingNeed !== 'hard',
+      walkDayRecommended: walkDaySuggestionIds.has(school.id),
     };
   });
 
@@ -870,5 +917,6 @@ export function generateVolunteerPlan(studentInfo: StudentInfo | null): Voluntee
       firstBatchAdmissionProbability: Math.round(simulationResult.firstBatchAdmissionProbability * 100),
       missRisk: Math.round(simulationResult.missProbability * 100),
     },
+    walkDayAdjustmentSuggestions,
   };
 }

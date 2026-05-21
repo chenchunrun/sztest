@@ -2553,3 +2553,6127 @@ export const vocationalPlans2026 = [
     "rawText": "35 公办 120 全住宿 面向全市招收ACD类考生 借址办学 术学校"
   }
 ] as const;
+
+export const publicGuideAttachmentRows2026 = [
+  {
+    "serial": 1,
+    "schoolCode": "8310101",
+    "name": "深圳中学（一）",
+    "baseName": "深圳中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 1798,
+    "boardingPlan": 1515,
+    "dayPlan": 283,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "2026 年招收高一新生安排在泥岗校区教学"
+    ]
+  },
+  {
+    "serial": 2,
+    "schoolCode": "8310122",
+    "name": "深圳中学（二）",
+    "baseName": "深圳中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 182,
+    "boardingPlan": 155,
+    "dayPlan": 27,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 3,
+    "schoolCode": "8310191",
+    "name": "深圳中学科技高中（一）",
+    "baseName": "深圳中学科技高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 705,
+    "boardingPlan": 705,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 4,
+    "schoolCode": "8310192",
+    "name": "深圳中学科技高中（二）",
+    "baseName": "深圳中学科技高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 295,
+    "boardingPlan": 295,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 5,
+    "schoolCode": "8310178",
+    "name": "深圳中学数理高中（一）",
+    "baseName": "深圳中学数理高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 705,
+    "boardingPlan": 705,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 6,
+    "schoolCode": "8310179",
+    "name": "深圳中学数理高中（二）",
+    "baseName": "深圳中学数理高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 295,
+    "boardingPlan": 295,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 7,
+    "schoolCode": "8310193",
+    "name": "深圳中学实验高中（一）",
+    "baseName": "深圳中学实验高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 705,
+    "boardingPlan": 705,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 8,
+    "schoolCode": "8310194",
+    "name": "深圳中学实验高中（二）",
+    "baseName": "深圳中学实验高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 295,
+    "boardingPlan": 295,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 9,
+    "schoolCode": "8310102",
+    "name": "深圳实验学校（高中部）（一）",
+    "baseName": "深圳实验学校（高中部）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 510,
+    "boardingPlan": 477,
+    "dayPlan": 33,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 10,
+    "schoolCode": "8310123",
+    "name": "深圳实验学校（高中部）（二）",
+    "baseName": "深圳实验学校（高中部）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 55,
+    "boardingPlan": 51,
+    "dayPlan": 4,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 11,
+    "schoolCode": "8310141",
+    "name": "深圳实验学校（光明高中部）（一）",
+    "baseName": "深圳实验学校（光明高中部）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 942,
+    "boardingPlan": 880,
+    "dayPlan": 62,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 12,
+    "schoolCode": "8310142",
+    "name": "深圳实验学校（光明高中部）（二）",
+    "baseName": "深圳实验学校（光明高中部）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 128,
+    "boardingPlan": 120,
+    "dayPlan": 8,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 13,
+    "schoolCode": "8310158",
+    "name": "深圳实验学校明理高中（一）",
+    "baseName": "深圳实验学校明理高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 846,
+    "boardingPlan": 769,
+    "dayPlan": 77,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 14,
+    "schoolCode": "8310159",
+    "name": "深圳实验学校明理高中（二）",
+    "baseName": "深圳实验学校明理高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 254,
+    "boardingPlan": 231,
+    "dayPlan": 23,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 15,
+    "schoolCode": "8310160",
+    "name": "深圳实验学校崇文高中（一）",
+    "baseName": "深圳实验学校崇文高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 715,
+    "boardingPlan": 650,
+    "dayPlan": 65,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 16,
+    "schoolCode": "8310161",
+    "name": "深圳实验学校崇文高中（二）",
+    "baseName": "深圳实验学校崇文高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 275,
+    "boardingPlan": 250,
+    "dayPlan": 25,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 17,
+    "schoolCode": "8310162",
+    "name": "深圳实验学校卓越高中（一）",
+    "baseName": "深圳实验学校卓越高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 642,
+    "boardingPlan": 584,
+    "dayPlan": 58,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 18,
+    "schoolCode": "8310163",
+    "name": "深圳实验学校卓越高中（二）",
+    "baseName": "深圳实验学校卓越高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 238,
+    "boardingPlan": 216,
+    "dayPlan": 22,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 19,
+    "schoolCode": "8310180",
+    "name": "深圳实验学校至臻高中（一）",
+    "baseName": "深圳实验学校至臻高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 334,
+    "boardingPlan": 304,
+    "dayPlan": 30,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 20,
+    "schoolCode": "8310181",
+    "name": "深圳实验学校至臻高中（二）",
+    "baseName": "深圳实验学校至臻高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 106,
+    "boardingPlan": 96,
+    "dayPlan": 10,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 21,
+    "schoolCode": "8310105",
+    "name": "深圳外国语学校（一）",
+    "baseName": "深圳外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 750,
+    "boardingPlan": 692,
+    "dayPlan": 58,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 22,
+    "schoolCode": "8310125",
+    "name": "深圳外国语学校（二）",
+    "baseName": "深圳外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 97,
+    "boardingPlan": 90,
+    "dayPlan": 7,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 23,
+    "schoolCode": "8310139",
+    "name": "深圳外国语学校龙华高中部（一）",
+    "baseName": "深圳外国语学校龙华高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 784,
+    "boardingPlan": 733,
+    "dayPlan": 51,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 24,
+    "schoolCode": "8310140",
+    "name": "深圳外国语学校龙华高中部（二）",
+    "baseName": "深圳外国语学校龙华高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 179,
+    "boardingPlan": 167,
+    "dayPlan": 12,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 25,
+    "schoolCode": "8310164",
+    "name": "深圳外国语学校致远高中（一）",
+    "baseName": "深圳外国语学校致远高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 474,
+    "boardingPlan": 431,
+    "dayPlan": 43,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 26,
+    "schoolCode": "8310165",
+    "name": "深圳外国语学校致远高中（二）",
+    "baseName": "深圳外国语学校致远高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 186,
+    "boardingPlan": 169,
+    "dayPlan": 17,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 27,
+    "schoolCode": "8310166",
+    "name": "深圳外国语学校弘知高中（一）",
+    "baseName": "深圳外国语学校弘知高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 794,
+    "boardingPlan": 722,
+    "dayPlan": 72,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 28,
+    "schoolCode": "8310167",
+    "name": "深圳外国语学校弘知高中（二）",
+    "baseName": "深圳外国语学校弘知高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 306,
+    "boardingPlan": 278,
+    "dayPlan": 28,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 29,
+    "schoolCode": "8310168",
+    "name": "深圳外国语学校博雅高中（一）",
+    "baseName": "深圳外国语学校博雅高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 715,
+    "boardingPlan": 650,
+    "dayPlan": 65,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 30,
+    "schoolCode": "8310169",
+    "name": "深圳外国语学校博雅高中（二）",
+    "baseName": "深圳外国语学校博雅高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 275,
+    "boardingPlan": 250,
+    "dayPlan": 25,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 31,
+    "schoolCode": "8310182",
+    "name": "深圳外国语学校理工高中（一）",
+    "baseName": "深圳外国语学校理工高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 411,
+    "boardingPlan": 374,
+    "dayPlan": 37,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 32,
+    "schoolCode": "8310183",
+    "name": "深圳外国语学校理工高中（二）",
+    "baseName": "深圳外国语学校理工高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 139,
+    "boardingPlan": 126,
+    "dayPlan": 13,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 33,
+    "schoolCode": "8310106",
+    "name": "深圳市高级中学中心校区（一）",
+    "baseName": "深圳市高级中学中心校区",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 785,
+    "boardingPlan": 734,
+    "dayPlan": 51,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 34,
+    "schoolCode": "8310107",
+    "name": "深圳市高级中学中心校区（二）",
+    "baseName": "深圳市高级中学中心校区",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 178,
+    "boardingPlan": 166,
+    "dayPlan": 12,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 35,
+    "schoolCode": "8310136",
+    "name": "深圳市高级中学东校区（一）",
+    "baseName": "深圳市高级中学东校区",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 823,
+    "boardingPlan": 769,
+    "dayPlan": 54,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 36,
+    "schoolCode": "8310137",
+    "name": "深圳市高级中学东校区（二）",
+    "baseName": "深圳市高级中学东校区",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 247,
+    "boardingPlan": 231,
+    "dayPlan": 16,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 37,
+    "schoolCode": "8310170",
+    "name": "深圳市高级中学创新高中（一）",
+    "baseName": "深圳市高级中学创新高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 678,
+    "boardingPlan": 616,
+    "dayPlan": 62,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 38,
+    "schoolCode": "8310171",
+    "name": "深圳市高级中学创新高中（二）",
+    "baseName": "深圳市高级中学创新高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 202,
+    "boardingPlan": 184,
+    "dayPlan": 18,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 39,
+    "schoolCode": "8310172",
+    "name": "深圳市高级中学文博高中（一）",
+    "baseName": "深圳市高级中学文博高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 835,
+    "boardingPlan": 759,
+    "dayPlan": 76,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 40,
+    "schoolCode": "8310173",
+    "name": "深圳市高级中学文博高中（二）",
+    "baseName": "深圳市高级中学文博高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 265,
+    "boardingPlan": 241,
+    "dayPlan": 24,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 41,
+    "schoolCode": "8310174",
+    "name": "深圳市高级中学理慧高中（一）",
+    "baseName": "深圳市高级中学理慧高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 761,
+    "boardingPlan": 692,
+    "dayPlan": 69,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 42,
+    "schoolCode": "8310175",
+    "name": "深圳市高级中学理慧高中（二）",
+    "baseName": "深圳市高级中学理慧高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 229,
+    "boardingPlan": 208,
+    "dayPlan": 21,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 43,
+    "schoolCode": "8310184",
+    "name": "深圳市高级中学有为高中（一）",
+    "baseName": "深圳市高级中学有为高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 420,
+    "boardingPlan": 382,
+    "dayPlan": 38,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 44,
+    "schoolCode": "8310185",
+    "name": "深圳市高级中学有为高中（二）",
+    "baseName": "深圳市高级中学有为高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 130,
+    "boardingPlan": 118,
+    "dayPlan": 12,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 45,
+    "schoolCode": "8310108",
+    "name": "深圳市第三高级中学（国内高考班）（一）",
+    "baseName": "深圳市第三高级中学（国内高考班）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 518,
+    "boardingPlan": 484,
+    "dayPlan": 34,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 46,
+    "schoolCode": "8310109",
+    "name": "深圳市第三高级中学（国内高考班）（二）",
+    "baseName": "深圳市第三高级中学（国内高考班）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 177,
+    "boardingPlan": 166,
+    "dayPlan": 11,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 47,
+    "schoolCode": "8310110",
+    "name": "深圳市第三高级中学（国家留学基金委自费出国留学班）",
+    "baseName": "深圳市第三高级中学（国家留学基金委自费出国留学班）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 376,
+    "boardingPlan": 376,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 48,
+    "schoolCode": "8310124",
+    "name": "深圳启元中学（一）",
+    "baseName": "深圳启元中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 548,
+    "boardingPlan": 498,
+    "dayPlan": 50,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "校永久校区（永久校区地址：龙岗区龙城街道回龙"
+    ]
+  },
+  {
+    "serial": 49,
+    "schoolCode": "8310126",
+    "name": "深圳启元中学（二）",
+    "baseName": "深圳启元中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 112,
+    "boardingPlan": 102,
+    "dayPlan": 10,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 50,
+    "schoolCode": "8310127",
+    "name": "深圳益新中学（一）",
+    "baseName": "深圳益新中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 647,
+    "boardingPlan": 504,
+    "dayPlan": 143,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "地址：龙华区福城街道福花路南侧"
+    ]
+  },
+  {
+    "serial": 51,
+    "schoolCode": "8310128",
+    "name": "深圳益新中学（二）",
+    "baseName": "深圳益新中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 123,
+    "boardingPlan": 96,
+    "dayPlan": 27,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 52,
+    "schoolCode": "8310112",
+    "name": "深圳大学附属中学中心校区（深大附中中心校区）（一）",
+    "baseName": "深圳大学附属中学中心校区（深大附中中心校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 494,
+    "boardingPlan": 462,
+    "dayPlan": 32,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "原“深圳大学附属中学（深大附中） ”更名"
+    ]
+  },
+  {
+    "serial": 53,
+    "schoolCode": "8310113",
+    "name": "深圳大学附属中学中心校区（深大附中中心校区）（二）",
+    "baseName": "深圳大学附属中学中心校区（深大附中中心校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 148,
+    "boardingPlan": 138,
+    "dayPlan": 10,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 54,
+    "schoolCode": "8310131",
+    "name": "深圳大学附属中学盐田校区（深大附中盐田校区）（一）",
+    "baseName": "深圳大学附属中学盐田校区（深大附中盐田校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 279,
+    "boardingPlan": 254,
+    "dayPlan": 25,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "址办学（地址：南山区前海路 0353 号），后续搬回"
+    ]
+  },
+  {
+    "serial": 55,
+    "schoolCode": "8310132",
+    "name": "深圳大学附属中学盐田校区（深大附中盐田校区）（二）",
+    "baseName": "深圳大学附属中学盐田校区（深大附中盐田校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 51,
+    "boardingPlan": 46,
+    "dayPlan": 5,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 56,
+    "schoolCode": "8310152",
+    "name": "深圳大学附属实验中学（一）",
+    "baseName": "深圳大学附属实验中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 504,
+    "boardingPlan": 458,
+    "dayPlan": 46,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 57,
+    "schoolCode": "8310153",
+    "name": "深圳大学附属实验中学（二）",
+    "baseName": "深圳大学附属实验中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 156,
+    "boardingPlan": 142,
+    "dayPlan": 14,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 58,
+    "schoolCode": "8310114",
+    "name": "深圳市第二实验学校（一）",
+    "baseName": "深圳市第二实验学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 380,
+    "boardingPlan": 356,
+    "dayPlan": 24,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 59,
+    "schoolCode": "8310115",
+    "name": "深圳市第二实验学校（二）",
+    "baseName": "深圳市第二实验学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 101,
+    "boardingPlan": 94,
+    "dayPlan": 7,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 60,
+    "schoolCode": "8310186",
+    "name": "深圳市第二实验学校明远高中（一）",
+    "baseName": "深圳市第二实验学校明远高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 511,
+    "boardingPlan": 465,
+    "dayPlan": 46,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 61,
+    "schoolCode": "8310187",
+    "name": "深圳市第二实验学校明远高中（二）",
+    "baseName": "深圳市第二实验学校明远高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 149,
+    "boardingPlan": 135,
+    "dayPlan": 14,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 62,
+    "schoolCode": "8310116",
+    "name": "深圳市第二高级中学（一）",
+    "baseName": "深圳市第二高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 841,
+    "boardingPlan": 786,
+    "dayPlan": 55,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 63,
+    "schoolCode": "8310117",
+    "name": "深圳市第二高级中学（二）",
+    "baseName": "深圳市第二高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 229,
+    "boardingPlan": 214,
+    "dayPlan": 15,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 64,
+    "schoolCode": "8310129",
+    "name": "深圳市第二高级中学宝安高中部（一）",
+    "baseName": "深圳市第二高级中学宝安高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 746,
+    "boardingPlan": 678,
+    "dayPlan": 68,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "地址：宝安区新桥街道中心路 12-14 号"
+    ]
+  },
+  {
+    "serial": 65,
+    "schoolCode": "8310130",
+    "name": "深圳市第二高级中学宝安高中部（二）",
+    "baseName": "深圳市第二高级中学宝安高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 134,
+    "boardingPlan": 122,
+    "dayPlan": 12,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 66,
+    "schoolCode": "8310176",
+    "name": "深圳市第二高级中学深汕实验学校（一）",
+    "baseName": "深圳市第二高级中学深汕实验学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 626,
+    "boardingPlan": 626,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 67,
+    "schoolCode": "8310177",
+    "name": "深圳市第二高级中学深汕实验学校（二）",
+    "baseName": "深圳市第二高级中学深汕实验学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 274,
+    "boardingPlan": 274,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 68,
+    "schoolCode": "8310118",
+    "name": "深圳第二外国语学校（一）",
+    "baseName": "深圳第二外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 695,
+    "boardingPlan": 650,
+    "dayPlan": 45,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 69,
+    "schoolCode": "8310119",
+    "name": "深圳第二外国语学校（二）",
+    "baseName": "深圳第二外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 268,
+    "boardingPlan": 250,
+    "dayPlan": 18,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 70,
+    "schoolCode": "8310120",
+    "name": "深圳科学高中（一）",
+    "baseName": "深圳科学高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 917,
+    "boardingPlan": 857,
+    "dayPlan": 60,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 71,
+    "schoolCode": "8310121",
+    "name": "深圳科学高中（二）",
+    "baseName": "深圳科学高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 260,
+    "boardingPlan": 243,
+    "dayPlan": 17,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "10",
+      "学校 办学 办学",
+      "序号 学校代码 学校名称 其中： 招生范围 备注",
+      "等级 性质 类型 总计划",
+      "住宿生 走读生"
+    ]
+  },
+  {
+    "serial": 72,
+    "schoolCode": "8310145",
+    "name": "深圳科学高中龙岗分校（一）",
+    "baseName": "深圳科学高中龙岗分校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 456,
+    "boardingPlan": 415,
+    "dayPlan": 41,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 73,
+    "schoolCode": "8310146",
+    "name": "深圳科学高中龙岗分校（二）",
+    "baseName": "深圳科学高中龙岗分校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 149,
+    "boardingPlan": 135,
+    "dayPlan": 14,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 74,
+    "schoolCode": "8310134",
+    "name": "深圳市第七高级中学（一）",
+    "baseName": "深圳市第七高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 772,
+    "boardingPlan": 721,
+    "dayPlan": 51,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 75,
+    "schoolCode": "8310135",
+    "name": "深圳市第七高级中学（二）",
+    "baseName": "深圳市第七高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 298,
+    "boardingPlan": 279,
+    "dayPlan": 19,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 76,
+    "schoolCode": "8310150",
+    "name": "南方科技大学附属中学（一）",
+    "baseName": "南方科技大学附属中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 682,
+    "boardingPlan": 620,
+    "dayPlan": 62,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 77,
+    "schoolCode": "8310151",
+    "name": "南方科技大学附属中学（二）",
+    "baseName": "南方科技大学附属中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 198,
+    "boardingPlan": 180,
+    "dayPlan": 18,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 78,
+    "schoolCode": "8310147",
+    "name": "广东实验中学深圳学校（一）",
+    "baseName": "广东实验中学深圳学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 588,
+    "boardingPlan": 535,
+    "dayPlan": 53,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 79,
+    "schoolCode": "8310148",
+    "name": "广东实验中学深圳学校（二）",
+    "baseName": "广东实验中学深圳学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 182,
+    "boardingPlan": 165,
+    "dayPlan": 17,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 80,
+    "schoolCode": "8310154",
+    "name": "深圳技术大学附属中学（一）",
+    "baseName": "深圳技术大学附属中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 479,
+    "boardingPlan": 435,
+    "dayPlan": 44,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 81,
+    "schoolCode": "8310155",
+    "name": "深圳技术大学附属中学（二）",
+    "baseName": "深圳技术大学附属中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 181,
+    "boardingPlan": 165,
+    "dayPlan": 16,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 82,
+    "schoolCode": "8310156",
+    "name": "东北师范大学附属中学深圳学校（一）",
+    "baseName": "东北师范大学附属中学深圳学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 479,
+    "boardingPlan": 435,
+    "dayPlan": 44,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 83,
+    "schoolCode": "8310157",
+    "name": "东北师范大学附属中学深圳学校（二）",
+    "baseName": "东北师范大学附属中学深圳学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 181,
+    "boardingPlan": 165,
+    "dayPlan": 16,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 84,
+    "schoolCode": "8310189",
+    "name": "深圳北理莫斯科大学附属实验中学（一）",
+    "baseName": "深圳北理莫斯科大学附属实验中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 522,
+    "boardingPlan": 475,
+    "dayPlan": 47,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 85,
+    "schoolCode": "8310190",
+    "name": "深圳北理莫斯科大学附属实验中学（二）",
+    "baseName": "深圳北理莫斯科大学附属实验中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 138,
+    "boardingPlan": 125,
+    "dayPlan": 13,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 86,
+    "schoolCode": "8310143",
+    "name": "深圳理工大学附属中学（一）",
+    "baseName": "深圳理工大学附属中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 371,
+    "boardingPlan": 337,
+    "dayPlan": 34,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "光明区公常路 1 号），后续搬回到学校永久校区"
+    ]
+  },
+  {
+    "serial": 87,
+    "schoolCode": "8310144",
+    "name": "深圳理工大学附属中学（二）",
+    "baseName": "深圳理工大学附属中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 69,
+    "boardingPlan": 63,
+    "dayPlan": 6,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 88,
+    "schoolCode": "8310138",
+    "name": "深圳市曙光中学（综合高中）（一）",
+    "baseName": "深圳市曙光中学（综合高中）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 651,
+    "boardingPlan": 507,
+    "dayPlan": 144,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "龙华区福城街道福花路南侧），后续搬回到学校永"
+    ]
+  },
+  {
+    "serial": 89,
+    "schoolCode": "8310149",
+    "name": "深圳市曙光中学（综合高中）（二）",
+    "baseName": "深圳市曙光中学（综合高中）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 119,
+    "boardingPlan": 93,
+    "dayPlan": 26,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "划龙宝路交汇处）"
+    ]
+  },
+  {
+    "serial": 90,
+    "schoolCode": "8310111",
+    "name": "深圳创新高级中学（综合高中）（一）",
+    "baseName": "深圳创新高级中学（综合高中）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 588,
+    "boardingPlan": 588,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "龙华区福城街道福花路南侧），后续搬回到学校永"
+    ]
+  },
+  {
+    "serial": 91,
+    "schoolCode": "8310188",
+    "name": "深圳创新高级中学（综合高中）（二）",
+    "baseName": "深圳创新高级中学（综合高中）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 112,
+    "boardingPlan": 112,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 92,
+    "schoolCode": "8310133",
+    "name": "深圳市第一职业技术学校（综合高中班）",
+    "baseName": "深圳市第一职业技术学校（综合高中班）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 120,
+    "boardingPlan": 120,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 93,
+    "schoolCode": "8310195",
+    "name": "深圳市体育实验学校",
+    "baseName": "深圳市体育实验学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 50,
+    "boardingPlan": 50,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 94,
+    "schoolCode": "8310401",
+    "name": "红岭中学（一）",
+    "baseName": "红岭中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 1057,
+    "boardingPlan": 988,
+    "dayPlan": 69,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 95,
+    "schoolCode": "8310402",
+    "name": "红岭中学（二）",
+    "baseName": "红岭中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 280,
+    "boardingPlan": 262,
+    "dayPlan": 18,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 96,
+    "schoolCode": "8310403",
+    "name": "福田中学（一）",
+    "baseName": "福田中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 870,
+    "boardingPlan": 791,
+    "dayPlan": 79,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 97,
+    "schoolCode": "8310404",
+    "name": "福田中学（二）",
+    "baseName": "福田中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 230,
+    "boardingPlan": 209,
+    "dayPlan": 21,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 98,
+    "schoolCode": "8310405",
+    "name": "北京大学附属中学深圳学校（一）",
+    "baseName": "北京大学附属中学深圳学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 414,
+    "boardingPlan": 387,
+    "dayPlan": 27,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 99,
+    "schoolCode": "8310406",
+    "name": "北京大学附属中学深圳学校（二）",
+    "baseName": "北京大学附属中学深圳学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 121,
+    "boardingPlan": 113,
+    "dayPlan": 8,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 100,
+    "schoolCode": "8310407",
+    "name": "西交利物浦大学基础教育集团外国语高级中学（一）",
+    "baseName": "西交利物浦大学基础教育集团外国语高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 583,
+    "boardingPlan": 545,
+    "dayPlan": 38,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 101,
+    "schoolCode": "8310408",
+    "name": "西交利物浦大学基础教育集团外国语高级中学（二）",
+    "baseName": "西交利物浦大学基础教育集团外国语高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 166,
+    "boardingPlan": 155,
+    "dayPlan": 11,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 102,
+    "schoolCode": "8310424",
+    "name": "香港中文大学（深圳）附属明德高级中学（一）",
+    "baseName": "香港中文大学（深圳）附属明德高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 532,
+    "boardingPlan": 484,
+    "dayPlan": 48,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 103,
+    "schoolCode": "8310425",
+    "name": "香港中文大学（深圳）附属明德高级中学（二）",
+    "baseName": "香港中文大学（深圳）附属明德高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 128,
+    "boardingPlan": 116,
+    "dayPlan": 12,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 104,
+    "schoolCode": "8310301",
+    "name": "翠园中学（爱国路校区）（一）",
+    "baseName": "翠园中学（爱国路校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 372,
+    "boardingPlan": 338,
+    "dayPlan": 34,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "地址：罗湖区爱国路 2011 号"
+    ]
+  },
+  {
+    "serial": 105,
+    "schoolCode": "8310302",
+    "name": "翠园中学（爱国路校区）（二）",
+    "baseName": "翠园中学（爱国路校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 68,
+    "boardingPlan": 62,
+    "dayPlan": 6,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 106,
+    "schoolCode": "8310309",
+    "name": "翠园中学（东门北路校区）（一）",
+    "baseName": "翠园中学（东门北路校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 534,
+    "boardingPlan": 416,
+    "dayPlan": 118,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "地址：罗湖区东门北路 1016 号"
+    ]
+  },
+  {
+    "serial": 107,
+    "schoolCode": "8310310",
+    "name": "翠园中学（东门北路校区）（二）",
+    "baseName": "翠园中学（东门北路校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 108,
+    "boardingPlan": 84,
+    "dayPlan": 24,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 108,
+    "schoolCode": "8310303",
+    "name": "罗湖高级中学（一）",
+    "baseName": "罗湖高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 391,
+    "boardingPlan": 367,
+    "dayPlan": 24,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 109,
+    "schoolCode": "8310304",
+    "name": "罗湖高级中学（二）",
+    "baseName": "罗湖高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 141,
+    "boardingPlan": 133,
+    "dayPlan": 8,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 110,
+    "schoolCode": "8310305",
+    "name": "罗湖外语学校（一）",
+    "baseName": "罗湖外语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 618,
+    "boardingPlan": 562,
+    "dayPlan": 56,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 111,
+    "schoolCode": "8310313",
+    "name": "罗湖外语学校（二）",
+    "baseName": "罗湖外语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 152,
+    "boardingPlan": 138,
+    "dayPlan": 14,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 112,
+    "schoolCode": "8310306",
+    "name": "深圳市美术学校（一）",
+    "baseName": "深圳市美术学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 312,
+    "boardingPlan": 284,
+    "dayPlan": 28,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 113,
+    "schoolCode": "8310307",
+    "name": "深圳市美术学校（二）",
+    "baseName": "深圳市美术学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 128,
+    "boardingPlan": 116,
+    "dayPlan": 12,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 114,
+    "schoolCode": "8310308",
+    "name": "深圳市行知职业技术学校（综合高中班）",
+    "baseName": "深圳市行知职业技术学校（综合高中班）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 165,
+    "boardingPlan": 165,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 115,
+    "schoolCode": "8310801",
+    "name": "盐田高级中学（一）",
+    "baseName": "盐田高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 813,
+    "boardingPlan": 760,
+    "dayPlan": 53,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 116,
+    "schoolCode": "8310802",
+    "name": "盐田高级中学（二）",
+    "baseName": "盐田高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 257,
+    "boardingPlan": 240,
+    "dayPlan": 17,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 117,
+    "schoolCode": "8310805",
+    "name": "深圳市盐港中学（综合高中班）",
+    "baseName": "深圳市盐港中学（综合高中班）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 107,
+    "boardingPlan": 107,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 118,
+    "schoolCode": "8310501",
+    "name": "南头中学（一）",
+    "baseName": "南头中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 719,
+    "boardingPlan": 458,
+    "dayPlan": 261,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 119,
+    "schoolCode": "8310502",
+    "name": "南头中学（二）",
+    "baseName": "南头中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 222,
+    "boardingPlan": 142,
+    "dayPlan": 80,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 120,
+    "schoolCode": "8310503",
+    "name": "育才中学（一）",
+    "baseName": "育才中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 943,
+    "boardingPlan": 814,
+    "dayPlan": 129,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "地址：南山区桃源街道峰景社区"
+    ]
+  },
+  {
+    "serial": 121,
+    "schoolCode": "8310504",
+    "name": "育才中学（二）",
+    "baseName": "育才中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 157,
+    "boardingPlan": 136,
+    "dayPlan": 21,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 122,
+    "schoolCode": "8310518",
+    "name": "育才一中（一）",
+    "baseName": "育才一中",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 534,
+    "boardingPlan": 499,
+    "dayPlan": 35,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 123,
+    "schoolCode": "8310519",
+    "name": "育才一中（二）",
+    "baseName": "育才一中",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 108,
+    "boardingPlan": 101,
+    "dayPlan": 7,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 124,
+    "schoolCode": "8310505",
+    "name": "华侨城高级中学（一）",
+    "baseName": "华侨城高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 682,
+    "boardingPlan": 637,
+    "dayPlan": 45,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 125,
+    "schoolCode": "8310506",
+    "name": "华侨城高级中学（二）",
+    "baseName": "华侨城高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 174,
+    "boardingPlan": 163,
+    "dayPlan": 11,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 126,
+    "schoolCode": "8310507",
+    "name": "北京师范大学南山附属学校（一）",
+    "baseName": "北京师范大学南山附属学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 361,
+    "boardingPlan": 328,
+    "dayPlan": 33,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 127,
+    "schoolCode": "8310508",
+    "name": "北京师范大学南山附属学校（二）",
+    "baseName": "北京师范大学南山附属学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 79,
+    "boardingPlan": 72,
+    "dayPlan": 7,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 128,
+    "schoolCode": "8310509",
+    "name": "南山外国语学校（集团）高级中学（一）",
+    "baseName": "南山外国语学校（集团）高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 518,
+    "boardingPlan": 484,
+    "dayPlan": 34,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 129,
+    "schoolCode": "8310517",
+    "name": "南山外国语学校（集团）高级中学（二）",
+    "baseName": "南山外国语学校（集团）高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 124,
+    "boardingPlan": 116,
+    "dayPlan": 8,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 130,
+    "schoolCode": "8310601",
+    "name": "宝安中学（集团）高中部（一）",
+    "baseName": "宝安中学（集团）高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 872,
+    "boardingPlan": 815,
+    "dayPlan": 57,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 131,
+    "schoolCode": "8310602",
+    "name": "宝安中学（集团）高中部（二）",
+    "baseName": "宝安中学（集团）高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 198,
+    "boardingPlan": 185,
+    "dayPlan": 13,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 132,
+    "schoolCode": "8310605",
+    "name": "新安中学（集团）高中部（一）",
+    "baseName": "新安中学（集团）高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 652,
+    "boardingPlan": 579,
+    "dayPlan": 73,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 133,
+    "schoolCode": "8310606",
+    "name": "新安中学（集团）高中部（二）",
+    "baseName": "新安中学（集团）高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 204,
+    "boardingPlan": 181,
+    "dayPlan": 23,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 134,
+    "schoolCode": "8310603",
+    "name": "宝安第一外国语学校（一）",
+    "baseName": "宝安第一外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 613,
+    "boardingPlan": 573,
+    "dayPlan": 40,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 135,
+    "schoolCode": "8310604",
+    "name": "宝安第一外国语学校（二）",
+    "baseName": "宝安第一外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 190,
+    "boardingPlan": 177,
+    "dayPlan": 13,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 136,
+    "schoolCode": "8310607",
+    "name": "西乡中学（一）",
+    "baseName": "西乡中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 792,
+    "boardingPlan": 740,
+    "dayPlan": 52,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 137,
+    "schoolCode": "8310608",
+    "name": "西乡中学（二）",
+    "baseName": "西乡中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 278,
+    "boardingPlan": 260,
+    "dayPlan": 18,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 138,
+    "schoolCode": "8310609",
+    "name": "沙井中学 （一）",
+    "baseName": "沙井中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 452,
+    "boardingPlan": 417,
+    "dayPlan": 35,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 139,
+    "schoolCode": "8310610",
+    "name": "沙井中学 （二）",
+    "baseName": "沙井中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 198,
+    "boardingPlan": 183,
+    "dayPlan": 15,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 140,
+    "schoolCode": "8310611",
+    "name": "松岗中学（一）",
+    "baseName": "松岗中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 238,
+    "boardingPlan": 222,
+    "dayPlan": 16,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 141,
+    "schoolCode": "8310612",
+    "name": "松岗中学（二）",
+    "baseName": "松岗中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 83,
+    "boardingPlan": 78,
+    "dayPlan": 5,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "11",
+      "学校 办学 办学",
+      "序号 学校代码 学校名称 其中： 招生范围 备注",
+      "等级 性质 类型 总计划",
+      "住宿生 走读生"
+    ]
+  },
+  {
+    "serial": 142,
+    "schoolCode": "8310616",
+    "name": "石岩外国语学校（一）",
+    "baseName": "石岩外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 351,
+    "boardingPlan": 284,
+    "dayPlan": 67,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 143,
+    "schoolCode": "8310645",
+    "name": "石岩外国语学校（二）",
+    "baseName": "石岩外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 144,
+    "boardingPlan": 116,
+    "dayPlan": 28,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 144,
+    "schoolCode": "8310639",
+    "name": "深圳市福海中学（一）",
+    "baseName": "深圳市福海中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 543,
+    "boardingPlan": 461,
+    "dayPlan": 82,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 145,
+    "schoolCode": "8310640",
+    "name": "深圳市福海中学（二）",
+    "baseName": "深圳市福海中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 164,
+    "boardingPlan": 139,
+    "dayPlan": 25,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 146,
+    "schoolCode": "8310641",
+    "name": "深圳市龙津中学（一）",
+    "baseName": "深圳市龙津中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 833,
+    "boardingPlan": 721,
+    "dayPlan": 112,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 147,
+    "schoolCode": "8310642",
+    "name": "深圳市龙津中学（二）",
+    "baseName": "深圳市龙津中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 322,
+    "boardingPlan": 279,
+    "dayPlan": 43,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 148,
+    "schoolCode": "8310643",
+    "name": "深圳市燕川中学（一）",
+    "baseName": "深圳市燕川中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 828,
+    "boardingPlan": 717,
+    "dayPlan": 111,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 149,
+    "schoolCode": "8310644",
+    "name": "深圳市燕川中学（二）",
+    "baseName": "深圳市燕川中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 327,
+    "boardingPlan": 283,
+    "dayPlan": 44,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 150,
+    "schoolCode": "8310701",
+    "name": "龙城高级中学（一）",
+    "baseName": "龙城高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 825,
+    "boardingPlan": 771,
+    "dayPlan": 54,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 151,
+    "schoolCode": "8310702",
+    "name": "龙城高级中学（二）",
+    "baseName": "龙城高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 245,
+    "boardingPlan": 229,
+    "dayPlan": 16,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 152,
+    "schoolCode": "8310703",
+    "name": "平冈中学（一）",
+    "baseName": "平冈中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 572,
+    "boardingPlan": 534,
+    "dayPlan": 38,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 153,
+    "schoolCode": "8310704",
+    "name": "平冈中学（二）",
+    "baseName": "平冈中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 178,
+    "boardingPlan": 166,
+    "dayPlan": 12,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 154,
+    "schoolCode": "8310705",
+    "name": "深圳市龙岗区第二高级中学（一）",
+    "baseName": "深圳市龙岗区第二高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 745,
+    "boardingPlan": 696,
+    "dayPlan": 49,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": [
+      "原“布吉高级中学”更名"
+    ]
+  },
+  {
+    "serial": 155,
+    "schoolCode": "8310706",
+    "name": "深圳市龙岗区第二高级中学（二）",
+    "baseName": "深圳市龙岗区第二高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 325,
+    "boardingPlan": 304,
+    "dayPlan": 21,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 156,
+    "schoolCode": "8310707",
+    "name": "布吉中学（一）",
+    "baseName": "布吉中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 318,
+    "boardingPlan": null,
+    "dayPlan": 318,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 157,
+    "schoolCode": "8310708",
+    "name": "布吉中学（二）",
+    "baseName": "布吉中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 142,
+    "boardingPlan": null,
+    "dayPlan": 142,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 158,
+    "schoolCode": "8310709",
+    "name": "横岗高级中学（一）",
+    "baseName": "横岗高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 597,
+    "boardingPlan": 558,
+    "dayPlan": 39,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 159,
+    "schoolCode": "8310710",
+    "name": "横岗高级中学（二）",
+    "baseName": "横岗高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 259,
+    "boardingPlan": 242,
+    "dayPlan": 17,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 160,
+    "schoolCode": "8310711",
+    "name": "平湖外国语学校（一）",
+    "baseName": "平湖外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 243,
+    "boardingPlan": 208,
+    "dayPlan": 35,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 161,
+    "schoolCode": "8310712",
+    "name": "平湖外国语学校（二）",
+    "baseName": "平湖外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 107,
+    "boardingPlan": 92,
+    "dayPlan": 15,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 162,
+    "schoolCode": "8310713",
+    "name": "华中师范大学龙岗附属中学（一）",
+    "baseName": "华中师范大学龙岗附属中学",
+    "level": "市一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 772,
+    "boardingPlan": 721,
+    "dayPlan": 51,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 163,
+    "schoolCode": "8310714",
+    "name": "华中师范大学龙岗附属中学（二）",
+    "baseName": "华中师范大学龙岗附属中学",
+    "level": "市一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 298,
+    "boardingPlan": 279,
+    "dayPlan": 19,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 164,
+    "schoolCode": "8310744",
+    "name": "龙岗区实验高级中学（一）",
+    "baseName": "龙岗区实验高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 324,
+    "boardingPlan": 295,
+    "dayPlan": 29,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 165,
+    "schoolCode": "8310745",
+    "name": "龙岗区实验高级中学（二）",
+    "baseName": "龙岗区实验高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 116,
+    "boardingPlan": 105,
+    "dayPlan": 11,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 166,
+    "schoolCode": "8311001",
+    "name": "龙华中学（一）",
+    "baseName": "龙华中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 291,
+    "boardingPlan": 208,
+    "dayPlan": 83,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 167,
+    "schoolCode": "8311002",
+    "name": "龙华中学（二）",
+    "baseName": "龙华中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 129,
+    "boardingPlan": 92,
+    "dayPlan": 37,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 168,
+    "schoolCode": "8311003",
+    "name": "观澜中学（一）",
+    "baseName": "观澜中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 804,
+    "boardingPlan": 731,
+    "dayPlan": 73,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 169,
+    "schoolCode": "8311004",
+    "name": "观澜中学（二）",
+    "baseName": "观澜中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 296,
+    "boardingPlan": 269,
+    "dayPlan": 27,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 170,
+    "schoolCode": "8311005",
+    "name": "龙华高级中学（一）",
+    "baseName": "龙华高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 498,
+    "boardingPlan": 465,
+    "dayPlan": 33,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 171,
+    "schoolCode": "8311006",
+    "name": "龙华高级中学（二）",
+    "baseName": "龙华高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 144,
+    "boardingPlan": 135,
+    "dayPlan": 9,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 172,
+    "schoolCode": "8311014",
+    "name": "深圳市艺术高中（一）",
+    "baseName": "深圳市艺术高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 311,
+    "boardingPlan": 283,
+    "dayPlan": 28,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 173,
+    "schoolCode": "8311015",
+    "name": "深圳市艺术高中（二）",
+    "baseName": "深圳市艺术高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 129,
+    "boardingPlan": 117,
+    "dayPlan": 12,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 174,
+    "schoolCode": "8311016",
+    "name": "深圳市格致中学（一）",
+    "baseName": "深圳市格致中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 474,
+    "boardingPlan": 431,
+    "dayPlan": 43,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 175,
+    "schoolCode": "8311017",
+    "name": "深圳市格致中学（二）",
+    "baseName": "深圳市格致中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 186,
+    "boardingPlan": 169,
+    "dayPlan": 17,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 176,
+    "schoolCode": "8311018",
+    "name": "深圳市红山中学（一）",
+    "baseName": "深圳市红山中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 474,
+    "boardingPlan": 431,
+    "dayPlan": 43,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 177,
+    "schoolCode": "8311019",
+    "name": "深圳市红山中学（二）",
+    "baseName": "深圳市红山中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 186,
+    "boardingPlan": 169,
+    "dayPlan": 17,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 178,
+    "schoolCode": "8311022",
+    "name": "深圳市龙华外国语高级中学（一）",
+    "baseName": "深圳市龙华外国语高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 474,
+    "boardingPlan": 431,
+    "dayPlan": 43,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 179,
+    "schoolCode": "8311023",
+    "name": "深圳市龙华外国语高级中学（二）",
+    "baseName": "深圳市龙华外国语高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 186,
+    "boardingPlan": 169,
+    "dayPlan": 17,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 180,
+    "schoolCode": "8311025",
+    "name": "深圳市致理中学（一）",
+    "baseName": "深圳市致理中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 1244,
+    "boardingPlan": 1131,
+    "dayPlan": 113,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 181,
+    "schoolCode": "8311026",
+    "name": "深圳市致理中学（二）",
+    "baseName": "深圳市致理中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 406,
+    "boardingPlan": 369,
+    "dayPlan": 37,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 182,
+    "schoolCode": "8311027",
+    "name": "深圳市龙华科技实验高级中学（一）",
+    "baseName": "深圳市龙华科技实验高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 1374,
+    "boardingPlan": 1249,
+    "dayPlan": 125,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 183,
+    "schoolCode": "8311028",
+    "name": "深圳市龙华科技实验高级中学（二）",
+    "baseName": "深圳市龙华科技实验高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 331,
+    "boardingPlan": 301,
+    "dayPlan": 30,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 184,
+    "schoolCode": "8310201",
+    "name": "坪山高级中学（一）",
+    "baseName": "坪山高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 588,
+    "boardingPlan": 515,
+    "dayPlan": 73,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 185,
+    "schoolCode": "8310202",
+    "name": "坪山高级中学（二）",
+    "baseName": "坪山高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 212,
+    "boardingPlan": 185,
+    "dayPlan": 27,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 186,
+    "schoolCode": "8310208",
+    "name": "深圳市聚龙科学中学（一）",
+    "baseName": "深圳市聚龙科学中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 787,
+    "boardingPlan": 715,
+    "dayPlan": 72,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 187,
+    "schoolCode": "8310209",
+    "name": "深圳市聚龙科学中学（二）",
+    "baseName": "深圳市聚龙科学中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 313,
+    "boardingPlan": 285,
+    "dayPlan": 28,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 188,
+    "schoolCode": "8310901",
+    "name": "光明区高级中学（一）",
+    "baseName": "光明区高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 1109,
+    "boardingPlan": 1036,
+    "dayPlan": 73,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 189,
+    "schoolCode": "8310902",
+    "name": "光明区高级中学（二）",
+    "baseName": "光明区高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 432,
+    "boardingPlan": 404,
+    "dayPlan": 28,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 190,
+    "schoolCode": "8310903",
+    "name": "光明中学（一）",
+    "baseName": "光明中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 448,
+    "boardingPlan": 419,
+    "dayPlan": 29,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 191,
+    "schoolCode": "8310904",
+    "name": "光明中学（二）",
+    "baseName": "光明中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 194,
+    "boardingPlan": 181,
+    "dayPlan": 13,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 192,
+    "schoolCode": "8310906",
+    "name": "中国科学院深圳理工大学附属实验高级中学（中科附高）（一）",
+    "baseName": "中国科学院深圳理工大学附属实验高级中学（中科附高）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 560,
+    "boardingPlan": 509,
+    "dayPlan": 51,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 193,
+    "schoolCode": "8310907",
+    "name": "中国科学院深圳理工大学附属实验高级中学（中科附高）（二）",
+    "baseName": "中国科学院深圳理工大学附属实验高级中学（中科附高）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 210,
+    "boardingPlan": 191,
+    "dayPlan": 19,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 194,
+    "schoolCode": "8311101",
+    "name": "人大附中深圳学校（一）",
+    "baseName": "人大附中深圳学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 790,
+    "boardingPlan": 790,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 195,
+    "schoolCode": "8311102",
+    "name": "人大附中深圳学校（二）",
+    "baseName": "人大附中深圳学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 210,
+    "boardingPlan": 210,
+    "dayPlan": 0,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 196,
+    "schoolCode": "8311105",
+    "name": "红岭教育集团大鹏华侨中学（一）",
+    "baseName": "红岭教育集团大鹏华侨中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 504,
+    "boardingPlan": 458,
+    "dayPlan": 46,
+    "recruitRanges": [
+      "面向全市招收 AC 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 197,
+    "schoolCode": "8311106",
+    "name": "红岭教育集团大鹏华侨中学（二）",
+    "baseName": "红岭教育集团大鹏华侨中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "totalPlan": 156,
+    "boardingPlan": 142,
+    "dayPlan": 14,
+    "recruitRanges": [
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "12"
+    ]
+  }
+] as const;
+
+export const privateGuideAttachmentRows2026 = [
+  {
+    "serial": 1,
+    "schoolCode": "8310314",
+    "name": "深圳市罗湖区华美外国语学校",
+    "baseName": "深圳市罗湖区华美外国语学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 380,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 2,
+    "schoolCode": "8310803",
+    "name": "深圳市万科梅沙书院",
+    "baseName": "深圳市万科梅沙书院",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 175,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 3,
+    "schoolCode": "8310804",
+    "name": "深圳市盐田区梅沙双语学校",
+    "baseName": "深圳市盐田区梅沙双语学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 240,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 4,
+    "schoolCode": "8310512",
+    "name": "深圳（南山）中加学校",
+    "baseName": "深圳（南山）中加学校",
+    "level": "省一级",
+    "nature": "民办（中外合作）",
+    "schoolType": "普高",
+    "totalPlan": 395,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 5,
+    "schoolCode": "8310513",
+    "name": "深圳市南山中英文学校",
+    "baseName": "深圳市南山中英文学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 300,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 6,
+    "schoolCode": "8310618",
+    "name": "深圳东方英文书院",
+    "baseName": "深圳东方英文书院",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 900,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 7,
+    "schoolCode": "8310627",
+    "name": "深圳市崛起实验中学",
+    "baseName": "深圳市崛起实验中学",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 540,
+    "accommodation": "提供 450 个床位",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 8,
+    "schoolCode": "8310614",
+    "name": "深圳市桃源居中澳实验学校",
+    "baseName": "深圳市桃源居中澳实验学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 1300,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 9,
+    "schoolCode": "8310628",
+    "name": "深圳市华胜实验学校",
+    "baseName": "深圳市华胜实验学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 600,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 10,
+    "schoolCode": "8310619",
+    "name": "深圳市富源学校",
+    "baseName": "深圳市富源学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 1060,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 11,
+    "schoolCode": "8310629",
+    "name": "深圳市华侨（康桥）书院",
+    "baseName": "深圳市华侨（康桥）书院",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 500,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 12,
+    "schoolCode": "8310630",
+    "name": "深圳市明德外语实验学校",
+    "baseName": "深圳市明德外语实验学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 450,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 13,
+    "schoolCode": "8310631",
+    "name": "深圳市宝安区中英公学",
+    "baseName": "深圳市宝安区中英公学",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 160,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 14,
+    "schoolCode": "8310632",
+    "name": "深圳市松岗中英文实验学校",
+    "baseName": "深圳市松岗中英文实验学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 350,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 15,
+    "schoolCode": "8310633",
+    "name": "深圳市宝安区翻身实验学校（西校区）",
+    "baseName": "深圳市宝安区翻身实验学校（西校区）",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 900,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 16,
+    "schoolCode": "8310635",
+    "name": "深圳市华一实验学校",
+    "baseName": "深圳市华一实验学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 700,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 17,
+    "schoolCode": "8310637",
+    "name": "深圳市福桥高级中学",
+    "baseName": "深圳市福桥高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 300,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 18,
+    "schoolCode": "8310638",
+    "name": "深圳市滨海高级中学",
+    "baseName": "深圳市滨海高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 640,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 19,
+    "schoolCode": "8310646",
+    "name": "深圳市弘毅高级中学",
+    "baseName": "深圳市弘毅高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 780,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 20,
+    "schoolCode": "8310715",
+    "name": "深圳市龙岗区东升学校",
+    "baseName": "深圳市龙岗区东升学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 1200,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 21,
+    "schoolCode": "8310716",
+    "name": "深圳市建文外国语学校",
+    "baseName": "深圳市建文外国语学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 2300,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 22,
+    "schoolCode": "8310734",
+    "name": "深圳市龙岗区科城实验学校",
+    "baseName": "深圳市龙岗区科城实验学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 560,
+    "accommodation": "走读",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 23,
+    "schoolCode": "8310735",
+    "name": "深圳市承翰学校",
+    "baseName": "深圳市承翰学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 790,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 24,
+    "schoolCode": "8310738",
+    "name": "深圳市坤翔高级中学",
+    "baseName": "深圳市坤翔高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 1500,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 25,
+    "schoolCode": "8310739",
+    "name": "深圳市龙岗区珊蒂泉外国语学校",
+    "baseName": "深圳市龙岗区珊蒂泉外国语学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 1200,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 26,
+    "schoolCode": "8310740",
+    "name": "深圳市枫叶学校",
+    "baseName": "深圳市枫叶学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 180,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 27,
+    "schoolCode": "8310741",
+    "name": "深圳市龙岗区德琳学校",
+    "baseName": "深圳市龙岗区德琳学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 750,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 28,
+    "schoolCode": "8310742",
+    "name": "深圳市鹏达高级中学",
+    "baseName": "深圳市鹏达高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 700,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 29,
+    "schoolCode": "8310743",
+    "name": "深圳菁华中英文实验中学",
+    "baseName": "深圳菁华中英文实验中学",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 1060,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 30,
+    "schoolCode": "8310746",
+    "name": "深圳市晟才高级中学",
+    "baseName": "深圳市晟才高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 440,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 31,
+    "schoolCode": "8310747",
+    "name": "深圳市中荟高级中学",
+    "baseName": "深圳市中荟高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 1200,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 32,
+    "schoolCode": "8311007",
+    "name": "深圳市龙华中英文实验学校",
+    "baseName": "深圳市龙华中英文实验学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 500,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 33,
+    "schoolCode": "8311008",
+    "name": "深圳市美中学校",
+    "baseName": "深圳市美中学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 960,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 34,
+    "schoolCode": "8311009",
+    "name": "深圳市展华实验学校",
+    "baseName": "深圳市展华实验学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 400,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 35,
+    "schoolCode": "8311013",
+    "name": "深圳市格睿特高级中学",
+    "baseName": "深圳市格睿特高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 700,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 36,
+    "schoolCode": "8311024",
+    "name": "深圳市龙华区博恒实验学校",
+    "baseName": "深圳市龙华区博恒实验学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 560,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 37,
+    "schoolCode": "8311021",
+    "name": "深圳市汉开数理高中",
+    "baseName": "深圳市汉开数理高中",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 800,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 38,
+    "schoolCode": "8311029",
+    "name": "深圳市育华高级中学",
+    "baseName": "深圳市育华高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 400,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 39,
+    "schoolCode": "8310204",
+    "name": "深圳市龙翔学校",
+    "baseName": "深圳市龙翔学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 1095,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 40,
+    "schoolCode": "8310205",
+    "name": "深圳市中新中学",
+    "baseName": "深圳市中新中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 450,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 41,
+    "schoolCode": "8310206",
+    "name": "深圳市立人高级中学",
+    "baseName": "深圳市立人高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 700,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 42,
+    "schoolCode": "8310207",
+    "name": "深圳市华朗学校",
+    "baseName": "深圳市华朗学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 500,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 43,
+    "schoolCode": "8310210",
+    "name": "深圳市知源高级中学",
+    "baseName": "深圳市知源高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 500,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 44,
+    "schoolCode": "8310211",
+    "name": "深圳市华文高级中学",
+    "baseName": "深圳市华文高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 350,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 45,
+    "schoolCode": "8310905",
+    "name": "深圳市光明书院",
+    "baseName": "深圳市光明书院",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 1400,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 46,
+    "schoolCode": "8310636",
+    "name": "深圳杰仁高级中学",
+    "baseName": "深圳杰仁高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 450,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 47,
+    "schoolCode": "8310908",
+    "name": "深圳市耀华外国语学校",
+    "baseName": "深圳市耀华外国语学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 300,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 48,
+    "schoolCode": "8310909",
+    "name": "深圳市光明区贝赛思外国语学校",
+    "baseName": "深圳市光明区贝赛思外国语学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 180,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "serial": 49,
+    "schoolCode": "8311104",
+    "name": "深圳市正德高级中学",
+    "baseName": "深圳市正德高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "totalPlan": 400,
+    "accommodation": "全住宿",
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  }
+] as const;
+
+export const publicGuideMeta2026 = [
+  {
+    "name": "宝安第一外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310603",
+      "8310604"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "宝安中学（集团）高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310601",
+      "8310602"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "北京大学附属中学深圳学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310405",
+      "8310406"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "北京师范大学南山附属学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310507",
+      "8310508"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "布吉中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310707",
+      "8310708"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "翠园中学（爱国路校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310301",
+      "8310302"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "地址：罗湖区爱国路 2011 号"
+    ]
+  },
+  {
+    "name": "翠园中学（东门北路校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310309",
+      "8310310"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "地址：罗湖区东门北路 1016 号"
+    ]
+  },
+  {
+    "name": "东北师范大学附属中学深圳学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310156",
+      "8310157"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "福田中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310403",
+      "8310404"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "观澜中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311003",
+      "8311004"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "光明区高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310901",
+      "8310902"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "光明中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310903",
+      "8310904"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "广东实验中学深圳学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310147",
+      "8310148"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "横岗高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310709",
+      "8310710"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "红岭教育集团大鹏华侨中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311105",
+      "8311106"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "12"
+    ]
+  },
+  {
+    "name": "红岭中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310401",
+      "8310402"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "华侨城高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310505",
+      "8310506"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "华中师范大学龙岗附属中学",
+    "level": "市一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310713",
+      "8310714"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "龙城高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310701",
+      "8310702"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "龙岗区实验高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310744",
+      "8310745"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "龙华高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311005",
+      "8311006"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "龙华中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311001",
+      "8311002"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "罗湖高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310303",
+      "8310304"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "罗湖外语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310305",
+      "8310313"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "南方科技大学附属中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310150",
+      "8310151"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "南山外国语学校（集团）高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310509",
+      "8310517"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "南头中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310501",
+      "8310502"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "平冈中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310703",
+      "8310704"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "平湖外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310711",
+      "8310712"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "坪山高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310201",
+      "8310202"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "人大附中深圳学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311101",
+      "8311102"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "沙井中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310609",
+      "8310610"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳北理莫斯科大学附属实验中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310189",
+      "8310190"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳创新高级中学（综合高中）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310111",
+      "8310188"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "龙华区福城街道福花路南侧），后续搬回到学校永"
+    ]
+  },
+  {
+    "name": "深圳大学附属实验中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310152",
+      "8310153"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳大学附属中学盐田校区（深大附中盐田校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310131",
+      "8310132"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "址办学（地址：南山区前海路 0353 号），后续搬回"
+    ]
+  },
+  {
+    "name": "深圳大学附属中学中心校区（深大附中中心校区）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310112",
+      "8310113"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "原“深圳大学附属中学（深大附中） ”更名"
+    ]
+  },
+  {
+    "name": "深圳第二外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310118",
+      "8310119"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳技术大学附属中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310154",
+      "8310155"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳科学高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310120",
+      "8310121"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "10",
+      "学校 办学 办学",
+      "序号 学校代码 学校名称 其中： 招生范围 备注",
+      "等级 性质 类型 总计划",
+      "住宿生 走读生"
+    ]
+  },
+  {
+    "name": "深圳科学高中龙岗分校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310145",
+      "8310146"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳理工大学附属中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310143",
+      "8310144"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "光明区公常路 1 号），后续搬回到学校永久校区"
+    ]
+  },
+  {
+    "name": "深圳启元中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310124",
+      "8310126"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "校永久校区（永久校区地址：龙岗区龙城街道回龙"
+    ]
+  },
+  {
+    "name": "深圳实验学校（高中部）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310102",
+      "8310123"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳实验学校（光明高中部）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310141",
+      "8310142"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳实验学校崇文高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310160",
+      "8310161"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳实验学校明理高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310158",
+      "8310159"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳实验学校至臻高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310180",
+      "8310181"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳实验学校卓越高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310162",
+      "8310163"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市第二高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310116",
+      "8310117"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市第二高级中学宝安高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310129",
+      "8310130"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "地址：宝安区新桥街道中心路 12-14 号"
+    ]
+  },
+  {
+    "name": "深圳市第二高级中学深汕实验学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310176",
+      "8310177"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市第二实验学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310114",
+      "8310115"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市第二实验学校明远高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310186",
+      "8310187"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市第七高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310134",
+      "8310135"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市第三高级中学（国家留学基金委自费出国留学班）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310110"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市第三高级中学（国内高考班）",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310108",
+      "8310109"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市第一职业技术学校（综合高中班）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310133"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市福海中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310639",
+      "8310640"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市高级中学创新高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310170",
+      "8310171"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市高级中学东校区",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310136",
+      "8310137"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市高级中学理慧高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310174",
+      "8310175"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市高级中学文博高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310172",
+      "8310173"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市高级中学有为高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310184",
+      "8310185"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市高级中学中心校区",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310106",
+      "8310107"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市格致中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311016",
+      "8311017"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市红山中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311018",
+      "8311019"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市聚龙科学中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310208",
+      "8310209"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市龙岗区第二高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310705",
+      "8310706"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "原“布吉高级中学”更名"
+    ]
+  },
+  {
+    "name": "深圳市龙华科技实验高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311027",
+      "8311028"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市龙华外国语高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311022",
+      "8311023"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市龙津中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310641",
+      "8310642"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市美术学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310306",
+      "8310307"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市曙光中学（综合高中）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310138",
+      "8310149"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "龙华区福城街道福花路南侧），后续搬回到学校永",
+      "划龙宝路交汇处）"
+    ]
+  },
+  {
+    "name": "深圳市体育实验学校",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310195"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市行知职业技术学校（综合高中班）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310308"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市盐港中学（综合高中班）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310805"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市燕川中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310643",
+      "8310644"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市艺术高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311014",
+      "8311015"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市致理中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311025",
+      "8311026"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310105",
+      "8310125"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳外国语学校博雅高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310168",
+      "8310169"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳外国语学校弘知高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310166",
+      "8310167"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳外国语学校理工高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310182",
+      "8310183"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳外国语学校龙华高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310139",
+      "8310140"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳外国语学校致远高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310164",
+      "8310165"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳益新中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310127",
+      "8310128"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "地址：龙华区福城街道福花路南侧"
+    ]
+  },
+  {
+    "name": "深圳中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310101",
+      "8310122"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "2026 年招收高一新生安排在泥岗校区教学"
+    ]
+  },
+  {
+    "name": "深圳中学科技高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310191",
+      "8310192"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳中学实验高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310193",
+      "8310194"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳中学数理高中",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310178",
+      "8310179"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "石岩外国语学校",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310616",
+      "8310645"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "松岗中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310611",
+      "8310612"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "11",
+      "学校 办学 办学",
+      "序号 学校代码 学校名称 其中： 招生范围 备注",
+      "等级 性质 类型 总计划",
+      "住宿生 走读生"
+    ]
+  },
+  {
+    "name": "西交利物浦大学基础教育集团外国语高级中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310407",
+      "8310408"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "西乡中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310607",
+      "8310608"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "香港中文大学（深圳）附属明德高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310424",
+      "8310425"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "新安中学（集团）高中部",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310605",
+      "8310606"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "盐田高级中学",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310801",
+      "8310802"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "育才一中",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310518",
+      "8310519"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "育才中学",
+    "level": "省一级",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310503",
+      "8310504"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": [
+      "地址：南山区桃源街道峰景社区"
+    ]
+  },
+  {
+    "name": "中国科学院深圳理工大学附属实验高级中学（中科附高）",
+    "level": "",
+    "nature": "公办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310906",
+      "8310907"
+    ],
+    "recruitRanges": [
+      "面向全市招收 AC 类考生",
+      "面向全市招收 D 类考生"
+    ],
+    "remarks": []
+  }
+] as const;
+
+export const privateGuideMeta2026 = [
+  {
+    "name": "深圳（南山）中加学校",
+    "level": "省一级",
+    "nature": "民办（中外合作）",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310512"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳东方英文书院",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310618"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳杰仁高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310636"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳菁华中英文实验中学",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310743"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市宝安区翻身实验学校（西校区）",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310633"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市宝安区中英公学",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310631"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市滨海高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310638"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市承翰学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310735"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市晟才高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310746"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市枫叶学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310740"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市福桥高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310637"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市富源学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310619"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市格睿特高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311013"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市光明区贝赛思外国语学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310909"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市光明书院",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310905"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市汉开数理高中",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311021"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市弘毅高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310646"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市华朗学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310207"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市华侨（康桥）书院",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310629"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市华胜实验学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310628"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市华文高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310211"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市华一实验学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310635"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市建文外国语学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310716"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市崛起实验中学",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310627"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市坤翔高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310738"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市立人高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310206"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市龙岗区德琳学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310741"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市龙岗区东升学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310715"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市龙岗区科城实验学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310734"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市龙岗区珊蒂泉外国语学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310739"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市龙华区博恒实验学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311024"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市龙华中英文实验学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311007"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市龙翔学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310204"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市罗湖区华美外国语学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310314"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市美中学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311008"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市明德外语实验学校",
+    "level": "市一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310630"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市南山中英文学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310513"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市鹏达高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310742"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市松岗中英文实验学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310632"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市桃源居中澳实验学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310614"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市万科梅沙书院",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310803"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市盐田区梅沙双语学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310804"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市耀华外国语学校",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310908"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市育华高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311029"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市展华实验学校",
+    "level": "省一级",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311009"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市正德高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8311104"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市知源高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310210"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市中荟高级中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310747"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  },
+  {
+    "name": "深圳市中新中学",
+    "level": "",
+    "nature": "民办",
+    "schoolType": "普高",
+    "schoolCodes": [
+      "8310205"
+    ],
+    "recruitRanges": [
+      "面向全市招收 ACD 类考生"
+    ],
+    "remarks": []
+  }
+] as const;

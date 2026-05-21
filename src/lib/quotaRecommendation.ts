@@ -29,6 +29,28 @@ type JuniorSchoolCompetitiveness = {
   highTierShare: number;
 };
 
+function mergeQuotaMaps(...maps: Array<Record<string, number> | undefined>) {
+  const merged: Record<string, number> = {};
+  for (const map of maps) {
+    if (!map) continue;
+    for (const [schoolName, quota] of Object.entries(map)) {
+      if (quota <= 0) continue;
+      merged[schoolName] = (merged[schoolName] || 0) + quota;
+    }
+  }
+  return merged;
+}
+
+function getQuotaMapByStudentType(
+  allocation: Awaited<ReturnType<typeof findJuniorSchoolIndicatorAllocation>>,
+  studentType: StudentType
+) {
+  if (!allocation) return {};
+  return studentType === 'AC'
+    ? mergeQuotaMaps(allocation.acQuotas, allocation.acdQuotas)
+    : mergeQuotaMaps(allocation.dQuotas, allocation.acdQuotas);
+}
+
 function hashSeed(input: string) {
   let hash = 2166136261;
   for (let index = 0; index < input.length; index += 1) {
@@ -123,7 +145,7 @@ function buildJuniorSchoolCompetitiveness(
     return { score: 50, avgTargetLine: 540, highTierShare: 0.35 };
   }
 
-  const quotaMap = studentType === 'AC' ? allocation.acQuotas : allocation.dQuotas;
+  const quotaMap = getQuotaMapByStudentType(allocation, studentType);
   const entries = Object.entries(quotaMap).filter(([, quota]) => quota > 0);
   if (entries.length === 0) {
     return { score: 50, avgTargetLine: 540, highTierShare: 0.35 };
@@ -302,7 +324,7 @@ async function getQuotaProfile(
   if (juniorSchool) {
     const allocation = await findJuniorSchoolIndicatorAllocation(juniorSchool);
     if (allocation) {
-      const quotaMap = studentType === 'AC' ? allocation.acQuotas : allocation.dQuotas;
+      const quotaMap = getQuotaMapByStudentType(allocation, studentType);
       quotaToJuniorSchool = quotaMap[school.name] || 0;
     }
   }
@@ -328,7 +350,7 @@ export async function getQuotaRecommendationContext(planStudentInfo: StudentInfo
   if (!allocation) return { status: 'not_found', juniorSchool };
   const juniorSchoolCompetitiveness = buildJuniorSchoolCompetitiveness(allocation, studentType);
 
-  const quotaMap = studentType === 'AC' ? allocation.acQuotas : allocation.dQuotas;
+  const quotaMap = getQuotaMapByStudentType(allocation, studentType);
   const quotaEntries = Object.entries(quotaMap).filter(([, quota]) => quota > 0);
   if (quotaEntries.length === 0) {
     return { status: 'no_quota', juniorSchool: allocation.juniorSchool, district: allocation.district };

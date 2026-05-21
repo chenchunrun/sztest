@@ -52,8 +52,16 @@ export default function PlanResult({
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
   const [indicatorContext, setIndicatorContext] = useState<QuotaRecommendationContext>({ status: 'missing' });
+  const [selectedWalkDayIds, setSelectedWalkDayIds] = useState<string[]>([]);
   useScrollAnimation();
   const patternLabel = plan.studentInfo.volunteerPattern === '3-6-3' ? '冲3稳6保3' : '冲4稳4保4';
+  const walkDaySuggestions = plan.walkDayAdjustmentSuggestions || [];
+  const walkDaySuggestionIds = new Set(walkDaySuggestions.map((item) => item.schoolId));
+  const walkDaySelectedSchools = plan.items.filter((item) => selectedWalkDayIds.includes(item.school.id));
+
+  useEffect(() => {
+    setSelectedWalkDayIds(walkDaySuggestions.map((item) => item.schoolId).slice(0, 4));
+  }, [plan.generatedAt, walkDaySuggestions]);
 
   const exportAsText = () => {
     const lines: string[] = [];
@@ -62,6 +70,11 @@ export default function PlanResult({
     lines.push(`考生信息: ${plan.studentInfo.score}分 · ${plan.studentInfo.studentType}类 · ${plan.studentInfo.strategyStyle === 'conservative' ? '保守' : plan.studentInfo.strategyStyle === 'aggressive' ? '激进' : '均衡'}`);
     lines.push(`志愿结构: ${patternLabel}`);
     lines.push(`意向区域: ${plan.studentInfo.preferredDistricts.join('、') || '不限'}`);
+    if (selectedWalkDayIds.length > 0) {
+      lines.push(`接受走读调剂: ${walkDaySelectedSchools.map((item) => item.school.name).join('、')}`);
+    } else {
+      lines.push('接受走读调剂: 不勾选');
+    }
     lines.push('');
     lines.push('志愿列表:');
     plan.items.forEach(item => {
@@ -86,6 +99,7 @@ export default function PlanResult({
     const lines: string[] = [];
     lines.push(`Shenzhen High School Admission Application (${plan.studentInfo.score}分${plan.studentInfo.studentType}类)`);
     lines.push(`志愿结构: ${patternLabel}`);
+    lines.push(`走读调剂: ${selectedWalkDayIds.length > 0 ? walkDaySelectedSchools.map((item) => item.school.name).join('、') : '不勾选'}`);
     lines.push('');
     plan.items.forEach(item => {
       lines.push(`${item.order}. ${item.school.name} (${getSchoolScore(item.school, plan.studentInfo.studentType)}分)`);
@@ -130,6 +144,14 @@ export default function PlanResult({
   const hasPlanItems = plan.items.length > 0;
   const missRisk = plan.summary.missRisk ?? 0;
   const firstBatchAdmissionProbability = plan.summary.firstBatchAdmissionProbability ?? 0;
+
+  const toggleWalkDaySchool = (schoolId: string) => {
+    setSelectedWalkDayIds((prev) => {
+      if (prev.includes(schoolId)) return prev.filter((id) => id !== schoolId);
+      if (prev.length >= 4) return prev;
+      return [...prev, schoolId];
+    });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -199,6 +221,56 @@ export default function PlanResult({
           <div className="mb-6 scroll-animate rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
             <p className="font-semibold mb-1">公办风险提示</p>
             <p>按当前公办志愿顺序模拟，第一批公办总录取率约 <strong>{firstBatchAdmissionProbability}%</strong>，未录取风险约 <strong>{missRisk}%</strong>。建议结合区域、住宿和学校层次偏好继续调整梯度。</p>
+          </div>
+        )}
+
+        {(plan.studentInfo.walkDayAdjustmentPreference !== 'none') && (
+          <div className="mb-6 scroll-animate rounded-xl border border-sky-200 bg-sky-50 p-4">
+            <div className="flex items-start gap-3">
+              <Home className="w-5 h-5 text-sky-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-sky-900">走读调剂建议</p>
+                <p className="mt-1 text-sm text-sky-800">
+                  依据 2026 官方规则，第一批统一招生中最多只能对 <strong>4 所公办普高</strong> 勾选“接受走读调剂”。系统已按通勤、区域和梯度给出建议，您可以在下方确认最终勾选学校。
+                </p>
+                {walkDaySuggestions.length > 0 ? (
+                  <>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {plan.items
+                        .filter((item) => item.walkDayEligible)
+                        .map((item) => {
+                          const selected = selectedWalkDayIds.includes(item.school.id);
+                          const suggested = walkDaySuggestionIds.has(item.school.id);
+                          const suggestionReason = walkDaySuggestions.find((entry) => entry.schoolId === item.school.id)?.reason;
+                          return (
+                            <button
+                              key={`walk-day-${item.school.id}`}
+                              onClick={() => toggleWalkDaySchool(item.school.id)}
+                              className={`rounded-xl border px-3 py-2 text-left text-xs transition-colors ${
+                                selected
+                                  ? 'border-sky-500 bg-sky-100 text-sky-900'
+                                  : 'border-sky-200 bg-white text-slate-700 hover:border-sky-400'
+                              }`}
+                            >
+                              <div className="font-medium">{item.school.name}</div>
+                              <div className="mt-1 text-[11px] opacity-80">
+                                {suggested ? suggestionReason : '可作为走读调剂备选'}
+                              </div>
+                            </button>
+                          );
+                        })}
+                    </div>
+                    <p className="mt-3 text-xs text-sky-700">
+                      已选择 <strong>{selectedWalkDayIds.length}</strong> / 4 所。被走读调剂录取后，将不再参加后续志愿投档，也不能录后改为住宿。
+                    </p>
+                  </>
+                ) : (
+                  <p className="mt-3 text-xs text-sky-700">
+                    当前方案中没有适合建议勾选走读调剂的学校，通常是因为您选择了必须住宿，或可走读学校的通勤条件不合适。
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
@@ -343,6 +415,7 @@ export default function PlanResult({
           <div className="text-sm text-amber-800">
             <p className="font-medium mb-1">填报说明</p>
             <p>系统同时展示两类概率：一是单校“达线概率”，反映您的分数达到该校预测线的机会；二是“最终录取概率”，反映按当前 12 个志愿顺序实际落到该校的机会。当前正取志愿固定输出 12 个公办普高志愿，并按冲刺、匹配、保底梯度排序。</p>
+            <p className="mt-2 text-xs">若您在结果页勾选了走读调剂学校，请在官方系统中对同样学校完成最终确认；本页面的勾选仅作为填报建议与导出记录。</p>
             {!hasPlanItems && (
               <p className="mt-2 text-xs font-medium">当前筛选条件下没有符合“冲稳保梯度”的学校，建议放宽区域、住宿或学校层次限制后重新生成。</p>
             )}
@@ -381,6 +454,9 @@ export default function PlanResult({
                           <ExternalLink className="w-3 h-3 opacity-50" />
                         </Link>
                         <span className={`text-xs px-2 py-0.5 rounded-full ${getLevelColor(item.school.level)}`}>{item.school.level}</span>
+                        {item.walkDayRecommended && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-100 text-sky-700">建议走读调剂</span>
+                        )}
                       </div>
                       <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
                         <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{item.school.district}</span>
