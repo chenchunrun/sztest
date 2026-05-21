@@ -1,37 +1,114 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { StudentInfo, StrategyStyle, BioGeoGrade, District, SchoolLevel, Subject, CommuteTolerance, ApplicantTrack, VolunteerPattern } from '@/types';
 import { MapPin, Building2, Home, AlertCircle, Sparkles, ChevronDown, ChevronUp, BookOpen, Bus, School, CheckCircle2 } from 'lucide-react';
 import { juniorSchoolNames } from '@/data/juniorSchoolNames';
 
-export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo) => void }) {
-  const [form, setForm] = useState<Partial<StudentInfo>>({
-    studentType: 'AC',
-    bioGeoGrade: 'A',
-    applicantTrack: 'general',
-    preferredDistricts: [],
-    accommodation: 'any',
-    preferredLevels: [],
-    acceptPrivate: false,
-    strategyStyle: 'balanced',
-    volunteerPattern: '4-4-4',
-    strongSubjects: [],
-    commuteTolerance: 'medium',
-    preferNewSchool: undefined,
-    preferStrictManagement: undefined,
-    preferArtSports: undefined,
-    subjectGradeOk: undefined,
-    isQuotaEligible: undefined,
-    boardingNeed: undefined,
+const DEFAULT_FORM: Partial<StudentInfo> = {
+  studentType: 'AC',
+  bioGeoGrade: 'A',
+  applicantTrack: 'general',
+  preferredDistricts: [],
+  accommodation: 'any',
+  preferredLevels: [],
+  acceptPrivate: false,
+  strategyStyle: 'balanced',
+  volunteerPattern: '4-4-4',
+  strongSubjects: [],
+  commuteTolerance: 'medium',
+  preferNewSchool: undefined,
+  preferStrictManagement: undefined,
+  preferArtSports: undefined,
+  subjectGradeOk: undefined,
+  isQuotaEligible: undefined,
+  boardingNeed: undefined,
+};
+
+function buildFormState(initialValue?: StudentInfo | null): Partial<StudentInfo> {
+  if (!initialValue) return { ...DEFAULT_FORM };
+  return {
+    ...DEFAULT_FORM,
+    ...initialValue,
+    preferredDistricts: [...(initialValue.preferredDistricts || [])],
+    preferredLevels: [...(initialValue.preferredLevels || [])],
+    strongSubjects: [...(initialValue.strongSubjects || [])],
+  };
+}
+
+function normalizeForSubmit(form: Partial<StudentInfo>): StudentInfo {
+  return {
+    ...form,
+    preferredDistricts: form.preferredDistricts || [],
+    preferredLevels: form.preferredLevels || [],
+    strongSubjects: form.strongSubjects || [],
+    riskPreference: form.riskPreference ?? form.strategyStyle ?? 'balanced',
+    boardingNeed: form.boardingNeed
+      ?? (form.accommodation === 'boarding'
+        ? 'hard'
+        : form.accommodation === 'day'
+          ? 'none'
+          : 'preferred'),
+  } as StudentInfo;
+}
+
+export default function StudentForm({
+  onSubmit,
+  initialValue,
+  onDirtyChange,
+  onFormChange,
+  syncKey,
+}: {
+  onSubmit: (info: StudentInfo) => void;
+  initialValue?: StudentInfo | null;
+  onDirtyChange?: (dirty: boolean) => void;
+  onFormChange?: (info: StudentInfo) => void;
+  syncKey?: number;
+}) {
+  const [form, setForm] = useState<Partial<StudentInfo>>(() => buildFormState(initialValue));
+  const [scoreInput, setScoreInput] = useState(() => {
+    const initialScore = buildFormState(initialValue).score;
+    return typeof initialScore === 'number' ? String(initialScore) : '';
   });
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [shaking, setShaking] = useState(false);
+  const [baselineSnapshot, setBaselineSnapshot] = useState(() => JSON.stringify(normalizeForSubmit(buildFormState(initialValue))));
+
+  useEffect(() => {
+    const nextForm = buildFormState(initialValue);
+    setForm(nextForm);
+    setScoreInput(typeof nextForm.score === 'number' ? String(nextForm.score) : '');
+    setErrors({});
+    setBaselineSnapshot(JSON.stringify(normalizeForSubmit(nextForm)));
+  }, [syncKey]);
+
+  useEffect(() => {
+    if (!onDirtyChange) return;
+    onDirtyChange(JSON.stringify(normalizeForSubmit(form)) !== baselineSnapshot);
+  }, [form, baselineSnapshot, onDirtyChange]);
+
+  useEffect(() => {
+    if (!onFormChange) return;
+    onFormChange(normalizeForSubmit(form));
+  }, [form, onFormChange]);
+
+  const updateForm = (updater: (prev: Partial<StudentInfo>) => Partial<StudentInfo>) => {
+    setForm(prev => updater(prev));
+  };
+
+  const handleScoreChange = (value: string) => {
+    if (!/^\d*$/.test(value)) return;
+    setScoreInput(value);
+    updateForm(prev => ({
+      ...prev,
+      score: value === '' ? undefined : Number(value),
+    }));
+  };
 
   const districts: District[] = ['福田', '罗湖', '南山', '宝安', '龙岗', '龙华', '光明', '坪山', '盐田', '大鹏', '深汕'];
   const levels: SchoolLevel[] = ['四大名校', '八大名校', '区属重点', '普通公办'];
 
   const toggleDistrict = (d: District) => {
-    setForm(prev => ({
+    updateForm(prev => ({
       ...prev,
       preferredDistricts: prev.preferredDistricts?.includes(d)
         ? prev.preferredDistricts.filter(x => x !== d)
@@ -40,7 +117,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
   };
 
   const toggleLevel = (l: SchoolLevel) => {
-    setForm(prev => ({
+    updateForm(prev => ({
       ...prev,
       preferredLevels: prev.preferredLevels?.includes(l)
         ? prev.preferredLevels.filter(x => x !== l)
@@ -62,19 +139,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
     }
 
     setErrors({});
-    onSubmit({
-      ...form,
-      preferredDistricts: form.preferredDistricts || [],
-      preferredLevels: form.preferredLevels || [],
-      strongSubjects: form.strongSubjects || [],
-      riskPreference: form.riskPreference ?? form.strategyStyle ?? 'balanced',
-      boardingNeed: form.boardingNeed
-        ?? (form.accommodation === 'boarding'
-          ? 'hard'
-          : form.accommodation === 'day'
-            ? 'none'
-            : 'preferred'),
-    } as StudentInfo);
+    onSubmit(normalizeForSubmit(form));
   };
 
   return (
@@ -93,11 +158,11 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
               <span className="text-xs font-normal text-gray-400 ml-2">（2026年满分630分）</span>
             </label>
             <input
-              type="number"
-              min={0}
-              max={630}
-              value={form.score || ''}
-              onChange={(e) => setForm(prev => ({ ...prev, score: Number(e.target.value) }))}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={scoreInput}
+              onChange={(e) => handleScoreChange(e.target.value)}
               placeholder="请输入预估分数"
               className={`w-full px-4 py-3 rounded-xl border ${errors.score ? 'border-red-300 bg-red-50' : 'border-gray-200'} focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-200 text-lg`}
             />
@@ -113,7 +178,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
               type="text"
               list="junior-school-options"
               value={form.juniorSchool || ''}
-              onChange={(e) => setForm(prev => ({ ...prev, juniorSchool: e.target.value }))}
+              onChange={(e) => updateForm(prev => ({ ...prev, juniorSchool: e.target.value }))}
               placeholder="请输入考生初中学校名称"
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-200"
             />
@@ -137,7 +202,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
             </label>
             <div className="flex flex-wrap gap-2">
               <button
-                onClick={() => setForm(prev => ({ ...prev, homeDistrict: undefined }))}
+                onClick={() => updateForm(prev => ({ ...prev, homeDistrict: undefined }))}
                 className={`px-3 py-2 rounded-lg text-sm transition-all duration-150 flex items-center gap-1 ${
                   !form.homeDistrict
                     ? 'bg-indigo-500 text-white'
@@ -150,7 +215,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
               {districts.map((d) => (
                 <button
                   key={`home-${d}`}
-                  onClick={() => setForm(prev => ({ ...prev, homeDistrict: d }))}
+                  onClick={() => updateForm(prev => ({ ...prev, homeDistrict: d }))}
                   className={`px-3 py-2 rounded-lg text-sm transition-all duration-150 flex items-center gap-1 ${
                     form.homeDistrict === d ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-indigo-100'
                   }`}
@@ -172,7 +237,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
               ] as const).map((type) => (
                 <button
                   key={type.value}
-                  onClick={() => setForm(prev => ({ ...prev, studentType: type.value }))}
+                  onClick={() => updateForm(prev => ({ ...prev, studentType: type.value }))}
                   className={`p-4 rounded-xl border-2 text-left transition-all duration-150 ${form.studentType === type.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
                 >
                   <div className="font-semibold text-sm">{type.label}</div>
@@ -191,7 +256,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
               ] as const).map((track) => (
                 <button
                   key={track.value}
-                  onClick={() => setForm(prev => ({ ...prev, applicantTrack: track.value as ApplicantTrack }))}
+                  onClick={() => updateForm(prev => ({ ...prev, applicantTrack: track.value as ApplicantTrack }))}
                   className={`p-4 rounded-xl border-2 text-left transition-all duration-150 ${form.applicantTrack === track.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
                 >
                   <div className="font-semibold text-sm">{track.label}</div>
@@ -208,7 +273,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
               {(['A+', 'A', 'B+', 'B', 'C+', 'C', 'D'] as BioGeoGrade[]).map((g) => (
                 <button
                   key={g}
-                  onClick={() => setForm(prev => ({ ...prev, bioGeoGrade: g }))}
+                  onClick={() => updateForm(prev => ({ ...prev, bioGeoGrade: g }))}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${form.bioGeoGrade === g ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-indigo-100'}`}
                 >
                   {g}
@@ -225,7 +290,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
             </label>
             <div className="flex flex-wrap gap-2">
               <button
-                onClick={() => setForm(prev => ({ ...prev, preferredDistricts: [] }))}
+                onClick={() => updateForm(prev => ({ ...prev, preferredDistricts: [] }))}
                 className={`px-3 py-2 rounded-lg text-sm transition-all duration-150 flex items-center gap-1 ${
                   !form.preferredDistricts || form.preferredDistricts.length === 0
                     ? 'bg-indigo-500 text-white'
@@ -262,7 +327,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
               ] as const).map((opt) => (
                 <button
                   key={opt.value}
-                  onClick={() => setForm(prev => ({ ...prev, accommodation: opt.value }))}
+                  onClick={() => updateForm(prev => ({ ...prev, accommodation: opt.value }))}
                   className={`p-3 rounded-xl border-2 text-center transition-all duration-150 ${form.accommodation === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
                 >
                   <opt.icon className={`w-5 h-5 mx-auto mb-1 ${form.accommodation === opt.value ? 'text-indigo-600' : 'text-gray-400'}`} />
@@ -307,7 +372,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
               ] as const).map((opt) => (
                 <button
                   key={opt.value}
-                  onClick={() => setForm(prev => ({ ...prev, strategyStyle: opt.value as StrategyStyle }))}
+                  onClick={() => updateForm(prev => ({ ...prev, strategyStyle: opt.value as StrategyStyle }))}
                   className={`p-3 rounded-xl border-2 text-center transition-all duration-150 ${form.strategyStyle === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
                 >
                   <div className={`font-semibold text-sm ${form.strategyStyle === opt.value ? opt.color : 'text-gray-700'}`}>{opt.label}</div>
@@ -326,7 +391,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
               ] as const).map((opt) => (
                 <button
                   key={opt.value}
-                  onClick={() => setForm(prev => ({ ...prev, volunteerPattern: opt.value as VolunteerPattern }))}
+                  onClick={() => updateForm(prev => ({ ...prev, volunteerPattern: opt.value as VolunteerPattern }))}
                   className={`p-4 rounded-xl border-2 text-left transition-all duration-150 ${form.volunteerPattern === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
                 >
                   <div className="font-semibold text-sm text-gray-800">{opt.label}</div>
@@ -365,7 +430,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
                     ] as const).map((opt) => (
                       <button
                         key={opt.value}
-                        onClick={() => setForm(prev => ({ ...prev, boardingNeed: opt.value }))}
+                        onClick={() => updateForm(prev => ({ ...prev, boardingNeed: opt.value }))}
                         className={`p-3 rounded-xl border-2 text-center transition-all duration-150 ${form.boardingNeed === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
                       >
                         <div className="font-medium text-sm">{opt.label}</div>
@@ -385,7 +450,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
                     ] as const).map((opt) => (
                       <button
                         key={opt.label}
-                        onClick={() => setForm(prev => ({ ...prev, subjectGradeOk: opt.value }))}
+                        onClick={() => updateForm(prev => ({ ...prev, subjectGradeOk: opt.value }))}
                         className={`p-3 rounded-xl border-2 text-center transition-all duration-150 ${form.subjectGradeOk === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
                       >
                         <div className="font-medium text-sm">{opt.label}</div>
@@ -405,7 +470,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
                     ] as const).map((opt) => (
                       <button
                         key={`quota-${opt.label}`}
-                        onClick={() => setForm(prev => ({ ...prev, isQuotaEligible: opt.value }))}
+                        onClick={() => updateForm(prev => ({ ...prev, isQuotaEligible: opt.value }))}
                         className={`p-3 rounded-xl border-2 text-center transition-all duration-150 ${form.isQuotaEligible === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
                       >
                         <div className="font-medium text-sm">{opt.label}</div>
@@ -429,7 +494,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
                         <button
                           key={subj}
                           onClick={() => {
-                            setForm(prev => {
+                            updateForm(prev => {
                               const current = prev.strongSubjects || [];
                               if (current.includes(subj)) {
                                 return { ...prev, strongSubjects: current.filter(s => s !== subj) };
@@ -465,7 +530,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
                     ] as const).map((opt) => (
                       <button
                         key={opt.value}
-                        onClick={() => setForm(prev => ({ ...prev, commuteTolerance: opt.value as CommuteTolerance }))}
+                        onClick={() => updateForm(prev => ({ ...prev, commuteTolerance: opt.value as CommuteTolerance }))}
                         className={`p-3 rounded-xl border-2 text-center transition-all duration-150 ${form.commuteTolerance === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-200'}`}
                       >
                         <div className="font-medium text-sm">{opt.label}</div>
@@ -489,7 +554,7 @@ export default function StudentForm({ onSubmit }: { onSubmit: (info: StudentInfo
                     ] as const).map((opt) => (
                       <button
                         key={opt.key}
-                        onClick={() => setForm(prev => ({ ...prev, [opt.key]: prev[opt.key as keyof typeof prev] === true ? undefined : true }))}
+                        onClick={() => updateForm(prev => ({ ...prev, [opt.key]: prev[opt.key as keyof typeof prev] === true ? undefined : true }))}
                         className={`w-full p-3 rounded-xl border-2 text-left transition-all duration-150 flex items-center justify-between ${
                           form[opt.key as keyof typeof form] === true
                             ? 'border-indigo-500 bg-indigo-50'

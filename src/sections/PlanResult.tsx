@@ -145,7 +145,7 @@ export default function PlanResult({
       .then(async ({ getQuotaRecommendationContext }) => {
         if (cancelled) return;
         const quotaBenchmarkLine = plan.items[0]
-          ? (plan.items[0].forecastLine ?? getSchoolScore(plan.items[0].school, plan.studentInfo.studentType))
+          ? getSchoolScore(plan.items[0].school, plan.studentInfo.studentType)
           : plan.studentInfo.score;
         const context = await getQuotaRecommendationContext(plan.studentInfo, quotaBenchmarkLine);
         if (cancelled) return;
@@ -220,7 +220,7 @@ export default function PlanResult({
                 <ul className="list-disc list-inside space-y-0.5 text-xs opacity-90">
                   <li>推荐基于您填写的初中学校在 Excel 指标分配表中的实际名额</li>
                   <li>只推荐您所在初中有名额、且您达到指标控制线的高中</li>
-                  <li>只推荐 <strong>不低于当前正取最高志愿</strong> 的指标生冲高学校，不把指标生当保稳位</li>
+                  <li>只推荐 <strong>不低于当前正取第1志愿</strong> 的指标生学校，可与第1志愿同档或更高，不把指标生当保稳位</li>
                   <li>冲高范围控制在该校正取线高出您当前分数 <strong>不超过20分</strong></li>
                   <li>指标生批次 <strong>优先于</strong> 第一批次（正取）录取</li>
                   <li>指标生被录取后，后续正取志愿 <strong>自动失效</strong></li>
@@ -255,7 +255,7 @@ export default function PlanResult({
 
           {indicatorContext.status === 'no_candidate' && (
             <div className="rounded-xl border border-dashed border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-              {indicatorContext.juniorSchool} 虽然有指标生名额，但按“达到控制线、正取线高出当前分数不超过20分，且不得低于当前正取最高志愿”的规则，当前没有合适的指标生冲高学校。
+              {indicatorContext.juniorSchool} 虽然有指标生名额，但按“达到控制线、学校正取线不低于当前正取第1志愿，且若高于当前分数则不超过20分”的规则，当前没有合适的指标生学校。
             </div>
           )}
 
@@ -276,7 +276,10 @@ export default function PlanResult({
                   <div>
                     <div className="font-semibold text-gray-900">{indicatorContext.recommendation.school.name}</div>
                     <div className="text-xs text-gray-500 mt-1">
-                      您所在初中分到 <strong>{indicatorContext.recommendation.quota}</strong> 个名额，且该校正取线高出您当前分数 <strong>{indicatorContext.recommendation.regularGap}</strong> 分，定位高于或不低于当前正取最高志愿。
+                      您所在初中分到 <strong>{indicatorContext.recommendation.quota}</strong> 个名额，
+                      {indicatorContext.recommendation.regularGap >= 0
+                        ? <>该校正取线高出您当前分数 <strong>{indicatorContext.recommendation.regularGap}</strong> 分，定位不低于当前正取第1志愿。</>
+                        : <>该校正取线虽低于您当前分数 <strong>{Math.abs(indicatorContext.recommendation.regularGap)}</strong> 分，但仍与当前正取第1志愿同档或不低于其基准线，适合作为指标生优先批次机会位。</>}
                     </div>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded-full font-medium ${

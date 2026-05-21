@@ -23,6 +23,12 @@ export type QuotaRecommendationContext =
   | { status: 'no_candidate'; juniorSchool: string; district: string }
   | { status: 'ready'; juniorSchool: string; district: string; recommendation: QuotaRecommendation };
 
+type JuniorSchoolCompetitiveness = {
+  score: number;
+  avgTargetLine: number;
+  highTierShare: number;
+};
+
 function hashSeed(input: string) {
   let hash = 2166136261;
   for (let index = 0; index < input.length; index += 1) {
@@ -86,7 +92,7 @@ function isSpecialProgramSchool(school: School) {
     .filter(Boolean)
     .join(' ');
 
-  return /综合高中|留学基金委自费出国留学班|港澳|国际体系|出国方向|国际书院/.test(text);
+  return /综合高中|留学基金委自费出国留学班|国际书院/.test(text);
 }
 
 function getLevelHotness(school: School) {
@@ -102,21 +108,108 @@ function getCommuteFactor(student: StudentInfo, school: School) {
   return 1;
 }
 
-function buildCompetitorModel(student: StudentInfo, school: School, quota: number, regularLine: number, controlLine: number) {
+function getLevelValue(school: School) {
+  if (school.level === '四大名校') return 100;
+  if (school.level === '八大名校') return 88;
+  if (school.level === '区属重点') return 74;
+  return 60;
+}
+
+function buildJuniorSchoolCompetitiveness(
+  allocation: Awaited<ReturnType<typeof findJuniorSchoolIndicatorAllocation>>,
+  studentType: StudentType
+): JuniorSchoolCompetitiveness {
+  if (!allocation) {
+    return { score: 50, avgTargetLine: 540, highTierShare: 0.35 };
+  }
+
+  const quotaMap = studentType === 'AC' ? allocation.acQuotas : allocation.dQuotas;
+  const entries = Object.entries(quotaMap).filter(([, quota]) => quota > 0);
+  if (entries.length === 0) {
+    return { score: 50, avgTargetLine: 540, highTierShare: 0.35 };
+  }
+
+  let totalQuota = 0;
+  let weightedLine = 0;
+  let weightedLevel = 0;
+  let highTierQuota = 0;
+
+  entries.forEach(([schoolName, quota]) => {
+    const school = schools.find((item) => item.name === schoolName);
+    if (!school) return;
+    const line = getSchoolScore(school, studentType);
+    const levelValue = getLevelValue(school);
+    totalQuota += quota;
+    weightedLine += line * quota;
+    weightedLevel += levelValue * quota;
+    if (school.level === '四大名校' || school.level === '八大名校') highTierQuota += quota;
+  });
+
+  if (totalQuota === 0) {
+    return { score: 50, avgTargetLine: 540, highTierShare: 0.35 };
+  }
+
+  const avgTargetLine = weightedLine / totalQuota;
+  const avgLevelValue = weightedLevel / totalQuota;
+  const highTierShare = highTierQuota / totalQuota;
+  const score = Math.max(
+    30,
+    Math.min(
+      95,
+      (avgTargetLine - 500) * 0.32 + (avgLevelValue - 60) * 1.1 + highTierShare * 26
+    )
+  );
+
+  return {
+    score: Number(score.toFixed(1)),
+    avgTargetLine: Number(avgTargetLine.toFixed(1)),
+    highTierShare: Number(highTierShare.toFixed(2)),
+  };
+}
+
+function buildCompetitorModel(
+  student: StudentInfo,
+  school: School,
+  quota: number,
+  regularLine: number,
+  controlLine: number,
+  juniorSchoolCompetitiveness: JuniorSchoolCompetitiveness
+) {
   const studentModel = buildStudentScoreModel(student);
   const regularGap = regularLine - studentModel.muScore;
   const hotness = getLevelHotness(school);
   const commuteFactor = getCommuteFactor(student, school);
+  const competitiveness = juniorSchoolCompetitiveness.score / 100;
+  const scoreTier = studentModel.muScore >= 595
+    ? 1
+    : studentModel.muScore >= 580
+      ? 0.82
+      : studentModel.muScore >= 560
+        ? 0.62
+        : studentModel.muScore >= 530
+          ? 0.42
+          : 0.24;
   const quotaPressure = quota <= 1 ? 2.2 : quota === 2 ? 1.75 : quota === 3 ? 1.45 : 1.2;
-  const baseCompetitors = Math.max(quota + 1, Math.round((quota + 2) * quotaPressure * hotness * commuteFactor));
+  const baseCompetitors = Math.max(
+    quota + 1,
+    Math.round((quota + 2) * quotaPressure * hotness * commuteFactor * (0.88 + competitiveness * 0.42 + scoreTier * 0.18))
+  );
   const expectedCompetitors = Math.max(quota, baseCompetitors);
 
   const lineSpread = Math.max(8, regularLine - controlLine);
+  const meanRatio = Math.max(
+    0.42,
+    Math.min(1.02, 0.5 + (hotness - 1) * 0.34 + competitiveness * 0.22 + scoreTier * 0.14)
+  );
+  const overshootAllowance = Math.max(0, Math.min(4, (competitiveness - 0.55) * 10 + (scoreTier - 0.45) * 6));
   const competitorScoreMean = Math.max(
     controlLine + 2,
-    Math.min(regularLine - 1, controlLine + lineSpread * (0.55 + (hotness - 1) * 0.5))
+    Math.min(regularLine + overshootAllowance, controlLine + lineSpread * meanRatio)
   );
-  const competitorScoreSigma = Math.max(5.5, Math.min(14, studentModel.sigmaScore * 0.95 + Math.max(0, regularGap) * 0.08));
+  const competitorScoreSigma = Math.max(
+    4.8,
+    Math.min(12.5, studentModel.sigmaScore * (0.9 - competitiveness * 0.08) + Math.max(0, regularGap) * 0.06 + scoreTier * 0.8)
+  );
 
   return {
     expectedCompetitors,
@@ -131,10 +224,11 @@ function simulateQuotaProbability(
   controlLine: number,
   quota: number,
   regularLine: number,
+  juniorSchoolCompetitiveness: JuniorSchoolCompetitiveness,
   simulations = 6000
 ) {
   const studentModel = buildStudentScoreModel(student);
-  const competitorModel = buildCompetitorModel(student, school, quota, regularLine, controlLine);
+  const competitorModel = buildCompetitorModel(student, school, quota, regularLine, controlLine, juniorSchoolCompetitiveness);
   const random = createSeededRandom(JSON.stringify({
     student: {
       score: student.score,
@@ -232,6 +326,7 @@ export async function getQuotaRecommendationContext(planStudentInfo: StudentInfo
 
   const allocation = await findJuniorSchoolIndicatorAllocation(juniorSchool);
   if (!allocation) return { status: 'not_found', juniorSchool };
+  const juniorSchoolCompetitiveness = buildJuniorSchoolCompetitiveness(allocation, studentType);
 
   const quotaMap = studentType === 'AC' ? allocation.acQuotas : allocation.dQuotas;
   const quotaEntries = Object.entries(quotaMap).filter(([, quota]) => quota > 0);
@@ -255,15 +350,16 @@ export async function getQuotaRecommendationContext(planStudentInfo: StudentInfo
 
       const regularLine = getSchoolScore(school, studentType);
       const regularGap = regularLine - score;
-      if (regularGap < 0 || regularGap > 20) return null;
       if (regularLine < regularBenchmarkLine) return null;
+      if (regularGap > 20) return null;
 
       const simulated = simulateQuotaProbability(
         planStudentInfo,
         school,
         indicatorLine,
         quotaToJuniorSchool,
-        regularLine
+        regularLine,
+        juniorSchoolCompetitiveness
       );
 
       return {

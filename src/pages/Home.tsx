@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import type { StudentInfo, VolunteerPlan } from '@/types';
 import { useVolunteerPlan } from '@/hooks/useVolunteerPlan';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
@@ -94,25 +94,40 @@ function useScrollAnimation() {
 }
 
 export default function Home() {
-  const [studentInfo, setStudentInfo, clearStudentInfo] = useLocalStorage<StudentInfo | null>(
+  const [draftDirty, setDraftDirty] = useState(false);
+  const [storedStudentInfo, setStoredStudentInfo, clearStoredStudentInfo] = useLocalStorage<StudentInfo | null>(
     'sztest:lastStudentInfo',
     null,
     { ttlMs: PRIVATE_STORAGE_TTL_MS }
   );
+  const [draftStudentInfo, setDraftStudentInfo] = useState<StudentInfo | null>(storedStudentInfo);
+  const [submittedStudentInfo, setSubmittedStudentInfo] = useState<StudentInfo | null>(storedStudentInfo);
+  const [formSyncKey, setFormSyncKey] = useState(0);
   const [savedPlans, setSavedPlans, clearSavedPlans] = useLocalStorage<VolunteerPlan[]>(
     'sztest:savedPlans',
     [],
     { ttlMs: PRIVATE_STORAGE_TTL_MS }
   );
-  const { plan, isLoading } = useVolunteerPlan(studentInfo);
+  const { plan, isLoading } = useVolunteerPlan(submittedStudentInfo);
   useScrollAnimation();
+
+  useEffect(() => {
+    if (!storedStudentInfo && submittedStudentInfo) {
+      setDraftStudentInfo(null);
+      setSubmittedStudentInfo(null);
+      setDraftDirty(false);
+    }
+  }, [storedStudentInfo, submittedStudentInfo]);
 
   const scrollTo = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   const handleSubmit = (info: StudentInfo) => {
-    setStudentInfo(info);
+    setDraftDirty(false);
+    setDraftStudentInfo(info);
+    setStoredStudentInfo(info);
+    setSubmittedStudentInfo(info);
     setTimeout(() => {
       document.getElementById('result')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
@@ -126,7 +141,11 @@ export default function Home() {
   };
 
   const handleLoadPlan = (p: VolunteerPlan) => {
-    setStudentInfo(p.studentInfo);
+    setDraftDirty(false);
+    setDraftStudentInfo(p.studentInfo);
+    setStoredStudentInfo(p.studentInfo);
+    setSubmittedStudentInfo(p.studentInfo);
+    setFormSyncKey((value) => value + 1);
     setTimeout(() => {
       document.getElementById('result')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
@@ -137,8 +156,21 @@ export default function Home() {
   };
 
   const handleClearStoredData = () => {
-    clearStudentInfo();
+    setDraftDirty(false);
+    setDraftStudentInfo(null);
+    setSubmittedStudentInfo(null);
+    clearStoredStudentInfo();
     clearSavedPlans();
+    setFormSyncKey((value) => value + 1);
+  };
+
+  const handleRegenerate = () => {
+    if (!draftStudentInfo) return;
+    setDraftDirty(false);
+    setSubmittedStudentInfo(draftStudentInfo);
+    setTimeout(() => {
+      document.getElementById('result')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const sectionFallback = <div className="px-4 py-12 text-center text-sm text-slate-400">正在加载内容...</div>;
@@ -149,7 +181,21 @@ export default function Home() {
       <HeroSection onStart={() => scrollTo('form')} />
       <CountdownSection />
       <StepsSection />
-      <StudentForm onSubmit={handleSubmit} />
+      <StudentForm
+        onSubmit={handleSubmit}
+        initialValue={draftStudentInfo}
+        onDirtyChange={setDraftDirty}
+        onFormChange={setDraftStudentInfo}
+        syncKey={formSyncKey}
+      />
+
+      {plan && draftDirty && !isLoading && (
+        <div id="result" className="px-4 pt-8">
+          <div className="max-w-4xl mx-auto rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+            您已修改表单信息，当前下方显示的志愿方案仍基于上一次点击“生成志愿方案”时的条件。请重新生成，新的分数和偏好才会进入推荐结果。
+          </div>
+        </div>
+      )}
 
       {isLoading && (
         <div id="result" className="px-4 py-12 text-center text-sm text-slate-400">
@@ -162,7 +208,7 @@ export default function Home() {
           <Suspense fallback={sectionFallback}>
             <PlanResult
               plan={plan}
-              onRegenerate={() => setStudentInfo(null)}
+              onRegenerate={handleRegenerate}
               onSavePlan={handleSavePlan}
               savedPlans={savedPlans}
               onLoadPlan={handleLoadPlan}

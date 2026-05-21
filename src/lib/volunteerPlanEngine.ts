@@ -117,7 +117,7 @@ function isSpecialProgramSchool(school: School): boolean {
     .filter(Boolean)
     .join(' ');
 
-  return /综合高中|留学基金委自费出国留学班|港澳|国际体系|出国方向|国际书院/.test(text);
+  return /综合高中|留学基金委自费出国留学班|国际书院/.test(text);
 }
 
 function getSchoolLevelWeight(level: School['level']): number {
