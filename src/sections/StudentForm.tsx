@@ -57,13 +57,11 @@ export default function StudentForm({
   initialValue,
   onDirtyChange,
   onFormChange,
-  syncKey,
 }: {
   onSubmit: (info: StudentInfo) => void;
   initialValue?: StudentInfo | null;
   onDirtyChange?: (dirty: boolean) => void;
   onFormChange?: (info: StudentInfo) => void;
-  syncKey?: number;
 }) {
   const [form, setForm] = useState<Partial<StudentInfo>>(() => buildFormState(initialValue));
   const [scoreInput, setScoreInput] = useState(() => {
@@ -73,15 +71,7 @@ export default function StudentForm({
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [shaking, setShaking] = useState(false);
-  const [baselineSnapshot, setBaselineSnapshot] = useState(() => JSON.stringify(normalizeForSubmit(buildFormState(initialValue))));
-
-  useEffect(() => {
-    const nextForm = buildFormState(initialValue);
-    setForm(nextForm);
-    setScoreInput(typeof nextForm.score === 'number' ? String(nextForm.score) : '');
-    setErrors({});
-    setBaselineSnapshot(JSON.stringify(normalizeForSubmit(nextForm)));
-  }, [syncKey]);
+  const [baselineSnapshot] = useState(() => JSON.stringify(normalizeForSubmit(buildFormState(initialValue))));
 
   useEffect(() => {
     if (!onDirtyChange) return;

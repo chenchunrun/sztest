@@ -149,6 +149,19 @@ def extract_level_map(path):
         level_map[name] = level
     return level_map
 
+
+def extract_template_sections(path: Path):
+    content = path.read_text(encoding='utf-8')
+    start_marker = "export const schools: School[] = ["
+    end_marker = "\n];\n\nexport function getSchoolScore"
+    start_index = content.find(start_marker)
+    end_index = content.find(end_marker)
+    if start_index == -1 or end_index == -1 or end_index <= start_index:
+        raise ValueError(f"Unable to extract schools template from {path}")
+    prefix = content[:start_index]
+    suffix = content[end_index + len("\n];\n") :]
+    return prefix, suffix
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Generate schools.ts from the source workbook.')
     parser.add_argument('excel_path', help='Path to the source Excel workbook.')
@@ -170,6 +183,7 @@ output_path = Path(args.output).expanduser().resolve()
 reference_path = Path(args.reference).expanduser().resolve()
 
 LEVEL_MAP = extract_level_map(reference_path)
+TEMPLATE_PREFIX, TEMPLATE_SUFFIX = extract_template_sections(reference_path)
 
 wb = openpyxl.load_workbook(excel_path, data_only=True)
 ws_main = wb['【公办】高中数据大数据']
@@ -453,8 +467,7 @@ for name, data in schools_data.items():
 school_list.sort(key=lambda x: sort_key(x))
 
 lines = []
-lines.append("import type { School, District, StudentType, SchoolTrait, WenliType } from '@/types';")
-lines.append("")
+lines.extend(TEMPLATE_PREFIX.splitlines())
 lines.append("export const schools: School[] = [")
 
 for idx, s in enumerate(school_list):
@@ -732,18 +745,10 @@ for ps in private_schools:
     lines.append("  },")
 
 lines.append("];")
-lines.append("")
-lines.append("export function getSchoolScore(school: School, studentType: StudentType): number {")
-lines.append("  return studentType === 'AC' ? school.acScore2025 : school.dScore2025;")
-lines.append("}")
-lines.append("")
-lines.append("export function getSchoolById(id: string): School | undefined {")
-lines.append("  return schools.find(s => s.id === id);")
-lines.append("}")
-lines.append("")
+lines.extend(TEMPLATE_SUFFIX.splitlines())
 
 with open(output_path, 'w', encoding='utf-8') as f:
-    f.write('\n'.join(lines))
+    f.write('\n'.join(lines) + '\n')
 
 print(f'Wrote {len(lines)} lines to {output_path}')
 print(f'Total public schools: {len(school_list)}')

@@ -111,14 +111,6 @@ export default function Home() {
   const { plan, isLoading } = useVolunteerPlan(submittedStudentInfo);
   useScrollAnimation();
 
-  useEffect(() => {
-    if (!storedStudentInfo && submittedStudentInfo) {
-      setDraftStudentInfo(null);
-      setSubmittedStudentInfo(null);
-      setDraftDirty(false);
-    }
-  }, [storedStudentInfo, submittedStudentInfo]);
-
   const scrollTo = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   }, []);
@@ -182,11 +174,11 @@ export default function Home() {
       <CountdownSection />
       <StepsSection />
       <StudentForm
+        key={formSyncKey}
         onSubmit={handleSubmit}
         initialValue={draftStudentInfo}
         onDirtyChange={setDraftDirty}
         onFormChange={setDraftStudentInfo}
-        syncKey={formSyncKey}
       />
 
       {plan && draftDirty && !isLoading && (

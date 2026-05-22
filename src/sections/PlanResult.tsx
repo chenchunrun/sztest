@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router';
 import type { VolunteerPlan } from '@/types';
 import { getSchoolScore } from '@/data/schools';
 import { MapPin, Home, Info, RotateCcw, Download, Target, ExternalLink, TrendingUp, Shield, AlertTriangle, CheckCircle, Save, History, Trash2, ChevronDown, ChevronUp, FileText, Copy } from 'lucide-react';
 import type { QuotaRecommendationContext } from '@/lib/quotaRecommendation';
+
+const EMPTY_WALK_DAY_SUGGESTIONS: NonNullable<VolunteerPlan['walkDayAdjustmentSuggestions']> = [];
 
 function useScrollAnimation() {
   useEffect(() => {
@@ -55,12 +57,30 @@ export default function PlanResult({
   const [selectedWalkDayIds, setSelectedWalkDayIds] = useState<string[]>([]);
   useScrollAnimation();
   const patternLabel = plan.studentInfo.volunteerPattern === '3-6-3' ? '冲3稳6保3' : '冲4稳4保4';
-  const walkDaySuggestions = plan.walkDayAdjustmentSuggestions || [];
-  const walkDaySuggestionIds = new Set(walkDaySuggestions.map((item) => item.schoolId));
-  const walkDaySelectedSchools = plan.items.filter((item) => selectedWalkDayIds.includes(item.school.id));
+  const walkDaySuggestions = useMemo(
+    () => plan.walkDayAdjustmentSuggestions ?? EMPTY_WALK_DAY_SUGGESTIONS,
+    [plan.walkDayAdjustmentSuggestions]
+  );
+  const walkDaySuggestionIds = useMemo(
+    () => new Set(walkDaySuggestions.map((item) => item.schoolId)),
+    [walkDaySuggestions]
+  );
+  const walkDaySelectedSchools = useMemo(
+    () => plan.items.filter((item) => selectedWalkDayIds.includes(item.school.id)),
+    [plan.items, selectedWalkDayIds]
+  );
+  const quotaBenchmarkLine = useMemo(
+    () => (plan.items[0] ? getSchoolScore(plan.items[0].school, plan.studentInfo.studentType) : plan.studentInfo.score),
+    [plan.items, plan.studentInfo.score, plan.studentInfo.studentType]
+  );
 
   useEffect(() => {
-    setSelectedWalkDayIds(walkDaySuggestions.map((item) => item.schoolId).slice(0, 4));
+    const nextIds = walkDaySuggestions.map((item) => item.schoolId).slice(0, 4);
+    setSelectedWalkDayIds((prev) => (
+      prev.length === nextIds.length && prev.every((id, index) => id === nextIds[index])
+        ? prev
+        : nextIds
+    ));
   }, [plan.generatedAt, walkDaySuggestions]);
 
   const exportAsText = () => {
@@ -166,9 +186,6 @@ export default function PlanResult({
     import('@/lib/quotaRecommendation')
       .then(async ({ getQuotaRecommendationContext }) => {
         if (cancelled) return;
-        const quotaBenchmarkLine = plan.items[0]
-          ? getSchoolScore(plan.items[0].school, plan.studentInfo.studentType)
-          : plan.studentInfo.score;
         const context = await getQuotaRecommendationContext(plan.studentInfo, quotaBenchmarkLine);
         if (cancelled) return;
         setIndicatorContext(context);
@@ -181,7 +198,7 @@ export default function PlanResult({
     return () => {
       cancelled = true;
     };
-  }, [plan.studentInfo]);
+  }, [plan.generatedAt, plan.studentInfo, quotaBenchmarkLine]);
 
   return (
     <section className="py-20 bg-white">

@@ -23,6 +23,8 @@ export type QuotaRecommendationContext =
   | { status: 'no_candidate'; juniorSchool: string; district: string }
   | { status: 'ready'; juniorSchool: string; district: string; recommendation: QuotaRecommendation };
 
+const MIN_RECOMMENDATION_PROBABILITY = 10;
+
 type JuniorSchoolCompetitiveness = {
   score: number;
   avgTargetLine: number;
@@ -401,17 +403,28 @@ export async function getQuotaRecommendationContext(planStudentInfo: StudentInfo
   const candidates = candidateEntries
     .filter((item): item is NonNullable<typeof item> => item !== null)
     .sort((a, b) => {
-      if (b.regularGap !== a.regularGap) return b.regularGap - a.regularGap;
       if (b.valueScore !== a.valueScore) return b.valueScore - a.valueScore;
       if (b.probability !== a.probability) return b.probability - a.probability;
+      if (b.regularGap !== a.regularGap) return b.regularGap - a.regularGap;
       return getSchoolScore(b.school, studentType) - getSchoolScore(a.school, studentType);
     });
 
-  if (candidates.length === 0) {
+  const bestCandidate = candidates.find((candidate) => candidate.probability >= MIN_RECOMMENDATION_PROBABILITY);
+  if (!bestCandidate) {
     return { status: 'no_candidate', juniorSchool: allocation.juniorSchool, district: allocation.district };
   }
 
-  const { valueScore: _valueScore, ...recommendation } = candidates[0];
+  const recommendation: QuotaRecommendation = {
+    school: bestCandidate.school,
+    quota: bestCandidate.quota,
+    indicatorLine: bestCandidate.indicatorLine,
+    regularGap: bestCandidate.regularGap,
+    controlLineMargin: bestCandidate.controlLineMargin,
+    probability: bestCandidate.probability,
+    expectedCompetitors: bestCandidate.expectedCompetitors,
+    competitorScoreMean: bestCandidate.competitorScoreMean,
+    competitorScoreSigma: bestCandidate.competitorScoreSigma,
+  };
   return {
     status: 'ready',
     juniorSchool: allocation.juniorSchool,

@@ -567,8 +567,8 @@ function enforceSafetyTail(
   studentInfo: StudentInfo,
   patternConfig: PatternConfig,
 ) {
-  let nextRush = [...rushFinal];
-  let nextSteady = [...steadyFinal];
+  const nextRush = [...rushFinal];
+  const nextSteady = [...steadyFinal];
   let nextSafe = dedupeRankedSchools([...safeFinal]).sort((a, b) => a.probability - b.probability);
   let usedIds = rebuildUsedIds([nextRush, nextSteady, nextSafe]);
 
